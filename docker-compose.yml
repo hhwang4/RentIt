@@ -1,0 +1,39 @@
+version: "3.3"
+services:
+  mysql:
+    #image: mysql:5.6.26
+    build: ./sql
+    container_name: cs6400-mysql
+    ports:
+     - 3306:3306
+    environment:
+      MYSQL_USER: "cs6400u"
+      MYSQL_PASSWORD: "password"
+      MYSQL_ROOT_PASSWORD: "mypassword"
+      MYSQL_DATABASE: "cs6400"
+    volumes:
+      - db-data:/var/lib/mysql/data
+    restart: always
+    networks:
+      - overlay
+
+  web:
+    build: ./web
+    depends_on:
+      - mysql
+    container_name: web
+    ports:
+      - 4000:8080
+    volumes:
+      - .:/code
+    links:
+      - mysql:mysql
+    restart: always
+    networks:
+      - overlay
+
+volumes:
+  db-data:
+ 
+networks:
+  overlay:
