@@ -1,62 +1,43 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<!--[if lt IE 7]>      <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en" ng-app="myApp" class="no-js"> <!--<![endif]-->
 <head>
-    <title>Example Python Flask App</title>
-
-
-    <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <link href="http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
-
-
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>My AngularJS App</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static',filename='styles/app.css') }}">
+  <script src="{{ url_for('static',filename='bower_components/html5-boilerplate/dist/js/vendor/modernizr-2.8.3.min.js') }}"></script>
 </head>
-
 <body>
+  <ul class="menu">
+    <li><a href="#!/view1">view1</a></li>
+    <li><a href="#!/view2">view2</a></li>
+  </ul>
 
-<div class="container">
-    <div class="header">
-        <!--<nav>-->
-            <!--<ul class="nav nav-pills pull-right">-->
-                <!--<li role="presentation" class="active"><a href="#">Home</a>-->
-                <!--</li>-->
-                <!--<li role="presentation"><a href="#">Sign In</a>-->
-                <!--</li>-->
-                <!--<li role="presentation"><a href="showSignUp">Sign Up</a>-->
-                <!--</li>-->
-            <!--</ul>-->
-        <!--</nav>-->
-        <h3 class="text-muted">Python Flask App</h3>
-    </div>
+  <!--[if lt IE 7]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+  <![endif]-->
 
-    <div>
-        <table class="table">
-            <thead>
-            <tr>
-                <th>Id</th>
-                <th>Last Name</th>
-                <th>First Name</th>
-                <th>Address</th>
-                <th>City</th>
-            </tr>
-            </thead>
-            {% for row in data %}
-            <tr>
-                {% for d in row %}
-                <td>{{ d }}</td>
-                {% endfor %}
-            </tr>
-            {% endfor %}
-        </table>
-    </div>
+  <div ng-view></div>
 
+  <div>Angular seed app: v<span app-version></span></div>
 
-
-    <footer class="footer">
-        <p>&copy; Company 2015</p>
-    </footer>
-
-</div>
+  <!-- In production use:
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
+  -->
+  <script src="{{ url_for('static',filename='bower_components/angular/angular.js') }}"></script>
+  <script src="{{ url_for('static',filename='bower_components/angular-route/angular-route.js') }}"></script>
+  <script src="{{ url_for('static',filename='app.js') }}"></script>
+  <script src="{{ url_for('static',filename='view1/view1.js') }}"></script>
+  <script src="{{ url_for('static',filename='view2/view2.js') }}"></script>
+  <script src="{{ url_for('static',filename='components/version/version.js') }}"></script>
+  <script src="{{ url_for('static',filename='components/version/version-directive.js') }}"></script>
+  <script src="{{ url_for('static',filename='components/version/interpolate-filter.js') }}"></script>
 </body>
-
 </html>
