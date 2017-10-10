@@ -81,8 +81,8 @@ CREATE TABLE `Reservation` (
 
 CREATE TABLE `ToolReservations` (
 	`Tool_Id` INT NOT NULL,
-    `Reservations_Id` INT NOT NULL,
-    PRIMARY KEY (`Tool_Id` , `Reservations_Id`)
+  `Reservations_Id` INT NOT NULL,
+  PRIMARY KEY (`Tool_Id` , `Reservations_Id`)
 );
 
 
@@ -98,7 +98,7 @@ CREATE TABLE `Tool` (
     `PowerSource_Id` INT NOT NULL,
     `SubOption_Id` INT NOT NULL,
     `SubType_Id` INT NOT NULL,
-	`deposit_price` DECIMAL(18 , 2 ) NOT NULL,
+	  `deposit_price` DECIMAL(18 , 2 ) NOT NULL,
     `rental_price` DECIMAL(18 , 2 ) NOT NULL,
     PRIMARY KEY (`id`)
 );
