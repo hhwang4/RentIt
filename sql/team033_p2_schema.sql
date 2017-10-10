@@ -79,14 +79,12 @@ CREATE TABLE `Reservation` (
 );
 
 
-CREATE TABLE `ToolAvailability` (
-    `id` INT NOT NULL AUTO_INCREMENT,
+CREATE TABLE `ToolReservations` (
     `deposit_price` DECIMAL(18 , 2 ) NOT NULL,
     `rental_price` DECIMAL(18 , 2 ) NOT NULL,
-    `tool_status` INT NOT NULL,
-    `Tool_Id` INT NOT NULL,
-    `Reservations_Id` INT,
-    PRIMARY KEY (`id`)
+	`Tool_Id` INT NOT NULL,
+    `Reservations_Id` INT NOT NULL,
+    PRIMARY KEY (`Tool_Id` , `Reservations_Id`)
 );
 
 
@@ -345,8 +343,8 @@ alter table `Customer` add constraint `FK_Customer_PhoneNumber_WorkPhoneNumber_I
 alter table `Reservation` add constraint `FK_Reservation_Customer_Customer_UserName`  foreign key (`Customer_UserName`) references `Customer` ( `user_name`) ;
 alter table `Reservation` add constraint `FK_Reservation_Clerk_DropOffClerk_UserName`  foreign key (`DropOffClerk_UserName`) references `Clerk` ( `user_name`) ;
 alter table `Reservation` add constraint `FK_Reservation_Clerk_PickupClerk_UserName`  foreign key (`PickupClerk_UserName`) references `Clerk` ( `user_name`) ;
-alter table `ToolAvailability` add constraint `FK_ToolAvailability_Tool_Tool_Id`  foreign key (`Tool_Id`) references `Tool` ( `id`)  on update cascade on delete cascade ;
-alter table `ToolAvailability` add constraint `FK_ToolAvailability_Reservation_Reservations_Id`  foreign key (`Reservations_Id`) references `Reservation` ( `id`) ;
+alter table `ToolReservations` add constraint `FK_ToolAvailability_Tool_Tool_Id`  foreign key (`Tool_Id`) references `Tool` ( `id`)  on update cascade on delete cascade ;
+alter table `ToolReservations` add constraint `FK_ToolAvailability_Reservation_Reservations_Id`  foreign key (`Reservations_Id`) references `Reservation` ( `id`) ;
 alter table `Tool` add constraint `FK_Tool_Category_Category_Id`  foreign key (`Category_Id`) references `Category` ( `id`)  on update cascade on delete cascade ;
 alter table `Tool` add constraint `FK_Tool_PowerSource_PowerSource_Id`  foreign key (`PowerSource_Id`) references `PowerSource` ( `id`)  on update cascade on delete cascade ;
 alter table `Tool` add constraint `FK_Tool_SubOption_SubOption_Id`  foreign key (`SubOption_Id`) references `SubOption` ( `id`)  on update cascade on delete cascade ;
