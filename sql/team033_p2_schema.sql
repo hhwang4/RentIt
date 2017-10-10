@@ -5,43 +5,44 @@ use cs6400_fa17_team033;
 CREATE TABLE `Customer` (
     `user_name` NVARCHAR(128) NOT NULL,
     `primary_phone` INT NOT NULL,
-    `first_name` LONGTEXT,
-    `middle_name` LONGTEXT,
-    `last_name` LONGTEXT,
-    `email` LONGTEXT NOT NULL,
-    `password` LONGTEXT,
-    `Address_Id` INT,
+    `first_name` VARCHAR(128) NOT NULL,
+    `middle_name` VARCHAR(128) NOT NULL,
+    `last_name` VARCHAR(128) NOT NULL,
+    `email` VARCHAR(128) NOT NULL,
+    `password` LONGTEXT NOT NULL,
+    `Address_Id` INT NOT NULL,
     `CellPhoneNumber_Id` INT,
     `CreditCard_Id` INT NOT NULL,
     `HomePhoneNumber_Id` INT,
     `WorkPhoneNumber_Id` INT,
-    PRIMARY KEY (`user_name`)
+    PRIMARY KEY (`user_name`),
+    UNIQUE(`email`)
 );
 
 CREATE TABLE `Address` (
     `id` INT NOT NULL AUTO_INCREMENT,
-    `street` LONGTEXT NOT NULL,
-    `city` LONGTEXT NOT NULL,
-    `state` LONGTEXT NOT NULL,
-    `zip` NVARCHAR(10) NOT NULL,
+    `street` VARCHAR(255) NOT NULL,
+    `city` VARCHAR(128) NOT NULL,
+    `state` VARCHAR(128) NOT NULL,
+    `zip` VARCHAR(10) NOT NULL,
     PRIMARY KEY (`id`)
 );
 
 
 CREATE TABLE `PhoneNumber` (
     `id` INT NOT NULL AUTO_INCREMENT,
-    `area_code` NVARCHAR(3) NOT NULL,
-    `number` NVARCHAR(12) NOT NULL,
-    `extension` LONGTEXT,
+    `area_code` VARCHAR(3) NOT NULL,
+    `number` VARCHAR(12) NOT NULL,
+    `extension` VARCHAR(10),
     PRIMARY KEY (`id`)
 );
 
 
 CREATE TABLE `CreditCard` (
     `id` INT NOT NULL AUTO_INCREMENT,
-    `name` LONGTEXT,
-    `card_number` LONGTEXT,
-    `cvc` NVARCHAR(3),
+    `name` VARCHAR(128) NOT NULL,
+    `card_number` VARCHAR(128) NOT NULL,
+    `cvc` VARCHAR(3) NOT NULL,
     `expiration_month` INT NOT NULL,
     `expiration_year` INT NOT NULL,
     PRIMARY KEY (`id`)
@@ -53,12 +54,14 @@ CREATE TABLE `Clerk` (
     `date_of_hire` DATETIME NOT NULL,
     `temp_password` LONGTEXT,
     `employee_number` INT NOT NULL,
-    `first_name` LONGTEXT,
-    `middle_name` LONGTEXT,
-    `last_name` LONGTEXT,
-    `email` LONGTEXT NOT NULL,
-    `password` LONGTEXT,
-    PRIMARY KEY (`user_name`)
+    `first_name` VARCHAR(128) NOT NULL,
+    `middle_name` VARCHAR(128) NOT NULL,
+    `last_name` VARCHAR(128) NOT NULL,
+    `email` VARCHAR(128) NOT NULL,
+    `password` LONGTEXT NOT NULL,
+    PRIMARY KEY (`user_name`),
+    UNIQUE(`email`),
+    UNIQUE(`employee_number`)
 );
 
 
@@ -69,7 +72,7 @@ CREATE TABLE `Reservation` (
     `end_date` DATETIME NOT NULL,
     `total_deposit_price` DECIMAL(18 , 2 ) NOT NULL,
     `total_rental_price` DECIMAL(18 , 2 ) NOT NULL,
-    `Customer_UserName` NVARCHAR(128),
+    `Customer_UserName` NVARCHAR(128) NOT NULL,
     `DropOffClerk_UserName` NVARCHAR(128),
     `PickupClerk_UserName` NVARCHAR(128),
     PRIMARY KEY (`id`)
@@ -87,13 +90,14 @@ CREATE TABLE `ToolAvailability` (
 );
 
 
+
 CREATE TABLE `Tool` (
     `id` INT NOT NULL AUTO_INCREMENT,
     `width` DOUBLE NOT NULL,
     `weight` DOUBLE NOT NULL,
     `length` DOUBLE NOT NULL,
-    `manufacturer` LONGTEXT NOT NULL,
-    `material` LONGTEXT,
+    `manufacturer` VARCHAR(128) NOT NULL,
+    `material` VARCHAR(128),
     `Category_Id` INT NOT NULL,
     `PowerSource_Id` INT NOT NULL,
     `SubOption_Id` INT NOT NULL,
@@ -104,26 +108,26 @@ CREATE TABLE `Tool` (
 
 CREATE TABLE `Category` (
     `id` INT NOT NULL AUTO_INCREMENT,
-    `name` LONGTEXT NOT NULL,
+    `name` VARCHAR(128) NOT NULL,
     PRIMARY KEY (`id`)
 );
 
 
 CREATE TABLE `PowerSource` (
     `id` INT NOT NULL AUTO_INCREMENT,
-    `name` LONGTEXT NOT NULL,
+    `name` VARCHAR(128) NOT NULL,
     `PowerTool_Id` INT,
     PRIMARY KEY (`id`)
 );
 
 CREATE TABLE `SubType` (
     `id` INT NOT NULL AUTO_INCREMENT,
-    `name` LONGTEXT NOT NULL,
+    `name` VARCHAR(128) NOT NULL,
     PRIMARY KEY (`id`)
 );
 CREATE TABLE `SubOption` (
     `id` INT NOT NULL AUTO_INCREMENT,
-    `name` LONGTEXT NOT NULL,
+    `name` VARCHAR(128) NOT NULL,
     `SubType_Id` INT,
     PRIMARY KEY (`id`)
 );
@@ -225,7 +229,7 @@ CREATE TABLE `PowerTool` (
     `volt_rating` DOUBLE NOT NULL,
     `amp_rating` DOUBLE NOT NULL,
     `min_rpm_rating` DOUBLE NOT NULL,
-    `max_rpm_rating` DOUBLE NOT NULL,
+    `max_rpm_rating` DOUBLE,
     PRIMARY KEY (`id`)
 );
 
@@ -233,7 +237,7 @@ CREATE TABLE `PowerDrill` (
     `id` INT NOT NULL,
     `adjustable_clutch` BOOL NOT NULL,
     `min_torque_rating` DOUBLE NOT NULL,
-    `max_torque_rating` DOUBLE NOT NULL,
+    `max_torque_rating` DOUBLE,
     PRIMARY KEY (`id`)
 );
 
@@ -252,7 +256,7 @@ CREATE TABLE `PowerSander` (
 CREATE TABLE `PowerAirCompressor` (
     `id` INT NOT NULL,
     `tank_size` DOUBLE NOT NULL,
-    `pressure_rating` DOUBLE NOT NULL,
+    `pressure_rating` DOUBLE,
     PRIMARY KEY (`id`)
 );
 
@@ -271,45 +275,46 @@ CREATE TABLE `PowerGenerator` (
 
 CREATE TABLE `CordlessPowerTool` (
     `id` INT NOT NULL,
+    `battery_type` VARCHAR(7) NOT NULL,
     PRIMARY KEY (`id`)
 );
 
 CREATE TABLE `LadderTool` (
     `id` INT NOT NULL,
-    `step_count` INT NOT NULL,
-    `weight_capacity` DOUBLE NOT NULL,
+    `step_count` INT,
+    `weight_capacity` DOUBLE,
     PRIMARY KEY (`id`)
 );
 
 CREATE TABLE `StraightLadder` (
     `id` INT NOT NULL,
-    `rubber_feet` BOOL NOT NULL,
+    `rubber_feet` BOOL,
     PRIMARY KEY (`id`)
 );
 
 CREATE TABLE `StepLadder` (
     `id` INT NOT NULL,
-    `pail_shelf` BOOL NOT NULL,
+    `pail_shelf` BOOL,
     PRIMARY KEY (`id`)
 );
 
 CREATE TABLE `GardenTool` (
     `id` INT NOT NULL,
-    `handle_material` LONGTEXT NOT NULL,
+    `handle_material` VARCHAR(128) NOT NULL,
     PRIMARY KEY (`id`)
 );
 
 CREATE TABLE `WheelBarrowTool` (
     `id` INT NOT NULL,
-    `bin_material` LONGTEXT NOT NULL,
+    `bin_material` VARCHAR(128) NOT NULL,
     `wheel_count` INT NOT NULL,
-    `bin_volume` DOUBLE NOT NULL,
+    `bin_volume` DOUBLE,
     PRIMARY KEY (`id`)
 );
 
 CREATE TABLE `PruningTool` (
     `id` INT NOT NULL,
-    `blade_material` LONGTEXT,
+    `blade_material` VARCHAR(128),
     `blade_length` DOUBLE NOT NULL,
     PRIMARY KEY (`id`)
 );
@@ -322,7 +327,7 @@ CREATE TABLE `StrikingTool` (
 
 CREATE TABLE `DiggingTool` (
     `id` INT NOT NULL,
-    `blade_width` DOUBLE NOT NULL,
+    `blade_width` DOUBLE,
     `blade_length` DOUBLE NOT NULL,
     PRIMARY KEY (`id`)
 );
@@ -332,7 +337,6 @@ CREATE TABLE `RakeTool` (
     `tine_count` INT NOT NULL,
     PRIMARY KEY (`id`)
 );
-
 alter table `Customer` add constraint `FK_Customer_Address_Address_Id`  foreign key (`Address_Id`) references `Address` ( `id`) ;
 alter table `Customer` add constraint `FK_Customer_PhoneNumber_CellPhoneNumber_Id`  foreign key (`CellPhoneNumber_Id`) references `PhoneNumber` ( `id`) ;
 alter table `Customer` add constraint `FK_Customer_CreditCard_CreditCard_Id`  foreign key (`CreditCard_Id`) references `CreditCard` ( `id`)  on update cascade on delete cascade ;
