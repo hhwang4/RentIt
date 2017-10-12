@@ -81,8 +81,8 @@ CREATE TABLE `Reservation` (
 
 CREATE TABLE `ToolReservations` (
 	`Tool_Id` INT NOT NULL,
-  `Reservations_Id` INT NOT NULL,
-  PRIMARY KEY (`Tool_Id` , `Reservations_Id`)
+    `Reservations_Id` INT NOT NULL,
+    PRIMARY KEY (`Tool_Id` , `Reservations_Id`)
 );
 
 
@@ -98,7 +98,7 @@ CREATE TABLE `Tool` (
     `PowerSource_Id` INT NOT NULL,
     `SubOption_Id` INT NOT NULL,
     `SubType_Id` INT NOT NULL,
-	  `deposit_price` DECIMAL(18 , 2 ) NOT NULL,
+    `deposit_price` DECIMAL(18 , 2 ) NOT NULL,
     `rental_price` DECIMAL(18 , 2 ) NOT NULL,
     PRIMARY KEY (`id`)
 );
@@ -114,7 +114,6 @@ CREATE TABLE `Category` (
 CREATE TABLE `PowerSource` (
     `id` INT NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(128) NOT NULL,
-    `PowerTool_Id` INT,
     PRIMARY KEY (`id`)
 );
 
@@ -143,8 +142,8 @@ CREATE TABLE `ServiceOrder` (
     `start_date` DATETIME NOT NULL,
     `end_date` DATETIME NOT NULL,
     `service_cost` DECIMAL(18 , 2 ) NOT NULL,
-    `tool_status` INT NOT NULL,
     `Tool_Id` INT NOT NULL,
+    UNIQUE(`Tool_Id`),
     PRIMARY KEY (`id`)
 );
 
@@ -183,13 +182,13 @@ CREATE TABLE `HandTool` (
     PRIMARY KEY (`id`)
 );
 
-CREATE TABLE `ScrewDriverTool` (
+CREATE TABLE `ScrewDriver` (
     `id` INT NOT NULL,
     `screw_size` INT NOT NULL,
     PRIMARY KEY (`id`)
 );
 
-CREATE TABLE `HandSocketTool` (
+CREATE TABLE `HandSocket` (
     `id` INT NOT NULL,
     `drive_size` DOUBLE NOT NULL,
     `sae_size` DOUBLE NOT NULL,
@@ -349,7 +348,6 @@ alter table `Tool` add constraint `FK_Tool_Category_Category_Id`  foreign key (`
 alter table `Tool` add constraint `FK_Tool_PowerSource_PowerSource_Id`  foreign key (`PowerSource_Id`) references `PowerSource` ( `id`)  on update cascade on delete cascade ;
 alter table `Tool` add constraint `FK_Tool_SubOption_SubOption_Id`  foreign key (`SubOption_Id`) references `SubOption` ( `id`)  on update cascade on delete cascade ;
 alter table `Tool` add constraint `FK_Tool_SubType_SubType_Id`  foreign key (`SubType_Id`) references `SubType` ( `id`)  on update cascade on delete cascade ;
-alter table `PowerSource` add constraint `FK_PowerSource_PowerTool_PowerTool_Id`  foreign key (`PowerTool_Id`) references `PowerTool` ( `id`) ;
 alter table `SubOption` add constraint `FK_SubOption_SubType_SubType_Id`  foreign key (`SubType_Id`) references `SubType` ( `id`) ;
 alter table `Accessory` add constraint `FK_Accessory_PowerTool_PowerTool_Id`  foreign key (`PowerTool_Id`) references `PowerTool` ( `id`) ;
 alter table `ServiceOrder` add constraint `FK_ServiceOrder_Tool_Tool_Id`  foreign key (`Tool_Id`) references `Tool` ( `id`)  on update cascade on delete cascade ;
@@ -361,8 +359,8 @@ alter table `SubTypePowerSource` add constraint `FK_SubTypePowerSource_SubType_S
 alter table `SubTypePowerSource` add constraint `FK_SubTypePowerSource_PowerSource_PowerSource_Id`  foreign key (`PowerSource_Id`) references `PowerSource` ( `id`)  on update cascade on delete cascade ;
 alter table `CordlessAccessory` add constraint `FK_CordlessAccessory_Accessory_id`  foreign key (`id`) references `Accessory` ( `id`) ;
 alter table `HandTool` add constraint `FK_HandTool_Tool_id`  foreign key (`id`) references `Tool` ( `id`) ;
-alter table `ScrewDriverTool` add constraint `FK_ScrewDriverTool_HandTool_id`  foreign key (`id`) references `HandTool` ( `id`) ;
-alter table `HandSocketTool` add constraint `FK_HandSocketTool_HandTool_id`  foreign key (`id`) references `HandTool` ( `id`) ;
+alter table `ScrewDriver` add constraint `FK_ScrewDriver_HandTool_id`  foreign key (`id`) references `HandTool` ( `id`) ;
+alter table `HandSocket` add constraint `FK_HandSocket_HandTool_id`  foreign key (`id`) references `HandTool` ( `id`) ;
 alter table `HandRatchet` add constraint `FK_HandRatchet_HandTool_id`  foreign key (`id`) references `HandTool` ( `id`) ;
 alter table `HandPlier` add constraint `FK_HandPlier_HandTool_id`  foreign key (`id`) references `HandTool` ( `id`) ;
 alter table `HandGun` add constraint `FK_HandGun_HandTool_id`  foreign key (`id`) references `HandTool` ( `id`) ;
