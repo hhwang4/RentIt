@@ -70,8 +70,8 @@ CREATE TABLE `Reservation` (
     `booking_date` DATETIME NOT NULL,
     `start_date` DATETIME NOT NULL,
     `end_date` DATETIME NOT NULL,
-    `total_deposit_price` DECIMAL(18 , 2 ) NOT NULL,
-    `total_rental_price` DECIMAL(18 , 2 ) NOT NULL,
+    #`total_deposit_price` DECIMAL(18 , 2 ) NOT NULL, #removed because these should be derived
+    #`total_rental_price` DECIMAL(18 , 2 ) NOT NULL, #removed because these should be derived
     `Customer_UserName` NVARCHAR(128) NOT NULL,
     `DropOffClerk_UserName` NVARCHAR(128),
     `PickupClerk_UserName` NVARCHAR(128),
