@@ -1,7 +1,5 @@
 use cs6400_fa17_team033;
 
-SELECT last_insert_id();
-
 # Clerk Users
 insert into Clerk values('admin@gatech.edu','2015-12-01', 'password', 1, 'The', 'Best', 'Admin', 'admin@gatech.edu', 'hunter2');
 
