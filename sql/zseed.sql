@@ -1,4 +1,4 @@
-use cs6400_fa17_team033;
+use cs6400_sfa17_team033;
 
 # Clerk Users
 insert into Clerk (user_name, date_of_hire,temp_password, first_name, middle_name, last_name, email, password)
