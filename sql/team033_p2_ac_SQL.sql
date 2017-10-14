@@ -68,7 +68,7 @@ join
 (select Tool_id, Reservations_Id from ToolReservations as tr where tr.Reservations_Id = @ourReservationId) as trr on trr.Tool_id = t.id
 join SubOption as so on so.id = t.SubOption_Id
 join SubType as st on st.id = t.SubType_Id
-join Category as cat on cat.id = t.Category_Id
+join Category as cat on cat.id = t.Category_IdCategoryCategory
 join PowerSource as ps on ps.id = t.PowerSource_Id;
 
 
@@ -365,13 +365,19 @@ insert into Tool (width, weight, length, manufacturer, material, deposit_price, 
 VALUES (@width, @weight, @length, @manufacturer, @material, deposit_price, rental_price, Category_Id, PowerSource_Id, SubType_Id, SubOption_Id);
 set @ccId = last_insert_id();
 
---Service Order / Repair Tool--
+
+--#Service Order / Repair Tool--
 -------------------------------
 /*
 Abstract Code
 ● User clicks Repair Tool from Main Menu
-● User enters StartDate, EndDate, Keyword, Type, Power Source, Sub-Type
-● Run Tool Search task: where tools not in ServiceOrder.ToolNumber <> Tool.Number or
+● User enters StartDate, EndDate, Keyword, Type, Power Source, Sub-Type*/
+set @StartDate = '2017-10-02', @EndDate = '2017-10-09', 
+@Category_Id = (select id from Category where name = 'Hand') ,
+@PowerSource_Id = (select id from PowerSource where name = 'Manual'), 
+@SubType_Id = (select id from SubType where name = 'Screwdriver');
+
+/*● Run Tool Search task: where tools not in ServiceOrder.ToolNumber <> Tool.Number or
 ServiceOrder.ToolNumber == Tool.Number and EndDate <> Null
 ○ For each Tool
 ■ Display ToolNumber, Description, Rental Price, and Deposit Price
