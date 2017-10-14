@@ -1,4 +1,4 @@
-use cs6400_fa17_team033;
+use cs6400_sfa17_team033;
 
 # Login Customer
 set @username := 'thebatman';

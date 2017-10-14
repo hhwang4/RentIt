@@ -1,6 +1,6 @@
-create database cs6400_fa17_team033;
+create database cs6400_sfa17_team033;
 
-use cs6400_fa17_team033;
+use cs6400_sfa17_team033;
 
 CREATE TABLE `Customer` (
 	`id` INT NOT NULL AUTO_INCREMENT,
