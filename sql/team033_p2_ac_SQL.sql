@@ -114,6 +114,8 @@ Description (concatenated) , Deposit Price, Rental Price.
 
 --#TODO
 
+
+
 --Tool Search--
 ---------------
 /* User clicks Search button
@@ -137,6 +139,7 @@ SELECT id, name, rental_price, deposit_price FROM 'Tool' INNER JOIN ((Category O
 on Tool.Number; Display full description*/
 
 --#TODO
+--SELECT description from Accessory as acc where acc.id = t.id
 
 --MAKE RESERVATION--
 --------------------
@@ -185,7 +188,7 @@ Confirmation
 --Purchase Tool--
 -----------------
 
-● User clicks Purchase Tool button from Main Menu
+/*● User clicks Purchase Tool button from Main Menu
 ● User enters Keyword, Type, Sub-Type, and/or Power Source
 ● User clicks Search button
 ○ Run Tool Search task : find tools w/ no SoldDate in SaleOrder
@@ -205,7 +208,7 @@ SaleOrder
 
 --Pick-up RESERVATION--
 -----------------------
-● User clicks Pick-Up button from Main Menu
+/*● User clicks Pick-Up button from Main Menu
 ● Run Pick-Up Reservation task
 ○ For each Reservation where Reservation.EndDate is NULL
 ■ Find the Customer.Name from Customer using
@@ -239,7 +242,7 @@ Date
 --Drop-Off Reservation--
 ------------------------
 
-● User clicks Drop-Off button from Main Menu
+/*● User clicks Drop-Off button from Main Menu
 ● Run Drop-Off Reservation task
 ○ For each Reservation with Reservation.DropOffClerk is NULL
 ■ Find the Customer.Name from Reservation.CustomerNumber
@@ -358,6 +361,7 @@ RepairCost, Clerk.Name
 select first_name, middle_name, last_name, email, date_of_hire, employee_number,
 (select count(PickupClerk_UserName) from Reservation as r where r.PickupClerk_UserName = c.user_name and MONTH(r.booking_date) = MONTH(NOW()) and YEAR(r.booking_date) = YEAR(NOW())) as numPickups,
 (select count(DropOffClerk_UserName) from Reservation as q where q.DropOffClerk_UserName = c.user_name and MONTH(q.booking_date) = MONTH(NOW()) and YEAR(q.booking_date) = YEAR(NOW())) as numDropOffs,
+
 # For some reason this syntax isn't working and it should (numPickups + numDropOffs) as CombinedTotal 
 # So instead use ugly syntax
 ((select count(PickupClerk_UserName) from Reservation as r where r.PickupClerk_UserName = c.user_name and MONTH(r.booking_date) = MONTH(NOW()) and YEAR(r.booking_date) = YEAR(NOW())) 
