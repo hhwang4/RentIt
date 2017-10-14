@@ -3,6 +3,7 @@ create database cs6400_fa17_team033;
 use cs6400_fa17_team033;
 
 CREATE TABLE `Customer` (
+	`id` INT NOT NULL AUTO_INCREMENT,
     `user_name` NVARCHAR(128) NOT NULL,
     `primary_phone` INT NOT NULL,
     `first_name` VARCHAR(128) NOT NULL,
@@ -16,7 +17,8 @@ CREATE TABLE `Customer` (
     `HomePhoneNumber_Id` INT,
     `WorkPhoneNumber_Id` INT,
     PRIMARY KEY (`user_name`),
-    UNIQUE(`email`)
+    UNIQUE(`email`),
+    UNIQUE(`id`)
 );
 
 CREATE TABLE `Address` (
@@ -53,7 +55,7 @@ CREATE TABLE `Clerk` (
     `user_name` NVARCHAR(128) NOT NULL,
     `date_of_hire` DATETIME NOT NULL,
     `temp_password` LONGTEXT,
-    `employee_number` INT NOT NULL,
+    `employee_number` INT NOT NULL AUTO_INCREMENT,
     `first_name` VARCHAR(128) NOT NULL,
     `middle_name` VARCHAR(128) NOT NULL,
     `last_name` VARCHAR(128) NOT NULL,

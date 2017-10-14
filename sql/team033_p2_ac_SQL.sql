@@ -46,14 +46,6 @@ LEFT OUTER JOIN PhoneNumber as q on c.WorkPhoneNumber_Id = q.id
 LEFT OUTER JOIN PhoneNumber as r on c.HomePhoneNumber_Id = r.id
 WHERE user_name=@username;
 
-/* #TODO:Question & Review */
-/*■ For each Phone under this Customer.Username
-● Display the phone number */
-
-
-/*■ Find Address using Customer.Username; Display address (city, street,
-state, zip) */
-SELECT city, street, state, zip FROM 'Address' INNER JOIN Customer ON Customer.address_id = Address.id WHERE Customer.user_name='$UserName';
 
 /* ○ View Reservations task */ 
 /*
@@ -85,7 +77,7 @@ SELECT first_name, middle_name, last_name, employee_number FROM Clerk INNER JOIN
 SELECT first_name, middle_name, last_name, employee_number FROM Clerk INNER JOIN Reservation ON Reservation.PickUpClerk_UserName= Clerk.user_name WHERE Customer_UserName='$UserName';
 
 
---Check Tool Availability--
+-- Check Tool Availability--
 ---------------------------
 /* ● User clicks Check Availability link
 ● User inputs Start Date, End Date, Keywords, Power Source, Sub-Type and/or Type
@@ -112,8 +104,8 @@ and/or keyword search.
 ■ Return Tool.Number, Tool.Name, RentalPrice, and DepositPrice*/
 --#TODO:QUESTION & REVIEW: I think we need to add those to the Tool table, because user can search for them without having a Tool Reservation.
 --#TODO:QUESTION & REVIEW: For each Tool that matches the ToolNumber.ToolType, .. I think we need to change this in abstract code?!
---#TODO:QUESTION & REVIEW: OR/AND don't remember how to do it in same clause.
---#TODO:QUESTION & REVIEW: Tool.Number thingy?!!
+--#TODO:QUESTION & REVIEW: OR/AND dont remember how to do it in same clause.
+#TODO:QUESTION & REVIEW: Tool.Number thingy?!!
 SELECT id, name, rental_price, deposit_price FROM 'Tool' INNER JOIN ((Category ON Category.id=Category_Id WHERE Category.name='$CategoryName') OR/AND 
 														(PowerSource ON PowerSource.id=PowerSource_Id WHERE PowerSource.name='$PowerSourceName') OR/AND
 														(SubType ON SubType.id=SubType_Id WHERE SubType.name='$SubTypeName'))
@@ -175,7 +167,7 @@ Confirmation
 --Purchase Tool--
 -----------------
 
-/* ● User clicks Purchase Tool button from Main Menu
+● User clicks Purchase Tool button from Main Menu
 ● User enters Keyword, Type, Sub-Type, and/or Power Source
 ● User clicks Search button
 ○ Run Tool Search task : find tools w/ no SoldDate in SaleOrder
@@ -195,7 +187,7 @@ SaleOrder
 
 --Pick-up RESERVATION--
 -----------------------
-/* ● User clicks Pick-Up button from Main Menu
+● User clicks Pick-Up button from Main Menu
 ● Run Pick-Up Reservation task
 ○ For each Reservation where Reservation.EndDate is NULL
 ■ Find the Customer.Name from Customer using
@@ -229,7 +221,7 @@ Date
 --Drop-Off Reservation--
 ------------------------
 
-/*● User clicks Drop-Off button from Main Menu
+● User clicks Drop-Off button from Main Menu
 ● Run Drop-Off Reservation task
 ○ For each Reservation with Reservation.DropOffClerk is NULL
 ■ Find the Customer.Name from Reservation.CustomerNumber
@@ -350,41 +342,32 @@ ToolNumber, Description, StartDate, EndDate RepairCost, Clerk.ID
 ■ Display SalePrice, SaleDate
 */
 
---#TODO
 
 
---Generate Report--
--------------------
-/*Abstract Code
-● User clicks Reports button from Main Menu
-● Display Clerk Report link, Customer Report link, and Tool Inventory link
-● User clicks Clerk Report link
-○ Go to Clerk Report
-○ For each Clerk
-■ Display Number, First Name, Middle Name, Last Name, Email, Hiring
-Date
-■ Sum number of pickups and dropoffs with Clerk.Number
-■ Calculate Total; Display Number of Pickups, Dropoffs, Combined Total
-● User clicks Customer Report link
-○ Go to Customer Report
-■ For each Customer
-● Display Customer Number, First Name, Middle Name, Last Name,
-Email, Phone
-● Count Reservation with Customer.Number; Display Total
-Reservations
-● Count Reservation.ToolNumber with Customer.Number; Display
-Total Tools Rented
-○ User clicks View Profile , then go to View Profile page
-● User clicks Tool Inventory link
-○ Go to Tool Inventory Report
-○ User enters All Tools, Hand Tool, Garden Tool, Ladder, Power Tool, Keyword i
-○ User clicks Search button
-○ Run Tool Search task
-■ For each Tool
-● Display ToolNumber, Description,
-● Find CurrentStatus, Date; Display CurrentStatus Date
-● Sum all rental prices collected and subtract cost
-● Sum all cost, original cost, repairs;
-● Calculate Total Profit; Display Rental Profit, Total Cost, Total Profit*/
+# Reports
 
---#TODO
+# Clerk Report
+select first_name, middle_name, last_name, email, date_of_hire, employee_number,
+(select count(PickupClerk_UserName) from Reservation as r where r.PickupClerk_UserName = c.user_name and MONTH(r.booking_date) = MONTH(NOW()) and YEAR(r.booking_date) = YEAR(NOW())) as numPickups,
+(select count(DropOffClerk_UserName) from Reservation as q where q.DropOffClerk_UserName = c.user_name and MONTH(q.booking_date) = MONTH(NOW()) and YEAR(q.booking_date) = YEAR(NOW())) as numDropOffs,
+# For some reason this syntax isn't working and it should (numPickups + numDropOffs) as CombinedTotal 
+# So instead use ugly syntax
+((select count(PickupClerk_UserName) from Reservation as r where r.PickupClerk_UserName = c.user_name and MONTH(r.booking_date) = MONTH(NOW()) and YEAR(r.booking_date) = YEAR(NOW())) 
++ 
+(select count(DropOffClerk_UserName) from Reservation as q where q.DropOffClerk_UserName = c.user_name and MONTH(q.booking_date) = MONTH(NOW()) and YEAR(q.booking_date) = YEAR(NOW()))
+) as CombinedTotal
+from Clerk as c
+order by CombinedTotal DESC;
+
+
+
+# Customer Report
+select id, first_name, middle_name, last_name, email,
+(select concat_ws('',area_code,number, extension) from PhoneNumber as p where p.id = c.primary_phone) as phone,
+(select count(Customer_UserName) from Reservation as r where r.Customer_UserName = c.user_name and MONTH(r.booking_date) = MONTH(NOW()) and YEAR(r.booking_date) = YEAR(NOW())) as totalReservations,
+(select count(Tool_id) from ToolReservations as tr where tr.Reservations_Id in
+(select id from Reservation as r where r.Customer_UserName = c.user_name and MONTH(r.booking_date) = MONTH(NOW()) and YEAR(r.booking_date) = YEAR(NOW()))) as ToolsRented
+from Customer as c
+order by ToolsRented, last_name;
+
+# Tool Inventory Report

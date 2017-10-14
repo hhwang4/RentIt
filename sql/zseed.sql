@@ -1,7 +1,8 @@
 use cs6400_fa17_team033;
 
 # Clerk Users
-insert into Clerk values('admin@gatech.edu','2015-12-01', 'password', 1, 'The', 'Best', 'Admin', 'admin@gatech.edu', 'hunter2');
+insert into Clerk (user_name, date_of_hire,temp_password, first_name, middle_name, last_name, email, password)
+values('admin@gatech.edu','2015-12-01', 'password', 'The', 'Best', 'Admin', 'admin@gatech.edu', 'hunter2');
 
 # Customers
 insert into Address (street, city, state, zip) values('123 main street', 'Gotham City', 'NY', '55555-5555');
