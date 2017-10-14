@@ -37,8 +37,10 @@ VALUES (@user_name, @primaryPhone, @first_name, @middle_name, @last_name, @email
 /* Find the User using the Username; Display the email, full name */
 SELECT email, first_name, middle_name, last_name, p.area_code as cellAc, p.extension as cellExt, p.number as cellNumber, 
 q.area_code as workAc, q.extension as workExt, q.number as workNumber, 
-r.area_code as homeAc, r.extension as homeExt, r.number as homeNumber
+r.area_code as homeAc, r.extension as homeExt, r.number as homeNumber,
+city, street, zip, state
 FROM Customer as c
+JOIN Address as a on a.id = c.Address_Id
 LEFT OUTER JOIN PhoneNumber as p on c.CellPhoneNumber_Id = p.id
 LEFT OUTER JOIN PhoneNumber as q on c.WorkPhoneNumber_Id = q.id
 LEFT OUTER JOIN PhoneNumber as r on c.HomePhoneNumber_Id = r.id
