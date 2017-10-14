@@ -1,24 +1,48 @@
---Login--
----------
-SELECT password FROM 'Customer' WHERE email='$Email';
+use cs6400_fa17_team033;
 
---Registeration--
------------------
-/* User enters username, email address, full name (first, middle, last), home phone, work
-phone, cell phone, address (City, State, Zipcode), password (twice)
-#TODO:REVIEW● User enters Credit Card details, credit card name, credit card number, expiration month,
-expiration year, CVC
-#TODO:REVIEW● Validate that at least one primary phone number is entered.*/
+# Login Customer
+set @username := 'thebatman';
+SELECT password FROM Customer WHERE user_name=@username;
+
+# Login Clerk
+set @clerkUsername := 'admin@gatech.edu';
+SELECT password FROM Clerk WHERE user_name=@clerkUsername;
+
+# Change Password
+set @newpassword = 'mynewpassword';
+update Clerk set password = @newpassword where user_name = @clerkUsername;
+update Clerk set temp_password = NULL where user_name = @clerkUsername;
+
+# Registration
+set @street = '123 main street', @city = 'Gotham City', @state = 'NY', @zip ='55555-5555';
+insert into Address (street, city, state, zip) values(@street, @city,@state, @zip);
+set @addressId := last_insert_id();
+
+set @cardname = 'Bruce Wayne', @card_number = '1234567801', @cvc = '021', @expiration_month = 8, @expiration_year = 2020;
+insert into CreditCard (name, card_number, cvc, expiration_month, expiration_year) VALUES (@cardname, @card_number, @cvc, @expiration_month, @expiration_year);
+set @ccId = last_insert_id();
+
+set @primaryPhone = 1, @user_name = 'TheJoker', @first_name = 'Mr', @middle_name = 'J', @last_name = 'Joker', @email = 'crimeclown@aol.com', @password = 'bats';
+set @cellphoneId = NULL, @homephoneId = NULL, @workphoneId = NULL;
+
+
 INSERT INTO Customer (user_name, primary_phone, first_name, middle_name, last_name, email, password, Address_Id, CellPhoneNumber_Id, CreditCard_Id, HomePhoneNumber_Id, WorkPhoneNumber_Id)
--- #TODO:Add the values# VALUES ('Cardinal', 'Tom B. Erichsen', 'Skagen 21', 'Stavanger', '4006', 'Norway');
+VALUES (@user_name, @primaryPhone, @first_name, @middle_name, @last_name, @email, @password, @addressId, @cellphoneId, @ccId, @homephoneId, @workphoneId);
 
 -- View PROFILE --
 ------------------
 
-/* ○ View Customer task */
+/* View Customer task */
 
-/*■ Find the User using the Username; Display the email, full name */
-SELECT email, first_name, middle_name, last_name FROM 'Customer' WHERE Customer.user_name='$UserName';
+/* Find the User using the Username; Display the email, full name */
+SELECT email, first_name, middle_name, last_name, p.area_code as cellAc, p.extension as cellExt, p.number as cellNumber, 
+q.area_code as workAc, q.extension as workExt, q.number as workNumber, 
+r.area_code as homeAc, r.extension as homeExt, r.number as homeNumber
+FROM Customer as c
+LEFT OUTER JOIN PhoneNumber as p on c.CellPhoneNumber_Id = p.id
+LEFT OUTER JOIN PhoneNumber as q on c.WorkPhoneNumber_Id = q.id
+LEFT OUTER JOIN PhoneNumber as r on c.HomePhoneNumber_Id = r.id
+WHERE user_name=@username;
 
 /* #TODO:Question & Review */
 /*■ For each Phone under this Customer.Username
