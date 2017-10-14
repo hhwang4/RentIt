@@ -112,8 +112,33 @@ Price, Deposit Price
 Description (concatenated) , Deposit Price, Rental Price.
 */
 
---#TODO
+set @powersource :='Manual';
+set @subtype :='ScrewDriver';
+set @category :='Hand';
+set @startdate :='2017-10-02 00:00:00';
+set @enddate :='2017-10-12 00:00:00';
 
+SELECT 
+	tool.id as toolId, 
+    category.name as category, 
+    powersource.name as powersource,
+    subtype.name as subtype, suboption.name as suboption,
+    rental_price, 
+    deposit_price 
+FROM Tool as tool
+JOIN SubOption as suboption ON suboption.id = tool.SubOption_Id
+JOIN SubType as subtype ON subtype.id = tool.SubType_Id
+JOIN PowerSource as powersource ON powersource.id = tool.PowerSource_Id
+JOIN Category as category ON category.id = tool.Category_Id
+WHERE subtype.name = @subtype 
+	AND powersource.name = @powersource 
+    AND category.name = @category
+    AND tool.id NOT IN (
+		SELECT Tool_Id as toolId 
+		from ToolReservations as toolreserv
+		JOIN Reservation as reservation ON reservation.id = toolreserv.Reservations_Id
+		WHERE reservation.start_date >= @startdate AND reservation.end_date <= @enddate
+		)
 
 
 --Tool Search--
@@ -122,15 +147,24 @@ Description (concatenated) , Deposit Price, Rental Price.
 ○ For each Tool that matches the ToolNumber.ToolType, PowerSource, SubTypes,
 and/or keyword search.
 ■ Return Tool.Number, Tool.Name, RentalPrice, and DepositPrice*/
---#TODO:QUESTION & REVIEW: I think we need to add those to the Tool table, because user can search for them without having a Tool Reservation.
---#TODO:QUESTION & REVIEW: For each Tool that matches the ToolNumber.ToolType, .. I think we need to change this in abstract code?!
---#TODO:QUESTION & REVIEW: OR/AND dont remember how to do it in same clause.
-#TODO:QUESTION & REVIEW: Tool.Number thingy?!!
-SELECT id, name, rental_price, deposit_price FROM 'Tool' INNER JOIN ((Category ON Category.id=Category_Id WHERE Category.name='$CategoryName') OR/AND 
-														(PowerSource ON PowerSource.id=PowerSource_Id WHERE PowerSource.name='$PowerSourceName') OR/AND
-														(SubType ON SubType.id=SubType_Id WHERE SubType.name='$SubTypeName'))
 
---#TODO
+set @powersource :='Manual';
+set @subtype :='ScrewDriver';
+set @category :='Hand';
+
+SELECT 
+	tool.id as toolId, 
+    category.name as category, 
+    powersource.name as powersource,
+    subtype.name as subtype, suboption.name as suboption,
+    rental_price, 
+    deposit_price 
+FROM Tool as tool
+JOIN SubOption as suboption ON suboption.id = tool.SubOption_Id
+JOIN SubType as subtype ON subtype.id = tool.SubType_Id
+JOIN PowerSource as powersource ON powersource.id = tool.PowerSource_Id
+JOIN Category as category ON category.id = tool.Category_Id
+WHERE subtype.name = @subtype AND powersource.name = @powersource AND category.name = @category
 
 --FULL TOOL DETAILS--
 ---------------------
@@ -138,8 +172,29 @@ SELECT id, name, rental_price, deposit_price FROM 'Tool' INNER JOIN ((Category O
 ● Find Hand, Garden, Ladder, Power, etc. (including accessories, materials, etc) based
 on Tool.Number; Display full description*/
 
---#TODO
---SELECT description from Accessory as acc where acc.id = t.id
+set @toolid :='8';
+
+SELECT 
+	tool.id as toolId, 
+    category.name as category, 
+    powersource.name as powersource,
+    subtype.name as subtype, suboption.name as suboption,
+    rental_price, 
+    deposit_price,
+    material,
+    width,
+    weight,
+    length,
+    manufacturer,
+    accessory.description as acc_description
+FROM Tool as tool
+JOIN SubOption as suboption ON suboption.id = tool.SubOption_Id
+JOIN SubType as subtype ON subtype.id = tool.SubType_Id
+JOIN PowerSource as powersource ON powersource.id = tool.PowerSource_Id
+JOIN Category as category ON category.id = tool.Category_Id
+JOIN Accessory as accessory ON accessory.PowerTool_Id = tool.id
+WHERE tool.id = @toolid
+
 
 --MAKE RESERVATION--
 --------------------
