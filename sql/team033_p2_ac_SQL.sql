@@ -356,8 +356,14 @@ single speed devices
 ○ Insert Tool price, weight, etc. into Tool
 ● Go to Main Menu form*/
 
---#TODO
-
+set @width = 1.0, @weight = 2.25, @length = '021', @manufacturer = 8, @material = 'steel', @deposit_price = 15.6, @rental_price = 5.33, 
+@Category_Id = (select id from Category where name = 'Hand'), 
+@PowerSource_Id = select id from PowerSource where name = 'Manual', 
+@SubType_Id = select id from SubType where name = 'Ratchet', 
+@SubOption_Id = select id from SubOption where name = 'hex';
+insert into Tool (width, weight, length, manufacturer, material, deposit_price, rental_price, Category_Id, PowerSource_Id, SubType_Id, SubOption_Id) 
+VALUES (@width, @weight, @length, @manufacturer, @material, deposit_price, rental_price, Category_Id, PowerSource_Id, SubType_Id, SubOption_Id);
+set @ccId = last_insert_id();
 
 --Service Order / Repair Tool--
 -------------------------------
