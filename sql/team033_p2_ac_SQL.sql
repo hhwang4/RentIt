@@ -47,12 +47,30 @@ LEFT OUTER JOIN PhoneNumber as r on c.HomePhoneNumber_Id = r.id
 WHERE user_name=@username;
 
 
-/* ○ View Reservations task */ 
-/*
-■ Find rental history
-● For each Reservation for the Customer.Username
-○ Display Reservation Number, StartDate, EndDate,*/
-SELECT id, start_date, end_date FROM 'Reservation' WHERE Reservation.Customer_UserName='$UserName';
+# View Reservations task
+select r.id as reservationId, start_date, end_date, DropOffClerk_UserName, PickupClerk_UserName,
+(DATEDIFF(end_date, start_date)) as numDays,
+sum(deposit_price) as TotalDeposit,
+sum(rental_price) as TotalRental
+from Tool 
+join 
+(select Tool_id,Reservations_Id from ToolReservations as tr 
+where tr.Reservations_Id in (select id from Reservation as r where r.Customer_UserName = @username)) as rid
+on rid.Tool_id = id
+join Reservation as r on r.id = Reservations_Id
+order by booking_date;
+
+# Get Tools associated with this reservation
+set @ourReservationId = 1;
+select cat.name as category, ps.name as powersource, st.name as subtype, so.name as suboption
+from Tool as t
+join
+(select Tool_id, Reservations_Id from ToolReservations as tr where tr.Reservations_Id = @ourReservationId) as trr on trr.Tool_id = t.id
+join SubOption as so on so.id = t.SubOption_Id
+join SubType as st on st.id = t.SubType_Id
+join Category as cat on cat.id = t.Category_Id
+join PowerSource as ps on ps.id = t.PowerSource_Id;
+
 
 /*#TODO
 ○ Calculate Number of Days from StartDate/EndDate
@@ -330,17 +348,7 @@ RepairCost, Clerk.Name
 
 --#TODO
 
---Sale Status--
----------------
-/*Abstract Code
-● User clicks Sale Status button from Main Menu
-● User enters StartDate, EndDate, Keyword, Type, Power Source, Sub-Type
-● Run Tool Search task: where ServiceOrder exists
-○ Display ServiceNumber, Status (ServiceOrder.EndDate <> NULL -> Sold),
-ToolNumber, Description, StartDate, EndDate RepairCost, Clerk.ID
-○ If “Sold” (ServiceOrder.EndDate <> NULL -> Sold)
-■ Display SalePrice, SaleDate
-*/
+# Sale Status
 
 
 
