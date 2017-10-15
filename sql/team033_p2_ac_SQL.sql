@@ -438,3 +438,25 @@ from Customer as c
 order by ToolsRented, last_name;
 
 # Tool Inventory Report
+set @categoryId = 1;
+set @startdate :='2017-10-02 00:00:00';
+set @enddate :='2017-10-12 00:00:00';
+
+select t.id as toolId,
+concat_ws(' ',so.name, st.name) as description,
+EXISTS(select id from Tool where t.id not in (select Tool_Id from ToolReservations as tr)) as available,
+EXISTS(select Tool_Id from ToolReservations as tr where tr.Tool_Id = t.id) as rented,
+EXISTS(select Tool_Id from ToolReservations as tr where tr.Tool_Id = t.id) as inrepair,
+EXISTS(select Tool_Id from ToolReservations as tr where tr.Tool_Id = t.id) as forsale,
+EXISTS(select Tool_Id from ToolReservations as tr where tr.Tool_Id = t.id) as sold,
+(IFNULL((select sum(DATEDIFF(end_date, start_date)) from Reservation as r join ToolReservations as tr on tr.Reservations_Id = r.id where t.id = tr.Tool_Id),0) * rental_price) as RentalProfit,
+(t.original_price + IFNULL((select sum(service_cost) from ServiceOrder as so where so.Tool_Id = t.id),0)) as TotalCost,
+((IFNULL((select sum(DATEDIFF(end_date, start_date)) from Reservation as r join ToolReservations as tr on tr.Reservations_Id = r.id where t.id = tr.Tool_Id),0) * rental_price)
+-
+(t.original_price + IFNULL((select sum(service_cost) from ServiceOrder as so where so.Tool_Id = t.id),0))) as TotalProfit
+from Tool as t
+join SubOption as so on so.id = t.SubOption_Id
+join SubType as st on st.id = t.SubType_Id
+where t.Category_Id = @categoryId
+order by TotalProfit DESC;
+#if all selected then we can drop the where clause
