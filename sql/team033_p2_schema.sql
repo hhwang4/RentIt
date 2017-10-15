@@ -146,6 +146,7 @@ CREATE TABLE `ServiceOrder` (
     `end_date` DATETIME NOT NULL,
     `service_cost` DECIMAL(18 , 2 ) NOT NULL,
     `Tool_Id` INT NOT NULL,
+    `Clerk_UserName` NVARCHAR(128),
     UNIQUE(`Tool_Id`),
     PRIMARY KEY (`id`)
 );

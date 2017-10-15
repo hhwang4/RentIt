@@ -331,8 +331,15 @@ Date
 sub-type and sub-options
 ○ Find Sub-Option based on Type, Sub-Type; Populate Sub-Option menu
 ● User enters Purchase Price
-● Calculate the Deposit Price and Rental Prices
-● User select Hand Tool radio button
+● Calculate the Deposit Price and Rental Prices*/
+
+SET @Purchase_Price = 20,
+@Tool_id = 2;
+UPDATE Tool
+SET deposit_price = @Purchase_Price * 0.4, rental_price = @Purchase_Price * 0.5
+WHERE Tool.id = @Tool_id;
+
+/*● User select Hand Tool radio button
 ○ Update menu options
 ○ User enters Manufacturer, Width, Width Fraction, Width Unit, Length, Weight,
 Length Fraction, Length Unit, Drive/Chuck Size (if applicable)
@@ -355,14 +362,39 @@ single speed devices
 ● User clicks Add Tool button
 ○ Insert Tool price, weight, etc. into Tool
 ● Go to Main Menu form*/
+set @catId = 1;
+set @powersource = 1;
+set @subtypeId = 2;
 
-set @width = 1.0, @weight = 2.25, @length = '021', @manufacturer = 8, @material = 'steel', @deposit_price = 15.6, @rental_price = 5.33, 
+
+# Query 1
+select name from Category;
+
+# Query 2
+select name from PowerSourceCategory as psc
+join PowerSource as ps on ps.id = psc.PowerSource_Id
+where psc.Category_Id = @catId;
+
+# Query 3
+select name
+from SubTypePowerSource as stps
+join SubType as st on st.id = stps.SubType_Id
+where stps.Category_Id = @catId and stps.PowerSource_Id = @powersource;
+
+# Query 4
+select so.name from SubOption as so
+join SubType as st on st.id = so.SubType_Id
+join SubTypePowerSource as stps on stps.SubType_Id = st.id
+where PowerSource_Id = @powersource and so.SubType_Id = @subtypeId and Category_Id = @catId;
+
+
+set @width = 9.0, @weight = 2.25, @length = '021', @manufacturer = 8, @material = 'steel', @deposit_price = 8.0, @rental_price = 10.0, @original_price = 20.0,
 @Category_Id = (select id from Category where name = 'Hand'), 
-@PowerSource_Id = select id from PowerSource where name = 'Manual', 
-@SubType_Id = select id from SubType where name = 'Ratchet', 
-@SubOption_Id = select id from SubOption where name = 'hex';
-insert into Tool (width, weight, length, manufacturer, material, deposit_price, rental_price, Category_Id, PowerSource_Id, SubType_Id, SubOption_Id) 
-VALUES (@width, @weight, @length, @manufacturer, @material, deposit_price, rental_price, Category_Id, PowerSource_Id, SubType_Id, SubOption_Id);
+@PowerSource_Id = (select id from PowerSource where name = 'Manual'), 
+@SubType_Id = (select id from SubType where name = 'Ratchet'), 
+@SubOption_Id = (select id from SubOption where name = 'hex');
+insert into Tool (width, weight, length, manufacturer, material, deposit_price, rental_price, original_price, Category_Id, PowerSource_Id, SubType_Id, SubOption_Id) 
+VALUES (@width, @weight, @length, @manufacturer, @material, @deposit_price, @original_price, @rental_price, @Category_Id, @PowerSource_Id, @SubType_Id, @SubOption_Id);
 set @ccId = last_insert_id();
 
 
@@ -373,15 +405,31 @@ Abstract Code
 ● User clicks Repair Tool from Main Menu
 ● User enters StartDate, EndDate, Keyword, Type, Power Source, Sub-Type*/
 set @StartDate = '2017-10-02', @EndDate = '2017-10-09', 
-@Category_Id = (select id from Category where name = 'Hand') ,
+@Clerk_Username = "jwas" ,
 @PowerSource_Id = (select id from PowerSource where name = 'Manual'), 
 @SubType_Id = (select id from SubType where name = 'Screwdriver');
+
+
+
+INSERT INTO ServiceOrder (start_date, end_date, Clerk_Username, service_cost, toolid) 
+VALUES (@StartDate, @EndDate, @Clerk_Username, @Service_Cost, @Tool_Id);
+
 
 /*● Run Tool Search task: where tools not in ServiceOrder.ToolNumber <> Tool.Number or
 ServiceOrder.ToolNumber == Tool.Number and EndDate <> Null
 ○ For each Tool
-■ Display ToolNumber, Description, Rental Price, and Deposit Price
-● User clicks Service Tool button
+■ Display ToolNumber, Description, Rental Price, and Deposit Price*/
+SET @tool_id = 8;
+
+SELECT t.id, concat(c.name, " ", ps.name, " ", st.name) AS Description, t.rental_price, t.deposit_price
+FROM Tool as t
+LEFT JOIN Category as c ON c.id = t.Category_Id
+LEFT JOIN PowerSourceCategory as psc ON psc.Category_Id = t.Category_Id
+LEFT JOIN PowerSource as ps on ps.id = psc.PowerSource_Id
+LEFT JOIN SubType as st ON st.id = t.SubType_Id
+WHERE t.id = @tool_id
+
+/*● User clicks Service Tool button
 ○ Update list of tools to service
 ● User enters Tool ID
 ○ Validate that tool does not have a service order
@@ -398,12 +446,29 @@ ServiceOrder.ToolNumber == Tool.Number and EndDate <> Null
 ● User clicks Service Status button from Main Menu
 ● User enters StartDate, EndDate, Keyword, Type, Power Source, Sub-Type
 ● Run Tool Search task: where ServiceOrder.EndDate is NULL
-○ Display ServiceNumber, Status, ToolNumber, Description, StartDate, EndDate
-RepairCost, Clerk.Name
-● User clicks Fix Now? Button
-○ Update EndDate to now(), ClerkNumber to current Clerk*/
+○ Display ServiceNumber, Status, ToolNumber, Description, StartDate, EndDate, RepairCost, Clerk.Name*/
 
---#TODO
+SET @tool_id = 2, @status = "In Repair", @RepairCost = 20;
+
+
+SELECT so.id as ServiceOrder_ID, @status as Tool_Status, t.id Tool_ID, concat(c.name, " ", ps.name, " ", st.name) AS Description, so.start_date as Service_StartDate, so.end_date as Service_EndDate, @RepairCost, so.Clerk_Username as Clerk
+FROM ServiceOrder as so
+LEFT JOIN Tool as t ON t.id = so.Tool_Id
+LEFT JOIN Category as c ON c.id = t.Category_Id
+LEFT JOIN PowerSourceCategory as psc ON psc.Category_Id = t.Category_Id
+LEFT JOIN PowerSource as ps on ps.id = psc.PowerSource_Id
+LEFT JOIN SubType as st ON st.id = t.SubType_Id
+WHERE t.id = @tool_id;
+
+
+
+/*● User clicks Fix Now? Button
+○ Update EndDate to now(), ClerkNumber to current Clerk*/
+SET @toolid = 2;
+
+UPDATE ServiceOrder
+SET end_date = NOW()
+WHERE Tool_Id = @toolid;
 
 --Sell Tool--
 -------------
