@@ -151,9 +151,10 @@ CREATE TABLE `ServiceOrder` (
 CREATE TABLE `SaleOrder` (
     `id` INT NOT NULL AUTO_INCREMENT,
     `for_sale_date` DATETIME NOT NULL,
-    `sold_date` DATETIME NOT NULL,
+    `sold_date` DATETIME,
     `purchase_price` DECIMAL(18 , 2 ) NOT NULL,
     `Customer_UserName` NVARCHAR(128),
+    `Clerk_UserName` NVARCHAR(128) NOT NULL,
     `Tool_Id` INT NOT NULL,
     PRIMARY KEY (`id`)
 );
@@ -352,6 +353,7 @@ alter table `SubOption` add constraint `FK_SubOption_SubType_SubType_Id`  foreig
 alter table `Accessory` add constraint `FK_Accessory_PowerTool_PowerTool_Id`  foreign key (`PowerTool_Id`) references `PowerTool` ( `id`) ;
 alter table `ServiceOrder` add constraint `FK_ServiceOrder_Tool_Tool_Id`  foreign key (`Tool_Id`) references `Tool` ( `id`)  on update cascade on delete cascade ;
 alter table `SaleOrder` add constraint `FK_SaleOrder_Customer_Customer_UserName`  foreign key (`Customer_UserName`) references `Customer` ( `user_name`) ;
+alter table `SaleOrder` add constraint `FK_SaleOrder_Clerk_Clerk_UserName`  foreign key (`Clerk_UserName`) references `Clerk` ( `user_name`) ;
 alter table `SaleOrder` add constraint `FK_SaleOrder_Tool_Tool_Id`  foreign key (`Tool_Id`) references `Tool` ( `id`)  on update cascade on delete cascade ;
 alter table `PowerSourceCategory` add constraint `FK_PowerSourceCategory_PowerSource_PowerSource_Id`  foreign key (`PowerSource_Id`) references `PowerSource` ( `id`)  on update cascade on delete cascade ;
 alter table `PowerSourceCategory` add constraint `FK_PowerSourceCategory_Category_Category_Id`  foreign key (`Category_Id`) references `Category` ( `id`)  on update cascade on delete cascade ;
