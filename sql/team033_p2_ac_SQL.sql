@@ -409,11 +409,95 @@ set @StartDate = '2017-10-02', @EndDate = '2017-10-09',
 @PowerSource_Id = (select id from PowerSource where name = 'Manual'), 
 @SubType_Id = (select id from SubType where name = 'Screwdriver');
 
-
-
 INSERT INTO ServiceOrder (start_date, end_date, Clerk_Username, service_cost, toolid) 
 VALUES (@StartDate, @EndDate, @Clerk_Username, @Service_Cost, @Tool_Id);
 
+# We also need a query for each specific subtype
+#ScrewDriver
+insert into HandTool VALUES (@lastTool);
+set @lastTool:= last_insert_id();
+insert into ScrewDriver (id, screw_size) VALUES (@lastTool, @screwsize);
+# Socket
+set @lastTool:= last_insert_id();
+insert into HandTool VALUES (@lastTool);
+set @lastTool:= last_insert_id();
+insert into HandSocket (id, drive_size, sae_size, deep_socket) VALUES (@lastTool, @drivesize,@saeSize, @deepsocket);
+
+#Ratchet
+insert into HandTool VALUES (@lastTool);
+set @lastTool:= last_insert_id();
+insert into HandRatchet (id, drive_size) VALUES (@lastTool,@drivesize);
+
+#Plier
+insert into HandTool VALUES (@lastTool);
+set @lastTool:= last_insert_id();
+insert into HandPlier(id, adjustable) VALUES (@lastTool,@adjustable);
+
+#Gun
+insert into HandTool VALUES (@lastTool);
+set @lastTool:= last_insert_id();
+insert into HandGun (id, gauge_rating, capacity) VALUES (@lastTool,@gaugerating, @capacity);
+
+#Hammer
+insert into HandTool VALUES (@lastTool);
+set @lastTool:= last_insert_id();
+insert into HandHammer (id, anti_vibration) VALUES (@lastTool,@antivib);
+
+# Garden, use this as a base for each Garden tool below
+insert into GardenTool (id, handle_material) VALUES (@lastTool, @handlematerial);
+
+# Pruning
+insert into PruningTool (id, blade_material, blade_length) VALUES (@lastTool, @bladematerial, @bladelength);
+
+#Striking
+insert into StrikingTool (id, head_weight) VALUES (@lastTool, @headweight);
+
+#Digging
+insert into DiggingTool (id, blade_width, blade_length) VALUES (@lastTool, @bladewidth, @bladelength);
+
+#Rake
+insert into RakeTool (id, tine_count) VALUES (@lastTool, @tinecount);
+
+#Wheelbarrow
+insert into WheelBarrowTool (id, bin_material,wheel_count,bin_volume) VALUES (@lastTool, @binmaterial, @wheelcount, @binvolume);
+
+#PowerTool - base for each power tool below
+insert into PowerTool (id, volt_rating, amp_rating, min_rpm_rating, max_rpm_rating) VALUES (@lastTool, @voltrating, @amprating, @minrpm, @maxrpm);
+
+#PowerDrill
+insert into PowerDrill (id, adjustable_clutch, min_torque_rating, max_torque_rating) VALUES (@lastTool, @adjustableclutch, @mintorquerating, @maxtorquerating);
+
+#Saw
+insert into PowerSaw (id, blade_size) VALUES (@lastTool, @bladesize);
+
+#Sander
+insert into PowerSander (id, dust_bag) VALUES (@lastTool, @dustbag);
+
+#AirCompressor
+insert into PowerAirCompressor (id, tank_size, pressure_Rating) VALUES (@lastTool, @tanksize, @pressureRating);
+
+#PowerMixer
+insert into PowerMixer (id, motor_rating, drum_size) VALUES (@lastTool, @motorrating, @drumsize);
+
+#PowerGenerator
+insert into PowerGenerator (id, power_rating) VALUES (@lastTool, @powerrating);
+
+#Accessory
+insert into Accessory (description, quantity, PowerTool_Id) VALUES (@description, @qty, @lastTool);
+Set @lastAccessory = last_insert_id();
+
+#Cordless Accessory
+insert into CordlessAccessory (id, volt_rating, amp_rating) VALUES (@lastAccessory, @voltrating, @amprating);
+
+#Ladder - Base use for each ladder subtype below
+set @lastTool:= last_insert_id();
+insert into LadderTool (id, step_count, weight_capacity) VALUES (@lastTool, @stepcount, @weightcapacity);
+
+#Straight Ladder
+insert into StrightLadder (id, rubber_feet) VALUES (@lastTool, @rubberfeet);
+
+#Step Ladder
+insert into StepLadder (id, pail_shelf) VALUES (@lastTool, @pailshelf);
 
 /*● Run Tool Search task: where tools not in ServiceOrder.ToolNumber <> Tool.Number or
 ServiceOrder.ToolNumber == Tool.Number and EndDate <> Null
@@ -448,10 +532,22 @@ WHERE t.id = @tool_id
 ● Run Tool Search task: where ServiceOrder.EndDate is NULL
 ○ Display ServiceNumber, Status, ToolNumber, Description, StartDate, EndDate, RepairCost, Clerk.Name*/
 
-SET @tool_id = 2, @status = "In Repair", @RepairCost = 20;
+SET @tool_id = 2, @RepairCost = 20;
 
 
-SELECT so.id as ServiceOrder_ID, @status as Tool_Status, t.id Tool_ID, concat(c.name, " ", ps.name, " ", st.name) AS Description, so.start_date as Service_StartDate, so.end_date as Service_EndDate, @RepairCost, so.Clerk_Username as Clerk
+SELECT so.id as ServiceOrder_ID, 
+EXISTS(select id from Tool t2 where t.id = t2.id 
+and t2.id not in (select Tool_Id from ToolReservations as tr where tr.Tool_Id = t2.id)
+and t2.id not in (select id from ServiceOrder as so where so.Tool_Id = t2.id and so.end_date > NOW() )
+and t2.id not in (select id from SaleOrder as so where so.sold_date is NULL and so.Tool_Id = t2.id)
+and t2.id not in (select id from SaleOrder as so where so.sold_date is not NULL and so.Tool_Id = t2.id)
+) as available,
+EXISTS(select Tool_Id from ToolReservations as tr where tr.Tool_Id = t.id) as rented,
+EXISTS(select id from ServiceOrder as so where so.Tool_Id = t.id and so.end_date > NOW() ) as inrepair,
+EXISTS(select id from SaleOrder as so where so.sold_date is NULL and so.Tool_Id = t.id) as forsale,
+EXISTS(select id from SaleOrder as so where so.sold_date is not NULL and so.Tool_Id = t.id) as sold,
+(select booking_date from ToolReservations as tr join Reservation as r on r.id =tr.Reservations_Id where tr.Tool_Id = t.id) as rented,
+t.id Tool_ID, concat(c.name, " ", ps.name, " ", st.name) AS Description, so.start_date as Service_StartDate, so.end_date as Service_EndDate, @RepairCost, so.Clerk_Username as Clerk
 FROM ServiceOrder as so
 LEFT JOIN Tool as t ON t.id = so.Tool_Id
 LEFT JOIN Category as c ON c.id = t.Category_Id
