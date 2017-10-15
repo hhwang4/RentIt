@@ -322,8 +322,8 @@ insert into Reservation (booking_date, start_date, end_date, Customer_UserName, 
 VALUES (NOW(), '2017-10-02', '2017-10-12', 'thebatman', NULL, NULL);
 
 # Sale Order
-insert into SaleOrder (for_sale_date, sold_date, purchase_price, Customer_UserName, Tool_Id)
-VALUES ('2017-10-02', '2017-10-09', 47.88, 'thebatman', 1);
+insert into SaleOrder (for_sale_date, sold_date, purchase_price, Customer_UserName, Tool_Id, Clerk_UserName)
+VALUES ('2017-10-02', '2017-10-09', 47.88, 'thebatman', 1, 'admin@gatech.edu');
 
 # Service Order
 insert into ServiceOrder (start_date, end_date, service_cost, Tool_Id)
