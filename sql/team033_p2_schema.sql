@@ -102,6 +102,7 @@ CREATE TABLE `Tool` (
     `SubType_Id` INT NOT NULL,
     `deposit_price` DECIMAL(18 , 2 ) NOT NULL,
     `rental_price` DECIMAL(18 , 2 ) NOT NULL,
+    `original_price` DECIMAL(18 , 2 ) NOT NULL,
     PRIMARY KEY (`id`)
 );
 
@@ -155,6 +156,7 @@ CREATE TABLE `SaleOrder` (
     `for_sale_date` DATETIME NOT NULL,
     `sold_date` DATETIME NOT NULL,
     `purchase_price` DECIMAL(18 , 2 ) NOT NULL,
+    `Clerk_UserName` NVARCHAR(128),
     `Customer_UserName` NVARCHAR(128),
     `Tool_Id` INT NOT NULL,
     PRIMARY KEY (`id`)
@@ -169,7 +171,8 @@ CREATE TABLE `PowerSourceCategory` (
 CREATE TABLE `SubTypePowerSource` (
     `SubType_Id` INT NOT NULL,
     `PowerSource_Id` INT NOT NULL,
-    PRIMARY KEY (`SubType_Id` , `PowerSource_Id`)
+    `Category_Id` INT NOT NULL,
+    PRIMARY KEY (`SubType_Id` , `PowerSource_Id`, `Category_Id`)
 );
 
 CREATE TABLE `CordlessAccessory` (
@@ -354,11 +357,13 @@ alter table `SubOption` add constraint `FK_SubOption_SubType_SubType_Id`  foreig
 alter table `Accessory` add constraint `FK_Accessory_PowerTool_PowerTool_Id`  foreign key (`PowerTool_Id`) references `PowerTool` ( `id`) ;
 alter table `ServiceOrder` add constraint `FK_ServiceOrder_Tool_Tool_Id`  foreign key (`Tool_Id`) references `Tool` ( `id`)  on update cascade on delete cascade ;
 alter table `SaleOrder` add constraint `FK_SaleOrder_Customer_Customer_UserName`  foreign key (`Customer_UserName`) references `Customer` ( `user_name`) ;
+alter table `SaleOrder` add constraint `FK_SaleOrder_Clerk_Clerk_UserName`  foreign key (`Clerk_UserName`) references `Clerk` ( `user_name`) ;
 alter table `SaleOrder` add constraint `FK_SaleOrder_Tool_Tool_Id`  foreign key (`Tool_Id`) references `Tool` ( `id`)  on update cascade on delete cascade ;
 alter table `PowerSourceCategory` add constraint `FK_PowerSourceCategory_PowerSource_PowerSource_Id`  foreign key (`PowerSource_Id`) references `PowerSource` ( `id`)  on update cascade on delete cascade ;
 alter table `PowerSourceCategory` add constraint `FK_PowerSourceCategory_Category_Category_Id`  foreign key (`Category_Id`) references `Category` ( `id`)  on update cascade on delete cascade ;
 alter table `SubTypePowerSource` add constraint `FK_SubTypePowerSource_SubType_SubType_Id`  foreign key (`SubType_Id`) references `SubType` ( `id`)  on update cascade on delete cascade ;
 alter table `SubTypePowerSource` add constraint `FK_SubTypePowerSource_PowerSource_PowerSource_Id`  foreign key (`PowerSource_Id`) references `PowerSource` ( `id`)  on update cascade on delete cascade ;
+alter table `SubTypePowerSource` add constraint `FK_SubTypePowerSource_Category_Category_Id`  foreign key (`Category_Id`) references `Category` ( `id`)  on update cascade on delete cascade ;
 alter table `CordlessAccessory` add constraint `FK_CordlessAccessory_Accessory_id`  foreign key (`id`) references `Accessory` ( `id`) ;
 alter table `HandTool` add constraint `FK_HandTool_Tool_id`  foreign key (`id`) references `Tool` ( `id`) ;
 alter table `ScrewDriver` add constraint `FK_ScrewDriver_HandTool_id`  foreign key (`id`) references `HandTool` ( `id`) ;
