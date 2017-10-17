@@ -425,6 +425,259 @@ JOIN (
 ) other_desc
 WHERE tool.id = @toolid;
 
+/*-- In case adding the where description clause like this
+--"where description LIKE '%' + @PartialName + '%' "*/
+
+
+set @PartialName :='hammer';
+SELECT 
+	toolId,
+    full_desc,
+    short_desc,
+    other_desc,
+	powersource,
+	subtype, 
+    suboption,
+	rental_price, 
+	deposit_price,
+	material,
+	width,
+	weight,
+	length,
+	manufacturer,
+	acc_description
+FROM(
+	SELECT 
+		tool.id as toolId, 
+		category.name as category, 
+		CONCAT(
+			powersource.name, ' ',
+			suboption.name, ' ', 
+			subtype.name
+		) as short_desc,
+		CONCAT(
+			width, ' in. W x',
+			length, 'in. L ',
+			other_desc.other_desc, ' ',
+			powersource.name, ' ',
+			suboption.name, ' ',
+			subtype.name, ' ',
+			manufacturer, ' '
+		) as full_desc,
+        other_desc.other_desc,
+		powersource.name as powersource,
+		subtype.name as subtype, suboption.name as suboption,
+		rental_price, 
+		deposit_price,
+		material,
+		width,
+		weight,
+		length,
+		manufacturer,
+		accessory.description as acc_description
+	FROM Tool as tool
+	JOIN SubOption as suboption ON suboption.id = tool.SubOption_Id
+	JOIN SubType as subtype ON subtype.id = tool.SubType_Id
+	JOIN PowerSource as powersource ON powersource.id = tool.PowerSource_Id
+	JOIN Category as category ON category.id = tool.Category_Id
+	JOIN Accessory as accessory ON accessory.PowerTool_Id = tool.id
+	JOIN (
+
+		SELECT
+			CONCAT(
+				COALESCE(gauge_rating, ''), ' ', 
+				COALESCE(capacity, '')
+			) AS other_desc
+		FROM HandGun
+		WHERE id = @toolid
+		UNION
+		SELECT
+			anti_vibration AS other_desc
+		FROM HandHammer	
+		WHERE id = @toolid
+		UNION
+		SELECT
+			adjustable AS other_desc
+		FROM HandPlier
+		WHERE id = @toolid
+		UNION
+		SELECT
+			drive_size AS other_desc
+		FROM HandRatchet
+		WHERE id = @toolid
+		UNION
+		SELECT
+			screw_size AS other_desc
+		FROM ScrewDriver
+		WHERE id = @toolid
+		UNION
+		SELECT
+			CONCAT(
+				COALESCE(drive_size, ''), ' ', 
+				COALESCE(sae_size, ''), ' ',
+				COALESCE(deep_socket, '')
+			) AS other_desc
+		FROM HandSocket
+		WHERE id = @toolid
+		UNION
+		SELECT
+			CONCAT(
+				COALESCE(tank_size, ''), ' ',
+				COALESCE(pressure_rating, ''), ' ',
+				COALESCE(volt_rating, ''), ' ',
+				COALESCE(amp_rating, ''), ' ',
+				COALESCE(min_rpm_rating, ''), ' ',
+				COALESCE(max_rpm_rating, '')
+			) AS other_desc
+		FROM PowerAirCompressor pa 
+		JOIN PowerTool pt ON pt.id = pa.id
+		WHERE pt.id = @toolid
+		UNION
+		SELECT
+			CONCAT(
+				COALESCE(adjustable_clutch, ''), ' ',
+				COALESCE(min_torque_rating, ''), ' ',
+				COALESCE(max_torque_rating, ''), ' ',
+				COALESCE(volt_rating, ''), ' ',
+				COALESCE(amp_rating, ''), ' ',
+				COALESCE(min_rpm_rating, ''), ' ',
+				COALESCE(max_rpm_rating, '')
+			) AS other_desc
+		FROM PowerDrill pa 
+		JOIN PowerTool pt ON pt.id = pa.id
+		WHERE pt.id = @toolid
+		UNION
+		SELECT
+			CONCAT(
+				COALESCE(power_rating, ''), ' ',
+				COALESCE(volt_rating, ''), ' ',
+				COALESCE(amp_rating, ''), ' ',
+				COALESCE(min_rpm_rating, ''), ' ',
+				COALESCE(max_rpm_rating, '')
+			) AS other_desc
+		FROM PowerGenerator pa 
+		JOIN PowerTool pt ON pt.id = pa.id
+		WHERE pt.id = @toolid
+		UNION
+		SELECT
+			CONCAT(
+				COALESCE(motor_rating, ''), ' ',
+				COALESCE(drum_size, ''), ' ',
+				COALESCE(volt_rating, ''), ' ',
+				COALESCE(amp_rating, ''), ' ',
+				COALESCE(min_rpm_rating, ''), ' ',
+				COALESCE(max_rpm_rating, '')
+			) AS other_desc
+		FROM PowerMixer pa 
+		JOIN PowerTool pt ON pt.id = pa.id
+		WHERE pt.id = @toolid
+		UNION
+		SELECT
+			CONCAT(
+				COALESCE(dust_bag, ''), ' ',
+				COALESCE(volt_rating, ''), ' ',
+				COALESCE(amp_rating, ''), ' ',
+				COALESCE(min_rpm_rating, ''), ' ',
+				COALESCE(max_rpm_rating, '')
+			) AS other_desc
+		FROM PowerSander pa 
+		JOIN PowerTool pt ON pt.id = pa.id
+		WHERE pt.id = @toolid
+
+		UNION
+		SELECT
+			CONCAT(
+				COALESCE(blade_size, ''), ' ',
+				COALESCE(volt_rating, ''), ' ',
+				COALESCE(amp_rating, ''), ' ',
+				COALESCE(min_rpm_rating, ''), ' ',
+				COALESCE(max_rpm_rating, '')
+			) AS other_desc
+		FROM PowerSaw pa 
+		JOIN PowerTool pt ON pt.id = pa.id
+		WHERE pt.id = @toolid
+
+		UNION
+		SELECT
+			CONCAT(
+				COALESCE(handle_material, ''), ' ',
+				COALESCE(blade_length, ''), ' ',
+				COALESCE(handle_material, '')
+			) AS other_desc
+		FROM PruningTool ga 
+		JOIN GardenTool gt ON gt.id = ga.id
+		WHERE gt.id = @toolid
+
+		UNION
+		SELECT
+			CONCAT(
+				COALESCE(handle_material, ''), ' ',
+				COALESCE(tine_count, ''), ' '
+			) AS other_desc
+		FROM RakeTool ga 
+		JOIN GardenTool gt ON gt.id = ga.id
+		WHERE gt.id = @toolid
+
+		UNION
+		SELECT
+			CONCAT(
+				COALESCE(head_weight, ''), ' ',
+				COALESCE(handle_material, '')
+			) AS other_desc
+		FROM StrikingTool ga 
+		JOIN GardenTool gt ON gt.id = ga.id
+		WHERE gt.id = @toolid
+
+		UNION
+		SELECT
+			CONCAT(
+				COALESCE(bin_material, ''), ' ',
+				COALESCE(wheel_count, ''), ' ',
+				COALESCE(bin_volume, ''), ' ',
+				COALESCE(handle_material, '')
+			) AS other_desc
+		FROM WheelBarrowTool ga 
+		JOIN GardenTool gt ON gt.id = ga.id
+		WHERE gt.id = @toolid
+
+		UNION
+		SELECT
+			CONCAT(
+				COALESCE(blade_length, ''), ' ',
+				COALESCE(blade_width, ''), ' ',
+				COALESCE(handle_material, '')
+			) AS other_desc
+		FROM DiggingTool ga 
+		JOIN GardenTool gt ON gt.id = ga.id
+		WHERE gt.id = @toolid
+
+		UNION
+		SELECT
+			CONCAT(
+				COALESCE(pail_shelf, ''), ' ',
+				COALESCE(step_count, ''), ' ', 
+				COALESCE(weight_capacity, '')
+			) AS other_desc
+		FROM StepLadder la 
+		JOIN LadderTool lt ON lt.id = la.id
+		WHERE la.id = @toolid
+
+		UNION
+		SELECT
+			CONCAT(
+				COALESCE(rubber_feet, ''), ' ',
+				COALESCE(step_count, ''), ' ', 
+				COALESCE(weight_capacity, '')
+			) AS other_desc
+		FROM StraightLadder la 
+		JOIN LadderTool lt ON lt.id = la.id
+		WHERE la.id = @toolid
+	) other_desc
+) tools
+WHERE 
+	other_desc LIKE CONCAT('%', @PartialName,'%') OR
+    full_desc LIKE CONCAT('%', @PartialName,'%') OR
+    short_desc LIKE CONCAT('%', @PartialName,'%') 
 
 
 
