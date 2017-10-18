@@ -90,7 +90,7 @@ CREATE TABLE `ToolReservations` (
 CREATE TABLE `Rentals` (
     `Tool_Id` INT NOT NULL,
     `start_date` DATETIME NOT NULL,
-    `end_date` DATETIME NOT NULL,
+    `end_date` DATETIME,
     `number_of_rentals` INT NOT NULL,
     PRIMARY KEY (`Tool_Id`)
 );
