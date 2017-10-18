@@ -1,40 +1,76 @@
---Login--
----------
-SELECT password FROM 'Customer' WHERE email='$Email';
+use cs6400_sfa17_team033;
 
---Registeration--
------------------
-/* User enters username, email address, full name (first, middle, last), home phone, work
-phone, cell phone, address (City, State, Zipcode), password (twice)
-#TODO:REVIEW● User enters Credit Card details, credit card name, credit card number, expiration month,
-expiration year, CVC
-#TODO:REVIEW● Validate that at least one primary phone number is entered.*/
+# Login Customer
+set @username := 'thebatman';
+SELECT password FROM Customer WHERE user_name=@username;
+
+# Login Clerk
+set @clerkUsername := 'admin@gatech.edu';
+SELECT password FROM Clerk WHERE user_name=@clerkUsername;
+
+# Change Password
+set @newpassword = 'mynewpassword';
+update Clerk set password = @newpassword where user_name = @clerkUsername;
+update Clerk set temp_password = NULL where user_name = @clerkUsername;
+
+# Registration
+set @street = '123 main street', @city = 'Gotham City', @state = 'NY', @zip ='55555-5555';
+insert into Address (street, city, state, zip) values(@street, @city,@state, @zip);
+set @addressId := last_insert_id();
+
+set @cardname = 'Bruce Wayne', @card_number = '1234567801', @cvc = '021', @expiration_month = 8, @expiration_year = 2020;
+insert into CreditCard (name, card_number, cvc, expiration_month, expiration_year) VALUES (@cardname, @card_number, @cvc, @expiration_month, @expiration_year);
+set @ccId = last_insert_id();
+
+set @primaryPhone = 1, @user_name = 'TheJoker', @first_name = 'Mr', @middle_name = 'J', @last_name = 'Joker', @email = 'crimeclown@aol.com', @password = 'bats';
+set @cellphoneId = NULL, @homephoneId = NULL, @workphoneId = NULL;
+
+
 INSERT INTO Customer (user_name, primary_phone, first_name, middle_name, last_name, email, password, Address_Id, CellPhoneNumber_Id, CreditCard_Id, HomePhoneNumber_Id, WorkPhoneNumber_Id)
--- #TODO:Add the values# VALUES ('Cardinal', 'Tom B. Erichsen', 'Skagen 21', 'Stavanger', '4006', 'Norway');
+VALUES (@user_name, @primaryPhone, @first_name, @middle_name, @last_name, @email, @password, @addressId, @cellphoneId, @ccId, @homephoneId, @workphoneId);
 
 -- View PROFILE --
 ------------------
 
-/* ○ View Customer task */
+/* View Customer task */
 
-/*■ Find the User using the Username; Display the email, full name */
-SELECT email, first_name, middle_name, last_name FROM 'Customer' WHERE Customer.user_name='$UserName';
+/* Find the User using the Username; Display the email, full name */
+SELECT email, first_name, middle_name, last_name, p.area_code as cellAc, p.extension as cellExt, p.number as cellNumber, 
+q.area_code as workAc, q.extension as workExt, q.number as workNumber, 
+r.area_code as homeAc, r.extension as homeExt, r.number as homeNumber,
+city, street, zip, state
+FROM Customer as c
+JOIN Address as a on a.id = c.Address_Id
+LEFT OUTER JOIN PhoneNumber as p on c.CellPhoneNumber_Id = p.id
+LEFT OUTER JOIN PhoneNumber as q on c.WorkPhoneNumber_Id = q.id
+LEFT OUTER JOIN PhoneNumber as r on c.HomePhoneNumber_Id = r.id
+WHERE user_name=@username;
 
-/* #TODO:Question & Review */
-/*■ For each Phone under this Customer.Username
-● Display the phone number */
 
+# View Reservations task
+select r.id as reservationId, start_date, end_date, DropOffClerk_UserName, PickupClerk_UserName,
+(DATEDIFF(end_date, start_date)) as numDays,
+sum(deposit_price) as TotalDeposit,
+sum(rental_price) as TotalRental
+from Tool 
+join 
+(select Tool_id,Reservations_Id from ToolReservations as tr 
+where tr.Reservations_Id in (select id from Reservation as r where r.Customer_UserName = @username)) as rid
+on rid.Tool_id = id
+join Reservation as r on r.id = Reservations_Id
+order by booking_date;
 
-/*■ Find Address using Customer.Username; Display address (city, street,
-state, zip) */
-SELECT city, street, state, zip FROM 'Address' INNER JOIN Customer ON Customer.address_id = Address.id WHERE Customer.user_name='$UserName';
+# Get Tools associated with this reservation
+set @ourReservationId = 1;
+select cat.name as category, ps.name as powersource, st.name as subtype, so.name as suboption
+from Tool as t
+join
+(select Tool_id, Reservations_Id from ToolReservations as tr where tr.Reservations_Id = @ourReservationId) as trr on trr.Tool_id = t.id
+join SubOption as so on so.id = t.SubOption_Id
+join SubType as st on st.id = t.SubType_Id
+join Category as cat on cat.id = t.Category_IdCategoryCategory
+join PowerSource as ps on ps.id = t.PowerSource_Id;
 
-/* ○ View Reservations task */ 
-/*
-■ Find rental history
-● For each Reservation for the Customer.Username
-○ Display Reservation Number, StartDate, EndDate,*/
-SELECT id, start_date, end_date FROM 'Reservation' WHERE Reservation.Customer_UserName='$UserName';
 
 /*#TODO
 ○ Calculate Number of Days from StartDate/EndDate
@@ -59,7 +95,7 @@ SELECT first_name, middle_name, last_name, employee_number FROM Clerk INNER JOIN
 SELECT first_name, middle_name, last_name, employee_number FROM Clerk INNER JOIN Reservation ON Reservation.PickUpClerk_UserName= Clerk.user_name WHERE Customer_UserName='$UserName';
 
 
---Check Tool Availability--
+-- Check Tool Availability--
 ---------------------------
 /* ● User clicks Check Availability link
 ● User inputs Start Date, End Date, Keywords, Power Source, Sub-Type and/or Type
@@ -76,7 +112,34 @@ Price, Deposit Price
 Description (concatenated) , Deposit Price, Rental Price.
 */
 
---#TODO
+set @powersource :='Manual';
+set @subtype :='ScrewDriver';
+set @category :='Hand';
+set @startdate :='2017-10-02 00:00:00';
+set @enddate :='2017-10-12 00:00:00';
+
+SELECT 
+	tool.id as toolId, 
+    category.name as category, 
+    powersource.name as powersource,
+    subtype.name as subtype, suboption.name as suboption,
+    rental_price, 
+    deposit_price 
+FROM Tool as tool
+JOIN SubOption as suboption ON suboption.id = tool.SubOption_Id
+JOIN SubType as subtype ON subtype.id = tool.SubType_Id
+JOIN PowerSource as powersource ON powersource.id = tool.PowerSource_Id
+JOIN Category as category ON category.id = tool.Category_Id
+WHERE subtype.name = @subtype 
+	AND powersource.name = @powersource 
+    AND category.name = @category
+    AND tool.id NOT IN (
+		SELECT Tool_Id as toolId 
+		from ToolReservations as toolreserv
+		JOIN Reservation as reservation ON reservation.id = toolreserv.Reservations_Id
+		WHERE reservation.start_date >= @startdate AND reservation.end_date <= @enddate
+		)
+
 
 --Tool Search--
 ---------------
@@ -84,15 +147,24 @@ Description (concatenated) , Deposit Price, Rental Price.
 ○ For each Tool that matches the ToolNumber.ToolType, PowerSource, SubTypes,
 and/or keyword search.
 ■ Return Tool.Number, Tool.Name, RentalPrice, and DepositPrice*/
---#TODO:QUESTION & REVIEW: I think we need to add those to the Tool table, because user can search for them without having a Tool Reservation.
---#TODO:QUESTION & REVIEW: For each Tool that matches the ToolNumber.ToolType, .. I think we need to change this in abstract code?!
---#TODO:QUESTION & REVIEW: OR/AND don't remember how to do it in same clause.
---#TODO:QUESTION & REVIEW: Tool.Number thingy?!!
-SELECT id, name, rental_price, deposit_price FROM 'Tool' INNER JOIN ((Category ON Category.id=Category_Id WHERE Category.name='$CategoryName') OR/AND 
-														(PowerSource ON PowerSource.id=PowerSource_Id WHERE PowerSource.name='$PowerSourceName') OR/AND
-														(SubType ON SubType.id=SubType_Id WHERE SubType.name='$SubTypeName'))
 
---#TODO
+set @powersource :='Manual';
+set @subtype :='ScrewDriver';
+set @category :='Hand';
+
+SELECT 
+	tool.id as toolId, 
+    category.name as category, 
+    powersource.name as powersource,
+    subtype.name as subtype, suboption.name as suboption,
+    rental_price, 
+    deposit_price 
+FROM Tool as tool
+JOIN SubOption as suboption ON suboption.id = tool.SubOption_Id
+JOIN SubType as subtype ON subtype.id = tool.SubType_Id
+JOIN PowerSource as powersource ON powersource.id = tool.PowerSource_Id
+JOIN Category as category ON category.id = tool.Category_Id
+WHERE subtype.name = @subtype AND powersource.name = @powersource AND category.name = @category
 
 --FULL TOOL DETAILS--
 ---------------------
@@ -100,7 +172,514 @@ SELECT id, name, rental_price, deposit_price FROM 'Tool' INNER JOIN ((Category O
 ● Find Hand, Garden, Ladder, Power, etc. (including accessories, materials, etc) based
 on Tool.Number; Display full description*/
 
---#TODO
+set @toolid :='8';
+
+SELECT 
+	tool.id as toolId, 
+    category.name as category, 
+    powersource.name as powersource,
+    subtype.name as subtype, suboption.name as suboption,
+    rental_price, 
+    deposit_price,
+    material,
+    width,
+    weight,
+    length,
+    manufacturer,
+    accessory.description as acc_description
+FROM Tool as tool
+JOIN SubOption as suboption ON suboption.id = tool.SubOption_Id
+JOIN SubType as subtype ON subtype.id = tool.SubType_Id
+JOIN PowerSource as powersource ON powersource.id = tool.PowerSource_Id
+JOIN Category as category ON category.id = tool.Category_Id
+JOIN Accessory as accessory ON accessory.PowerTool_Id = tool.id
+WHERE tool.id = @toolid;
+
+
+
+set @toolid :='8';
+SELECT 
+	tool.id as toolId, 
+    category.name as category, 
+    CONCAT(
+		powersource.name, ' ',
+        suboption.name, ' ', 
+        subtype.name
+	) as short_desc,
+    CONCAT(
+		width, ' in. W x',
+        length, 'in. L ',
+        other_desc.other_desc, ' ',
+        powersource.name, ' ',
+        suboption.name, ' ',
+        subtype.name, ' ',
+        manufacturer, ' '
+    ) as full_desc,
+    powersource.name as powersource,
+    subtype.name as subtype, suboption.name as suboption,
+    rental_price, 
+    deposit_price,
+    material,
+    width,
+    weight,
+    length,
+    manufacturer,
+    accessory.description as acc_description
+FROM Tool as tool
+JOIN SubOption as suboption ON suboption.id = tool.SubOption_Id
+JOIN SubType as subtype ON subtype.id = tool.SubType_Id
+JOIN PowerSource as powersource ON powersource.id = tool.PowerSource_Id
+JOIN Category as category ON category.id = tool.Category_Id
+JOIN Accessory as accessory ON accessory.PowerTool_Id = tool.id
+JOIN (
+
+	SELECT
+		CONCAT(
+			COALESCE(gauge_rating, ''), ' ', 
+			COALESCE(capacity, '')
+		) AS other_desc
+	FROM HandGun
+	WHERE id = @toolid
+	UNION
+	SELECT
+		anti_vibration AS other_desc
+	FROM HandHammer	
+	WHERE id = @toolid
+	UNION
+	SELECT
+		adjustable AS other_desc
+	FROM HandPlier
+	WHERE id = @toolid
+	UNION
+	SELECT
+		drive_size AS other_desc
+	FROM HandRatchet
+	WHERE id = @toolid
+	UNION
+	SELECT
+		screw_size AS other_desc
+	FROM ScrewDriver
+	WHERE id = @toolid
+	UNION
+	SELECT
+		CONCAT(
+			COALESCE(drive_size, ''), ' ', 
+			COALESCE(sae_size, ''), ' ',
+			COALESCE(deep_socket, '')
+		) AS other_desc
+	FROM HandSocket
+	WHERE id = @toolid
+	UNION
+	SELECT
+		CONCAT(
+			COALESCE(tank_size, ''), ' ',
+			COALESCE(pressure_rating, ''), ' ',
+			COALESCE(volt_rating, ''), ' ',
+			COALESCE(amp_rating, ''), ' ',
+			COALESCE(min_rpm_rating, ''), ' ',
+			COALESCE(max_rpm_rating, '')
+		) AS other_desc
+	FROM PowerAirCompressor pa 
+	JOIN PowerTool pt ON pt.id = pa.id
+	WHERE pt.id = @toolid
+	UNION
+	SELECT
+		CONCAT(
+			COALESCE(adjustable_clutch, ''), ' ',
+			COALESCE(min_torque_rating, ''), ' ',
+			COALESCE(max_torque_rating, ''), ' ',
+			COALESCE(volt_rating, ''), ' ',
+			COALESCE(amp_rating, ''), ' ',
+			COALESCE(min_rpm_rating, ''), ' ',
+			COALESCE(max_rpm_rating, '')
+		) AS other_desc
+	FROM PowerDrill pa 
+	JOIN PowerTool pt ON pt.id = pa.id
+	WHERE pt.id = @toolid
+	UNION
+	SELECT
+		CONCAT(
+			COALESCE(power_rating, ''), ' ',
+			COALESCE(volt_rating, ''), ' ',
+			COALESCE(amp_rating, ''), ' ',
+			COALESCE(min_rpm_rating, ''), ' ',
+			COALESCE(max_rpm_rating, '')
+		) AS other_desc
+	FROM PowerGenerator pa 
+	JOIN PowerTool pt ON pt.id = pa.id
+	WHERE pt.id = @toolid
+	UNION
+	SELECT
+		CONCAT(
+			COALESCE(motor_rating, ''), ' ',
+			COALESCE(drum_size, ''), ' ',
+			COALESCE(volt_rating, ''), ' ',
+			COALESCE(amp_rating, ''), ' ',
+			COALESCE(min_rpm_rating, ''), ' ',
+			COALESCE(max_rpm_rating, '')
+		) AS other_desc
+	FROM PowerMixer pa 
+	JOIN PowerTool pt ON pt.id = pa.id
+	WHERE pt.id = @toolid
+	UNION
+	SELECT
+		CONCAT(
+			COALESCE(dust_bag, ''), ' ',
+			COALESCE(volt_rating, ''), ' ',
+			COALESCE(amp_rating, ''), ' ',
+			COALESCE(min_rpm_rating, ''), ' ',
+			COALESCE(max_rpm_rating, '')
+		) AS other_desc
+	FROM PowerSander pa 
+	JOIN PowerTool pt ON pt.id = pa.id
+	WHERE pt.id = @toolid
+
+	UNION
+	SELECT
+		CONCAT(
+			COALESCE(blade_size, ''), ' ',
+			COALESCE(volt_rating, ''), ' ',
+			COALESCE(amp_rating, ''), ' ',
+			COALESCE(min_rpm_rating, ''), ' ',
+			COALESCE(max_rpm_rating, '')
+		) AS other_desc
+	FROM PowerSaw pa 
+	JOIN PowerTool pt ON pt.id = pa.id
+	WHERE pt.id = @toolid
+
+	UNION
+	SELECT
+		CONCAT(
+			COALESCE(handle_material, ''), ' ',
+			COALESCE(blade_length, ''), ' ',
+			COALESCE(handle_material, '')
+		) AS other_desc
+	FROM PruningTool ga 
+	JOIN GardenTool gt ON gt.id = ga.id
+	WHERE gt.id = @toolid
+
+	UNION
+	SELECT
+		CONCAT(
+			COALESCE(handle_material, ''), ' ',
+			COALESCE(tine_count, ''), ' '
+		) AS other_desc
+	FROM RakeTool ga 
+	JOIN GardenTool gt ON gt.id = ga.id
+	WHERE gt.id = @toolid
+
+	UNION
+	SELECT
+		CONCAT(
+			COALESCE(head_weight, ''), ' ',
+			COALESCE(handle_material, '')
+		) AS other_desc
+	FROM StrikingTool ga 
+	JOIN GardenTool gt ON gt.id = ga.id
+	WHERE gt.id = @toolid
+
+	UNION
+	SELECT
+		CONCAT(
+			COALESCE(bin_material, ''), ' ',
+			COALESCE(wheel_count, ''), ' ',
+			COALESCE(bin_volume, ''), ' ',
+			COALESCE(handle_material, '')
+		) AS other_desc
+	FROM WheelBarrowTool ga 
+	JOIN GardenTool gt ON gt.id = ga.id
+	WHERE gt.id = @toolid
+
+	UNION
+	SELECT
+		CONCAT(
+			COALESCE(blade_length, ''), ' ',
+			COALESCE(blade_width, ''), ' ',
+			COALESCE(handle_material, '')
+		) AS other_desc
+	FROM DiggingTool ga 
+	JOIN GardenTool gt ON gt.id = ga.id
+	WHERE gt.id = @toolid
+
+	UNION
+	SELECT
+		CONCAT(
+			COALESCE(pail_shelf, ''), ' ',
+			COALESCE(step_count, ''), ' ', 
+			COALESCE(weight_capacity, '')
+		) AS other_desc
+	FROM StepLadder la 
+	JOIN LadderTool lt ON lt.id = la.id
+	WHERE la.id = @toolid
+
+	UNION
+	SELECT
+		CONCAT(
+			COALESCE(rubber_feet, ''), ' ',
+			COALESCE(step_count, ''), ' ', 
+			COALESCE(weight_capacity, '')
+		) AS other_desc
+	FROM StraightLadder la 
+	JOIN LadderTool lt ON lt.id = la.id
+	WHERE la.id = @toolid
+) other_desc
+WHERE tool.id = @toolid;
+
+/*-- In case adding the where description clause like this
+--"where description LIKE '%' + @PartialName + '%' "*/
+
+
+set @PartialName :='hammer';
+SELECT 
+	toolId,
+    full_desc,
+    short_desc,
+    other_desc,
+	powersource,
+	subtype, 
+    suboption,
+	rental_price, 
+	deposit_price,
+	material,
+	width,
+	weight,
+	length,
+	manufacturer,
+	acc_description
+FROM(
+	SELECT 
+		tool.id as toolId, 
+		category.name as category, 
+		CONCAT(
+			powersource.name, ' ',
+			suboption.name, ' ', 
+			subtype.name
+		) as short_desc,
+		CONCAT(
+			width, ' in. W x',
+			length, 'in. L ',
+			other_desc.other_desc, ' ',
+			powersource.name, ' ',
+			suboption.name, ' ',
+			subtype.name, ' ',
+			manufacturer, ' '
+		) as full_desc,
+        other_desc.other_desc,
+		powersource.name as powersource,
+		subtype.name as subtype, suboption.name as suboption,
+		rental_price, 
+		deposit_price,
+		material,
+		width,
+		weight,
+		length,
+		manufacturer,
+		accessory.description as acc_description
+	FROM Tool as tool
+	JOIN SubOption as suboption ON suboption.id = tool.SubOption_Id
+	JOIN SubType as subtype ON subtype.id = tool.SubType_Id
+	JOIN PowerSource as powersource ON powersource.id = tool.PowerSource_Id
+	JOIN Category as category ON category.id = tool.Category_Id
+	JOIN Accessory as accessory ON accessory.PowerTool_Id = tool.id
+	JOIN (
+
+		SELECT
+			CONCAT(
+				COALESCE(gauge_rating, ''), ' ', 
+				COALESCE(capacity, '')
+			) AS other_desc
+		FROM HandGun
+		WHERE id = @toolid
+		UNION
+		SELECT
+			anti_vibration AS other_desc
+		FROM HandHammer	
+		WHERE id = @toolid
+		UNION
+		SELECT
+			adjustable AS other_desc
+		FROM HandPlier
+		WHERE id = @toolid
+		UNION
+		SELECT
+			drive_size AS other_desc
+		FROM HandRatchet
+		WHERE id = @toolid
+		UNION
+		SELECT
+			screw_size AS other_desc
+		FROM ScrewDriver
+		WHERE id = @toolid
+		UNION
+		SELECT
+			CONCAT(
+				COALESCE(drive_size, ''), ' ', 
+				COALESCE(sae_size, ''), ' ',
+				COALESCE(deep_socket, '')
+			) AS other_desc
+		FROM HandSocket
+		WHERE id = @toolid
+		UNION
+		SELECT
+			CONCAT(
+				COALESCE(tank_size, ''), ' ',
+				COALESCE(pressure_rating, ''), ' ',
+				COALESCE(volt_rating, ''), ' ',
+				COALESCE(amp_rating, ''), ' ',
+				COALESCE(min_rpm_rating, ''), ' ',
+				COALESCE(max_rpm_rating, '')
+			) AS other_desc
+		FROM PowerAirCompressor pa 
+		JOIN PowerTool pt ON pt.id = pa.id
+		WHERE pt.id = @toolid
+		UNION
+		SELECT
+			CONCAT(
+				COALESCE(adjustable_clutch, ''), ' ',
+				COALESCE(min_torque_rating, ''), ' ',
+				COALESCE(max_torque_rating, ''), ' ',
+				COALESCE(volt_rating, ''), ' ',
+				COALESCE(amp_rating, ''), ' ',
+				COALESCE(min_rpm_rating, ''), ' ',
+				COALESCE(max_rpm_rating, '')
+			) AS other_desc
+		FROM PowerDrill pa 
+		JOIN PowerTool pt ON pt.id = pa.id
+		WHERE pt.id = @toolid
+		UNION
+		SELECT
+			CONCAT(
+				COALESCE(power_rating, ''), ' ',
+				COALESCE(volt_rating, ''), ' ',
+				COALESCE(amp_rating, ''), ' ',
+				COALESCE(min_rpm_rating, ''), ' ',
+				COALESCE(max_rpm_rating, '')
+			) AS other_desc
+		FROM PowerGenerator pa 
+		JOIN PowerTool pt ON pt.id = pa.id
+		WHERE pt.id = @toolid
+		UNION
+		SELECT
+			CONCAT(
+				COALESCE(motor_rating, ''), ' ',
+				COALESCE(drum_size, ''), ' ',
+				COALESCE(volt_rating, ''), ' ',
+				COALESCE(amp_rating, ''), ' ',
+				COALESCE(min_rpm_rating, ''), ' ',
+				COALESCE(max_rpm_rating, '')
+			) AS other_desc
+		FROM PowerMixer pa 
+		JOIN PowerTool pt ON pt.id = pa.id
+		WHERE pt.id = @toolid
+		UNION
+		SELECT
+			CONCAT(
+				COALESCE(dust_bag, ''), ' ',
+				COALESCE(volt_rating, ''), ' ',
+				COALESCE(amp_rating, ''), ' ',
+				COALESCE(min_rpm_rating, ''), ' ',
+				COALESCE(max_rpm_rating, '')
+			) AS other_desc
+		FROM PowerSander pa 
+		JOIN PowerTool pt ON pt.id = pa.id
+		WHERE pt.id = @toolid
+
+		UNION
+		SELECT
+			CONCAT(
+				COALESCE(blade_size, ''), ' ',
+				COALESCE(volt_rating, ''), ' ',
+				COALESCE(amp_rating, ''), ' ',
+				COALESCE(min_rpm_rating, ''), ' ',
+				COALESCE(max_rpm_rating, '')
+			) AS other_desc
+		FROM PowerSaw pa 
+		JOIN PowerTool pt ON pt.id = pa.id
+		WHERE pt.id = @toolid
+
+		UNION
+		SELECT
+			CONCAT(
+				COALESCE(handle_material, ''), ' ',
+				COALESCE(blade_length, ''), ' ',
+				COALESCE(handle_material, '')
+			) AS other_desc
+		FROM PruningTool ga 
+		JOIN GardenTool gt ON gt.id = ga.id
+		WHERE gt.id = @toolid
+
+		UNION
+		SELECT
+			CONCAT(
+				COALESCE(handle_material, ''), ' ',
+				COALESCE(tine_count, ''), ' '
+			) AS other_desc
+		FROM RakeTool ga 
+		JOIN GardenTool gt ON gt.id = ga.id
+		WHERE gt.id = @toolid
+
+		UNION
+		SELECT
+			CONCAT(
+				COALESCE(head_weight, ''), ' ',
+				COALESCE(handle_material, '')
+			) AS other_desc
+		FROM StrikingTool ga 
+		JOIN GardenTool gt ON gt.id = ga.id
+		WHERE gt.id = @toolid
+
+		UNION
+		SELECT
+			CONCAT(
+				COALESCE(bin_material, ''), ' ',
+				COALESCE(wheel_count, ''), ' ',
+				COALESCE(bin_volume, ''), ' ',
+				COALESCE(handle_material, '')
+			) AS other_desc
+		FROM WheelBarrowTool ga 
+		JOIN GardenTool gt ON gt.id = ga.id
+		WHERE gt.id = @toolid
+
+		UNION
+		SELECT
+			CONCAT(
+				COALESCE(blade_length, ''), ' ',
+				COALESCE(blade_width, ''), ' ',
+				COALESCE(handle_material, '')
+			) AS other_desc
+		FROM DiggingTool ga 
+		JOIN GardenTool gt ON gt.id = ga.id
+		WHERE gt.id = @toolid
+
+		UNION
+		SELECT
+			CONCAT(
+				COALESCE(pail_shelf, ''), ' ',
+				COALESCE(step_count, ''), ' ', 
+				COALESCE(weight_capacity, '')
+			) AS other_desc
+		FROM StepLadder la 
+		JOIN LadderTool lt ON lt.id = la.id
+		WHERE la.id = @toolid
+
+		UNION
+		SELECT
+			CONCAT(
+				COALESCE(rubber_feet, ''), ' ',
+				COALESCE(step_count, ''), ' ', 
+				COALESCE(weight_capacity, '')
+			) AS other_desc
+		FROM StraightLadder la 
+		JOIN LadderTool lt ON lt.id = la.id
+		WHERE la.id = @toolid
+	) other_desc
+) tools
+WHERE 
+	other_desc LIKE CONCAT('%', @PartialName,'%') OR
+    full_desc LIKE CONCAT('%', @PartialName,'%') OR
+    short_desc LIKE CONCAT('%', @PartialName,'%') 
+
+
 
 --MAKE RESERVATION--
 --------------------
@@ -149,7 +728,7 @@ Confirmation
 --Purchase Tool--
 -----------------
 
-/* ● User clicks Purchase Tool button from Main Menu
+/*● User clicks Purchase Tool button from Main Menu
 ● User enters Keyword, Type, Sub-Type, and/or Power Source
 ● User clicks Search button
 ○ Run Tool Search task : find tools w/ no SoldDate in SaleOrder
@@ -169,7 +748,7 @@ SaleOrder
 
 --Pick-up RESERVATION--
 -----------------------
-/* ● User clicks Pick-Up button from Main Menu
+/*● User clicks Pick-Up button from Main Menu
 ● Run Pick-Up Reservation task
 ○ For each Reservation where Reservation.EndDate is NULL
 ■ Find the Customer.Name from Customer using
@@ -237,8 +816,15 @@ Date
 sub-type and sub-options
 ○ Find Sub-Option based on Type, Sub-Type; Populate Sub-Option menu
 ● User enters Purchase Price
-● Calculate the Deposit Price and Rental Prices
-● User select Hand Tool radio button
+● Calculate the Deposit Price and Rental Prices*/
+
+SET @Purchase_Price = 20,
+@Tool_id = 2;
+UPDATE Tool
+SET deposit_price = @Purchase_Price * 0.4, rental_price = @Purchase_Price * 0.5
+WHERE Tool.id = @Tool_id;
+
+/*● User select Hand Tool radio button
 ○ Update menu options
 ○ User enters Manufacturer, Width, Width Fraction, Width Unit, Length, Weight,
 Length Fraction, Length Unit, Drive/Chuck Size (if applicable)
@@ -261,21 +847,158 @@ single speed devices
 ● User clicks Add Tool button
 ○ Insert Tool price, weight, etc. into Tool
 ● Go to Main Menu form*/
+set @catId = 1;
+set @powersource = 1;
+set @subtypeId = 2;
 
---#TODO
+
+# Query 1
+select name from Category;
+
+# Query 2
+select name from PowerSourceCategory as psc
+join PowerSource as ps on ps.id = psc.PowerSource_Id
+where psc.Category_Id = @catId;
+
+# Query 3
+select name
+from SubTypePowerSource as stps
+join SubType as st on st.id = stps.SubType_Id
+where stps.Category_Id = @catId and stps.PowerSource_Id = @powersource;
+
+# Query 4
+select so.name from SubOption as so
+join SubType as st on st.id = so.SubType_Id
+join SubTypePowerSource as stps on stps.SubType_Id = st.id
+where PowerSource_Id = @powersource and so.SubType_Id = @subtypeId and Category_Id = @catId;
 
 
---Service Order / Repair Tool--
+set @width = 9.0, @weight = 2.25, @length = '021', @manufacturer = 8, @material = 'steel', @deposit_price = 8.0, @rental_price = 10.0, @original_price = 20.0,
+@Category_Id = (select id from Category where name = 'Hand'), 
+@PowerSource_Id = (select id from PowerSource where name = 'Manual'), 
+@SubType_Id = (select id from SubType where name = 'Ratchet'), 
+@SubOption_Id = (select id from SubOption where name = 'hex');
+insert into Tool (width, weight, length, manufacturer, material, deposit_price, rental_price, original_price, Category_Id, PowerSource_Id, SubType_Id, SubOption_Id) 
+VALUES (@width, @weight, @length, @manufacturer, @material, @deposit_price, @original_price, @rental_price, @Category_Id, @PowerSource_Id, @SubType_Id, @SubOption_Id);
+set @ccId = last_insert_id();
+
+
+--#Service Order / Repair Tool--
 -------------------------------
 /*
 Abstract Code
 ● User clicks Repair Tool from Main Menu
-● User enters StartDate, EndDate, Keyword, Type, Power Source, Sub-Type
-● Run Tool Search task: where tools not in ServiceOrder.ToolNumber <> Tool.Number or
+● User enters StartDate, EndDate, Keyword, Type, Power Source, Sub-Type*/
+set @StartDate = '2017-10-02', @EndDate = '2017-10-09', 
+@Clerk_Username = "jwas" ,
+@PowerSource_Id = (select id from PowerSource where name = 'Manual'), 
+@SubType_Id = (select id from SubType where name = 'Screwdriver');
+
+INSERT INTO ServiceOrder (start_date, end_date, Clerk_Username, service_cost, toolid) 
+VALUES (@StartDate, @EndDate, @Clerk_Username, @Service_Cost, @Tool_Id);
+
+# We also need a query for each specific subtype
+#ScrewDriver
+insert into HandTool VALUES (@lastTool);
+set @lastTool:= last_insert_id();
+insert into ScrewDriver (id, screw_size) VALUES (@lastTool, @screwsize);
+# Socket
+set @lastTool:= last_insert_id();
+insert into HandTool VALUES (@lastTool);
+set @lastTool:= last_insert_id();
+insert into HandSocket (id, drive_size, sae_size, deep_socket) VALUES (@lastTool, @drivesize,@saeSize, @deepsocket);
+
+#Ratchet
+insert into HandTool VALUES (@lastTool);
+set @lastTool:= last_insert_id();
+insert into HandRatchet (id, drive_size) VALUES (@lastTool,@drivesize);
+
+#Plier
+insert into HandTool VALUES (@lastTool);
+set @lastTool:= last_insert_id();
+insert into HandPlier(id, adjustable) VALUES (@lastTool,@adjustable);
+
+#Gun
+insert into HandTool VALUES (@lastTool);
+set @lastTool:= last_insert_id();
+insert into HandGun (id, gauge_rating, capacity) VALUES (@lastTool,@gaugerating, @capacity);
+
+#Hammer
+insert into HandTool VALUES (@lastTool);
+set @lastTool:= last_insert_id();
+insert into HandHammer (id, anti_vibration) VALUES (@lastTool,@antivib);
+
+# Garden, use this as a base for each Garden tool below
+insert into GardenTool (id, handle_material) VALUES (@lastTool, @handlematerial);
+
+# Pruning
+insert into PruningTool (id, blade_material, blade_length) VALUES (@lastTool, @bladematerial, @bladelength);
+
+#Striking
+insert into StrikingTool (id, head_weight) VALUES (@lastTool, @headweight);
+
+#Digging
+insert into DiggingTool (id, blade_width, blade_length) VALUES (@lastTool, @bladewidth, @bladelength);
+
+#Rake
+insert into RakeTool (id, tine_count) VALUES (@lastTool, @tinecount);
+
+#Wheelbarrow
+insert into WheelBarrowTool (id, bin_material,wheel_count,bin_volume) VALUES (@lastTool, @binmaterial, @wheelcount, @binvolume);
+
+#PowerTool - base for each power tool below
+insert into PowerTool (id, volt_rating, amp_rating, min_rpm_rating, max_rpm_rating) VALUES (@lastTool, @voltrating, @amprating, @minrpm, @maxrpm);
+
+#PowerDrill
+insert into PowerDrill (id, adjustable_clutch, min_torque_rating, max_torque_rating) VALUES (@lastTool, @adjustableclutch, @mintorquerating, @maxtorquerating);
+
+#Saw
+insert into PowerSaw (id, blade_size) VALUES (@lastTool, @bladesize);
+
+#Sander
+insert into PowerSander (id, dust_bag) VALUES (@lastTool, @dustbag);
+
+#AirCompressor
+insert into PowerAirCompressor (id, tank_size, pressure_Rating) VALUES (@lastTool, @tanksize, @pressureRating);
+
+#PowerMixer
+insert into PowerMixer (id, motor_rating, drum_size) VALUES (@lastTool, @motorrating, @drumsize);
+
+#PowerGenerator
+insert into PowerGenerator (id, power_rating) VALUES (@lastTool, @powerrating);
+
+#Accessory
+insert into Accessory (description, quantity, PowerTool_Id) VALUES (@description, @qty, @lastTool);
+Set @lastAccessory = last_insert_id();
+
+#Cordless Accessory
+insert into CordlessAccessory (id, volt_rating, amp_rating) VALUES (@lastAccessory, @voltrating, @amprating);
+
+#Ladder - Base use for each ladder subtype below
+set @lastTool:= last_insert_id();
+insert into LadderTool (id, step_count, weight_capacity) VALUES (@lastTool, @stepcount, @weightcapacity);
+
+#Straight Ladder
+insert into StrightLadder (id, rubber_feet) VALUES (@lastTool, @rubberfeet);
+
+#Step Ladder
+insert into StepLadder (id, pail_shelf) VALUES (@lastTool, @pailshelf);
+
+/*● Run Tool Search task: where tools not in ServiceOrder.ToolNumber <> Tool.Number or
 ServiceOrder.ToolNumber == Tool.Number and EndDate <> Null
 ○ For each Tool
-■ Display ToolNumber, Description, Rental Price, and Deposit Price
-● User clicks Service Tool button
+■ Display ToolNumber, Description, Rental Price, and Deposit Price*/
+SET @tool_id = 8;
+
+SELECT t.id, concat(c.name, " ", ps.name, " ", st.name) AS Description, t.rental_price, t.deposit_price
+FROM Tool as t
+LEFT JOIN Category as c ON c.id = t.Category_Id
+LEFT JOIN PowerSourceCategory as psc ON psc.Category_Id = t.Category_Id
+LEFT JOIN PowerSource as ps on ps.id = psc.PowerSource_Id
+LEFT JOIN SubType as st ON st.id = t.SubType_Id
+WHERE t.id = @tool_id
+
+/*● User clicks Service Tool button
 ○ Update list of tools to service
 ● User enters Tool ID
 ○ Validate that tool does not have a service order
@@ -292,12 +1015,41 @@ ServiceOrder.ToolNumber == Tool.Number and EndDate <> Null
 ● User clicks Service Status button from Main Menu
 ● User enters StartDate, EndDate, Keyword, Type, Power Source, Sub-Type
 ● Run Tool Search task: where ServiceOrder.EndDate is NULL
-○ Display ServiceNumber, Status, ToolNumber, Description, StartDate, EndDate
-RepairCost, Clerk.Name
-● User clicks Fix Now? Button
-○ Update EndDate to now(), ClerkNumber to current Clerk*/
+○ Display ServiceNumber, Status, ToolNumber, Description, StartDate, EndDate, RepairCost, Clerk.Name*/
 
---#TODO
+SET @tool_id = 2, @RepairCost = 20;
+
+
+SELECT so.id as ServiceOrder_ID, 
+EXISTS(select id from Tool t2 where t.id = t2.id 
+and t2.id not in (select Tool_Id from ToolReservations as tr where tr.Tool_Id = t2.id)
+and t2.id not in (select id from ServiceOrder as so where so.Tool_Id = t2.id and so.end_date > NOW() )
+and t2.id not in (select id from SaleOrder as so where so.sold_date is NULL and so.Tool_Id = t2.id)
+and t2.id not in (select id from SaleOrder as so where so.sold_date is not NULL and so.Tool_Id = t2.id)
+) as available,
+EXISTS(select Tool_Id from ToolReservations as tr where tr.Tool_Id = t.id) as rented,
+EXISTS(select id from ServiceOrder as so where so.Tool_Id = t.id and so.end_date > NOW() ) as inrepair,
+EXISTS(select id from SaleOrder as so where so.sold_date is NULL and so.Tool_Id = t.id) as forsale,
+EXISTS(select id from SaleOrder as so where so.sold_date is not NULL and so.Tool_Id = t.id) as sold,
+(select booking_date from ToolReservations as tr join Reservation as r on r.id =tr.Reservations_Id where tr.Tool_Id = t.id) as rented,
+t.id Tool_ID, concat(c.name, " ", ps.name, " ", st.name) AS Description, so.start_date as Service_StartDate, so.end_date as Service_EndDate, @RepairCost, so.Clerk_Username as Clerk
+FROM ServiceOrder as so
+LEFT JOIN Tool as t ON t.id = so.Tool_Id
+LEFT JOIN Category as c ON c.id = t.Category_Id
+LEFT JOIN PowerSourceCategory as psc ON psc.Category_Id = t.Category_Id
+LEFT JOIN PowerSource as ps on ps.id = psc.PowerSource_Id
+LEFT JOIN SubType as st ON st.id = t.SubType_Id
+WHERE t.id = @tool_id;
+
+
+
+/*● User clicks Fix Now? Button
+○ Update EndDate to now(), ClerkNumber to current Clerk*/
+SET @toolid = 2;
+
+UPDATE ServiceOrder
+SET end_date = NOW()
+WHERE Tool_Id = @toolid;
 
 --Sell Tool--
 -------------
@@ -312,53 +1064,66 @@ RepairCost, Clerk.Name
 
 --#TODO
 
---Sale Status--
----------------
-/*Abstract Code
-● User clicks Sale Status button from Main Menu
-● User enters StartDate, EndDate, Keyword, Type, Power Source, Sub-Type
-● Run Tool Search task: where ServiceOrder exists
-○ Display ServiceNumber, Status (ServiceOrder.EndDate <> NULL -> Sold),
-ToolNumber, Description, StartDate, EndDate RepairCost, Clerk.ID
-○ If “Sold” (ServiceOrder.EndDate <> NULL -> Sold)
-■ Display SalePrice, SaleDate
-*/
-
---#TODO
+# Sale Status
 
 
---Generate Report--
--------------------
-/*Abstract Code
-● User clicks Reports button from Main Menu
-● Display Clerk Report link, Customer Report link, and Tool Inventory link
-● User clicks Clerk Report link
-○ Go to Clerk Report
-○ For each Clerk
-■ Display Number, First Name, Middle Name, Last Name, Email, Hiring
-Date
-■ Sum number of pickups and dropoffs with Clerk.Number
-■ Calculate Total; Display Number of Pickups, Dropoffs, Combined Total
-● User clicks Customer Report link
-○ Go to Customer Report
-■ For each Customer
-● Display Customer Number, First Name, Middle Name, Last Name,
-Email, Phone
-● Count Reservation with Customer.Number; Display Total
-Reservations
-● Count Reservation.ToolNumber with Customer.Number; Display
-Total Tools Rented
-○ User clicks View Profile , then go to View Profile page
-● User clicks Tool Inventory link
-○ Go to Tool Inventory Report
-○ User enters All Tools, Hand Tool, Garden Tool, Ladder, Power Tool, Keyword i
-○ User clicks Search button
-○ Run Tool Search task
-■ For each Tool
-● Display ToolNumber, Description,
-● Find CurrentStatus, Date; Display CurrentStatus Date
-● Sum all rental prices collected and subtract cost
-● Sum all cost, original cost, repairs;
-● Calculate Total Profit; Display Rental Profit, Total Cost, Total Profit*/
 
---#TODO
+# Reports
+
+# Clerk Report
+select first_name, middle_name, last_name, email, date_of_hire, employee_number,
+(select count(PickupClerk_UserName) from Reservation as r where r.PickupClerk_UserName = c.user_name and MONTH(r.booking_date) = MONTH(NOW()) and YEAR(r.booking_date) = YEAR(NOW())) as numPickups,
+(select count(DropOffClerk_UserName) from Reservation as q where q.DropOffClerk_UserName = c.user_name and MONTH(q.booking_date) = MONTH(NOW()) and YEAR(q.booking_date) = YEAR(NOW())) as numDropOffs,
+
+# For some reason this syntax isn't working and it should (numPickups + numDropOffs) as CombinedTotal 
+# So instead use ugly syntax
+((select count(PickupClerk_UserName) from Reservation as r where r.PickupClerk_UserName = c.user_name and MONTH(r.booking_date) = MONTH(NOW()) and YEAR(r.booking_date) = YEAR(NOW())) 
++ 
+(select count(DropOffClerk_UserName) from Reservation as q where q.DropOffClerk_UserName = c.user_name and MONTH(q.booking_date) = MONTH(NOW()) and YEAR(q.booking_date) = YEAR(NOW()))
+) as CombinedTotal
+from Clerk as c
+order by CombinedTotal DESC;
+
+
+
+# Customer Report
+select id, first_name, middle_name, last_name, email,
+(select concat_ws('',area_code,number, extension) from PhoneNumber as p where p.id = c.primary_phone) as phone,
+(select count(Customer_UserName) from Reservation as r where r.Customer_UserName = c.user_name and MONTH(r.booking_date) = MONTH(NOW()) and YEAR(r.booking_date) = YEAR(NOW())) as totalReservations,
+(select count(Tool_id) from ToolReservations as tr where tr.Reservations_Id in
+(select id from Reservation as r where r.Customer_UserName = c.user_name and MONTH(r.booking_date) = MONTH(NOW()) and YEAR(r.booking_date) = YEAR(NOW()))) as ToolsRented
+from Customer as c
+order by ToolsRented, last_name;
+
+# Tool Inventory Report
+set @categoryId = 1;
+set @startdate :='2017-10-02 00:00:00';
+set @enddate :='2017-10-12 00:00:00';
+
+select t.id as toolId,
+concat_ws(' ',so.name, st.name) as description,
+EXISTS(select id from Tool t2 where t.id = t2.id 
+and t2.id not in (select Tool_Id from ToolReservations as tr where tr.Tool_Id = t2.id)
+and t2.id not in (select id from ServiceOrder as so where so.Tool_Id = t2.id and so.end_date > NOW() )
+and t2.id not in (select id from SaleOrder as so where so.sold_date is NULL and so.Tool_Id = t2.id)
+and t2.id not in (select id from SaleOrder as so where so.sold_date is not NULL and so.Tool_Id = t2.id)
+) as available,
+EXISTS(select Tool_Id from ToolReservations as tr where tr.Tool_Id = t.id) as rented,
+EXISTS(select id from ServiceOrder as so where so.Tool_Id = t.id and so.end_date > NOW() ) as inrepair,
+EXISTS(select id from SaleOrder as so where so.sold_date is NULL and so.Tool_Id = t.id) as forsale,
+EXISTS(select id from SaleOrder as so where so.sold_date is not NULL and so.Tool_Id = t.id) as sold,
+(select sold_date from SaleOrder as so where so.sold_date is not NULL and so.Tool_Id = t.id) as soldDate,
+(select sold_date from SaleOrder as so where so.sold_date is NULL and so.Tool_Id = t.id) as forsaleDate,
+(select start_date from ServiceOrder as so where so.Tool_Id = t.id and so.end_date > NOW() ) as inrepairDate,
+(select booking_date from ToolReservations as tr join Reservation as r on r.id =tr.Reservations_Id where tr.Tool_Id = t.id) as rented,
+(IFNULL((select sum(DATEDIFF(end_date, start_date)) from Reservation as r join ToolReservations as tr on tr.Reservations_Id = r.id where t.id = tr.Tool_Id),0) * rental_price) as RentalProfit,
+(t.original_price + IFNULL((select sum(service_cost) from ServiceOrder as so where so.Tool_Id = t.id),0)) as TotalCost,
+((IFNULL((select sum(DATEDIFF(end_date, start_date)) from Reservation as r join ToolReservations as tr on tr.Reservations_Id = r.id where t.id = tr.Tool_Id),0) * rental_price)
+-
+(t.original_price + IFNULL((select sum(service_cost) from ServiceOrder as so where so.Tool_Id = t.id),0))) as TotalProfit
+from Tool as t
+join SubOption as so on so.id = t.SubOption_Id
+join SubType as st on st.id = t.SubType_Id
+where t.Category_Id = @categoryId
+order by TotalProfit DESC;
+#if all selected then we can drop the where clause

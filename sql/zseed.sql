@@ -1,7 +1,8 @@
-use cs6400_fa17_team033;
+use cs6400_sfa17_team033;
 
 # Clerk Users
-insert into Clerk values('admin@gatech.edu','2015-12-01', 'password', 1, 'The', 'Best', 'Admin', 'admin@gatech.edu', 'hunter2');
+insert into Clerk (user_name, date_of_hire,temp_password, first_name, middle_name, last_name, email, password)
+values('admin@gatech.edu','2015-12-01', 'password', 'The', 'Best', 'Admin', 'admin@gatech.edu', 'hunter2');
 
 # Customers
 insert into Address (street, city, state, zip) values('123 main street', 'Gotham City', 'NY', '55555-5555');
@@ -206,59 +207,59 @@ insert into SubOption (name, SubType_Id) VALUES ('electric', @lastSubtype);
 
 # setup powersource subtype relationship
 
-insert into SubTypePowerSource (SubType_Id, PowerSource_Id) VALUES ((select id from SubType where name = 'Screwdriver'), @manualPowerSourceId);
-insert into SubTypePowerSource (SubType_Id, PowerSource_Id) VALUES ((select id from SubType where name = 'Socket'), @manualPowerSourceId);
-insert into SubTypePowerSource (SubType_Id, PowerSource_Id) VALUES ((select id from SubType where name = 'Ratchet'), @manualPowerSourceId);
-insert into SubTypePowerSource (SubType_Id, PowerSource_Id) VALUES ((select id from SubType where name = 'Wrench'), @manualPowerSourceId);
-insert into SubTypePowerSource (SubType_Id, PowerSource_Id) VALUES ((select id from SubType where name = 'Pliers'), @manualPowerSourceId);
-insert into SubTypePowerSource (SubType_Id, PowerSource_Id) VALUES ((select id from SubType where name = 'Gun'), @manualPowerSourceId);
-insert into SubTypePowerSource (SubType_Id, PowerSource_Id) VALUES ((select id from SubType where name = 'Hammer'), @manualPowerSourceId);
+insert into SubTypePowerSource (SubType_Id, PowerSource_Id, Category_Id) VALUES ((select id from SubType where name = 'Screwdriver'), @manualPowerSourceId, @handCategoryId);
+insert into SubTypePowerSource (SubType_Id, PowerSource_Id, Category_Id) VALUES ((select id from SubType where name = 'Socket'), @manualPowerSourceId, @handCategoryId);
+insert into SubTypePowerSource (SubType_Id, PowerSource_Id, Category_Id) VALUES ((select id from SubType where name = 'Ratchet'), @manualPowerSourceId, @handCategoryId);
+insert into SubTypePowerSource (SubType_Id, PowerSource_Id, Category_Id) VALUES ((select id from SubType where name = 'Wrench'), @manualPowerSourceId, @handCategoryId);
+insert into SubTypePowerSource (SubType_Id, PowerSource_Id, Category_Id) VALUES ((select id from SubType where name = 'Pliers'), @manualPowerSourceId, @handCategoryId);
+insert into SubTypePowerSource (SubType_Id, PowerSource_Id, Category_Id) VALUES ((select id from SubType where name = 'Gun'), @manualPowerSourceId, @handCategoryId);
+insert into SubTypePowerSource (SubType_Id, PowerSource_Id, Category_Id) VALUES ((select id from SubType where name = 'Hammer'), @manualPowerSourceId, @handCategoryId);
 
-insert into SubTypePowerSource (SubType_Id, PowerSource_Id) VALUES ((select id from SubType where name = 'Digger'), @manualPowerSourceId);
-insert into SubTypePowerSource (SubType_Id, PowerSource_Id) VALUES ((select id from SubType where name = 'Pruner'), @manualPowerSourceId);
-insert into SubTypePowerSource (SubType_Id, PowerSource_Id) VALUES ((select id from SubType where name = 'Rakes'), @manualPowerSourceId);
-insert into SubTypePowerSource (SubType_Id, PowerSource_Id) VALUES ((select id from SubType where name = 'Wheelbarrows'), @manualPowerSourceId);
-insert into SubTypePowerSource (SubType_Id, PowerSource_Id) VALUES ((select id from SubType where name = 'Striking'), @manualPowerSourceId);
+insert into SubTypePowerSource (SubType_Id, PowerSource_Id, Category_Id) VALUES ((select id from SubType where name = 'Digger'), @manualPowerSourceId, @gardenCategoryId);
+insert into SubTypePowerSource (SubType_Id, PowerSource_Id, Category_Id) VALUES ((select id from SubType where name = 'Pruner'), @manualPowerSourceId, @gardenCategoryId);
+insert into SubTypePowerSource (SubType_Id, PowerSource_Id, Category_Id) VALUES ((select id from SubType where name = 'Rakes'), @manualPowerSourceId, @gardenCategoryId);
+insert into SubTypePowerSource (SubType_Id, PowerSource_Id, Category_Id) VALUES ((select id from SubType where name = 'Wheelbarrows'), @manualPowerSourceId, @gardenCategoryId);
+insert into SubTypePowerSource (SubType_Id, PowerSource_Id, Category_Id) VALUES ((select id from SubType where name = 'Striking'), @manualPowerSourceId, @gardenCategoryId);
 
-insert into SubTypePowerSource (SubType_Id, PowerSource_Id) VALUES ((select id from SubType where name = 'Straight'), @manualPowerSourceId);
-insert into SubTypePowerSource (SubType_Id, PowerSource_Id) VALUES ((select id from SubType where name = 'Step'), @manualPowerSourceId);
+insert into SubTypePowerSource (SubType_Id, PowerSource_Id, Category_Id) VALUES ((select id from SubType where name = 'Straight'), @manualPowerSourceId, @ladderCategoryId);
+insert into SubTypePowerSource (SubType_Id, PowerSource_Id, Category_Id) VALUES ((select id from SubType where name = 'Step'), @manualPowerSourceId, @ladderCategoryId);
 
-insert into SubTypePowerSource (SubType_Id, PowerSource_Id) VALUES ((select id from SubType where name = 'Drill'), @acPowerSourceId);
-insert into SubTypePowerSource (SubType_Id, PowerSource_Id) VALUES ((select id from SubType where name = 'Drill'), @dcPowerSourceId);
+insert into SubTypePowerSource (SubType_Id, PowerSource_Id, Category_Id) VALUES ((select id from SubType where name = 'Drill'), @acPowerSourceId, @powerCategoryId);
+insert into SubTypePowerSource (SubType_Id, PowerSource_Id, Category_Id) VALUES ((select id from SubType where name = 'Drill'), @dcPowerSourceId, @powerCategoryId);
 
-insert into SubTypePowerSource (SubType_Id, PowerSource_Id) VALUES ((select id from SubType where name = 'Saw'), @acPowerSourceId);
-insert into SubTypePowerSource (SubType_Id, PowerSource_Id) VALUES ((select id from SubType where name = 'Saw'), @dcPowerSourceId);
+insert into SubTypePowerSource (SubType_Id, PowerSource_Id, Category_Id) VALUES ((select id from SubType where name = 'Saw'), @acPowerSourceId, @powerCategoryId);
+insert into SubTypePowerSource (SubType_Id, PowerSource_Id, Category_Id) VALUES ((select id from SubType where name = 'Saw'), @dcPowerSourceId, @powerCategoryId);
 
-insert into SubTypePowerSource (SubType_Id, PowerSource_Id) VALUES ((select id from SubType where name = 'Sander'), @acPowerSourceId);
-insert into SubTypePowerSource (SubType_Id, PowerSource_Id) VALUES ((select id from SubType where name = 'Sander'), @dcPowerSourceId);
+insert into SubTypePowerSource (SubType_Id, PowerSource_Id, Category_Id) VALUES ((select id from SubType where name = 'Sander'), @acPowerSourceId, @powerCategoryId);
+insert into SubTypePowerSource (SubType_Id, PowerSource_Id, Category_Id) VALUES ((select id from SubType where name = 'Sander'), @dcPowerSourceId, @powerCategoryId);
 
-insert into SubTypePowerSource (SubType_Id, PowerSource_Id) VALUES ((select id from SubType where name = 'Air-Compressor'), @acPowerSourceId);
-insert into SubTypePowerSource (SubType_Id, PowerSource_Id) VALUES ((select id from SubType where name = 'Air-Compressor'), @gasPowerSourceId);
+insert into SubTypePowerSource (SubType_Id, PowerSource_Id, Category_Id) VALUES ((select id from SubType where name = 'Air-Compressor'), @acPowerSourceId, @powerCategoryId);
+insert into SubTypePowerSource (SubType_Id, PowerSource_Id, Category_Id) VALUES ((select id from SubType where name = 'Air-Compressor'), @gasPowerSourceId, @powerCategoryId);
 
-insert into SubTypePowerSource (SubType_Id, PowerSource_Id) VALUES ((select id from SubType where name = 'Mixer'), @acPowerSourceId);
-insert into SubTypePowerSource (SubType_Id, PowerSource_Id) VALUES ((select id from SubType where name = 'Mixer'), @gasPowerSourceId);
+insert into SubTypePowerSource (SubType_Id, PowerSource_Id, Category_Id) VALUES ((select id from SubType where name = 'Mixer'), @acPowerSourceId, @powerCategoryId);
+insert into SubTypePowerSource (SubType_Id, PowerSource_Id, Category_Id) VALUES ((select id from SubType where name = 'Mixer'), @gasPowerSourceId, @powerCategoryId);
 
-insert into SubTypePowerSource (SubType_Id, PowerSource_Id) VALUES ((select id from SubType where name = 'Generator'), @gasPowerSourceId);
+insert into SubTypePowerSource (SubType_Id, PowerSource_Id, Category_Id) VALUES ((select id from SubType where name = 'Generator'), @gasPowerSourceId, @powerCategoryId);
 
 # Insert Hand Tools
-insert into Tool (width, weight, length, manufacturer, material, deposit_price, rental_price, Category_Id, PowerSource_Id, SubType_Id, SubOption_Id)
-VALUES (2.0, 2.25, 6, 'Dewalt', 'steel', 15.60, 5.33, @handCategoryId, @manualPowerSourceId, (select id from SubType where name = 'Screwdriver'), (select id from SubOption where name = 'hex'));
+insert into Tool (width, weight, length, manufacturer, material, deposit_price, rental_price, original_price, Category_Id, PowerSource_Id, SubType_Id, SubOption_Id)
+VALUES (2.0, 2.25, 6, 'Dewalt', 'steel', 15.60, 5.33, 44.0, @handCategoryId, @manualPowerSourceId, (select id from SubType where name = 'Screwdriver'), (select id from SubOption where name = 'hex'));
 
 set @lastTool:= last_insert_id();
 insert into HandTool VALUES (@lastTool);
 set @lastTool:= last_insert_id();
 insert into ScrewDriver (id, screw_size) VALUES (@lastTool, 4);
 
-insert into Tool (width, weight, length, manufacturer, material, deposit_price, rental_price, Category_Id, PowerSource_Id, SubType_Id, SubOption_Id)
-VALUES (2.0, 2.25, 6, 'Dewalt', 'steel', 15.60, 5.33, @handCategoryId, @manualPowerSourceId, (select id from SubType where name = 'Screwdriver'), (select id from SubOption where name = 'hex'));
+insert into Tool (width, weight, length, manufacturer, material, deposit_price, rental_price, original_price, Category_Id, PowerSource_Id, SubType_Id, SubOption_Id)
+VALUES (2.0, 2.25, 6, 'Dewalt', 'steel', 15.60, 5.33, 55, @handCategoryId, @manualPowerSourceId, (select id from SubType where name = 'Screwdriver'), (select id from SubOption where name = 'hex'));
 
 set @lastTool:= last_insert_id();
 insert into HandTool VALUES (@lastTool);
 set @lastTool:= last_insert_id();
 insert into ScrewDriver (id, screw_size) VALUES (@lastTool, 4);
 
-insert into Tool (width, weight, length, manufacturer, material, deposit_price, rental_price, Category_Id, PowerSource_Id, SubType_Id, SubOption_Id)
-VALUES (12.0, 5.25, 68, 'Dewalt', 'plastic', 0.60, 12.44, @handCategoryId, @manualPowerSourceId, (select id from SubType where name = 'Screwdriver'), (select id from SubOption where name = 'hex'));
+insert into Tool (width, weight, length, manufacturer, material, deposit_price, rental_price, original_price, Category_Id, PowerSource_Id, SubType_Id, SubOption_Id)
+VALUES (12.0, 5.25, 68, 'Dewalt', 'plastic', 0.60, 12.44,99, @handCategoryId, @manualPowerSourceId, (select id from SubType where name = 'Screwdriver'), (select id from SubOption where name = 'hex'));
 
 set @lastTool:= last_insert_id();
 insert into HandTool VALUES (@lastTool);
@@ -267,8 +268,8 @@ insert into ScrewDriver (id, screw_size) VALUES (@lastTool, 7);
 
 
 #Hand socket
-insert into Tool (width, weight, length, manufacturer, material, deposit_price, rental_price, Category_Id, PowerSource_Id, SubType_Id, SubOption_Id)
-VALUES (2.0, 2.25, 6, 'Dewalt', 'steel', 15.60, 5.33, @handCategoryId, @manualPowerSourceId, (select id from SubType where name = 'Socket'), (select id from SubOption where name = 'deep'));
+insert into Tool (width, weight, length, manufacturer, material, deposit_price, rental_price, original_price, Category_Id, PowerSource_Id, SubType_Id, SubOption_Id)
+VALUES (2.0, 2.25, 6, 'Dewalt', 'steel', 15.60, 5.33, 3, @handCategoryId, @manualPowerSourceId, (select id from SubType where name = 'Socket'), (select id from SubOption where name = 'deep'));
 
 set @lastTool:= last_insert_id();
 insert into HandTool VALUES (@lastTool);
@@ -276,8 +277,8 @@ set @lastTool:= last_insert_id();
 insert into HandSocket (id, drive_size, sae_size, deep_socket) VALUES (@lastTool, .5, .25, true);
 
 # Hand Ratchet
-insert into Tool (width, weight, length, manufacturer, material, deposit_price, rental_price, Category_Id, PowerSource_Id, SubType_Id, SubOption_Id)
-VALUES (2.0, 2.25, 6, 'Dewalt', 'steel', 15.60, 5.33, @handCategoryId, @manualPowerSourceId, (select id from SubType where name = 'Ratchet'), (select id from SubOption where name = 'fixed'));
+insert into Tool (width, weight, length, manufacturer, material, deposit_price, rental_price, original_price, Category_Id, PowerSource_Id, SubType_Id, SubOption_Id)
+VALUES (2.0, 2.25, 6, 'Dewalt', 'steel', 15.60, 5.33, 7, @handCategoryId, @manualPowerSourceId, (select id from SubType where name = 'Ratchet'), (select id from SubOption where name = 'fixed'));
 
 set @lastTool:= last_insert_id();
 insert into HandTool VALUES (@lastTool);
@@ -286,8 +287,8 @@ insert into HandRatchet (id, drive_size) VALUES (@lastTool, .5);
 
 
 # Garden tools insert
-insert into Tool (width, weight, length, manufacturer, material, deposit_price, rental_price, Category_Id, PowerSource_Id, SubType_Id, SubOption_Id)
-VALUES (2.0, 2.25, 6, 'Dewalt', 'steel', 15.60, 5.33, @gardenCategoryId, @manualPowerSourceId, (select id from SubType where name = 'Digger'), (select id from SubOption where name = 'edger'));
+insert into Tool (width, weight, length, manufacturer, material, deposit_price, rental_price, original_price, Category_Id, PowerSource_Id, SubType_Id, SubOption_Id)
+VALUES (2.0, 2.25, 6, 'Dewalt', 'steel', 15.60, 5.33, 66.9, @gardenCategoryId, @manualPowerSourceId, (select id from SubType where name = 'Digger'), (select id from SubOption where name = 'edger'));
 
 set @lastTool:= last_insert_id();
 insert into GardenTool (id, handle_material) VALUES (@lastTool, 'wood');
@@ -295,8 +296,8 @@ set @lastTool:= last_insert_id();
 insert into DiggingTool (id, blade_width, blade_length) VALUES (@lastTool, NULL, .25);
 
 # Ladder Tools Insert
-insert into Tool (width, weight, length, manufacturer, material, deposit_price, rental_price, Category_Id, PowerSource_Id, SubType_Id, SubOption_Id)
-VALUES (2.0, 2.25, 6, 'Dewalt', 'steel', 15.60, 5.33, @ladderCategoryId, @manualPowerSourceId, (select id from SubType where name = 'Step'), (select id from SubOption where name = 'folding'));
+insert into Tool (width, weight, length, manufacturer, material, deposit_price, rental_price, original_price, Category_Id, PowerSource_Id, SubType_Id, SubOption_Id)
+VALUES (2.0, 2.25, 6, 'Dewalt', 'steel', 15.60, 5.33, 33.0, @ladderCategoryId, @manualPowerSourceId, (select id from SubType where name = 'Step'), (select id from SubOption where name = 'folding'));
 
 set @lastTool:= last_insert_id();
 insert into LadderTool (id, step_count, weight_capacity) VALUES (@lastTool, 10, 6.3);
@@ -304,8 +305,8 @@ set @lastTool:= last_insert_id();
 insert into StepLadder (id, pail_shelf) VALUES (@lastTool, true);
 
 # Power Tool insert
-insert into Tool (width, weight, length, manufacturer, material, deposit_price, rental_price, Category_Id, PowerSource_Id, SubType_Id, SubOption_Id)
-VALUES (22.0, 2.25, 6, 'Dewalt', 'steel', 14, 88.98, @powerCategoryId, @dcPowerSourceId, (select id from SubType where name = 'Drill'), (select id from SubOption where name = 'hammer'));
+insert into Tool (width, weight, length, manufacturer, material, deposit_price, rental_price, original_price, Category_Id, PowerSource_Id, SubType_Id, SubOption_Id)
+VALUES (22.0, 2.25, 6, 'Dewalt', 'steel', 14, 88.98, 55, @powerCategoryId, @dcPowerSourceId, (select id from SubType where name = 'Drill'), (select id from SubOption where name = 'hammer'));
 
 set @lastTool:= last_insert_id();
 insert into PowerTool (id, volt_rating, amp_rating, min_rpm_rating, max_rpm_rating) VALUES (@lastTool, 110, 30, 2000, 4500);
