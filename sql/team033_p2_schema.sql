@@ -157,7 +157,6 @@ CREATE TABLE `SaleOrder` (
     `for_sale_date` DATETIME NOT NULL,
     `sold_date` DATETIME,
     `purchase_price` DECIMAL(18 , 2 ) NOT NULL,
-    `Clerk_UserName` NVARCHAR(128),
     `Customer_UserName` NVARCHAR(128),
     `Clerk_UserName` NVARCHAR(128) NOT NULL,
     `Tool_Id` INT NOT NULL,
