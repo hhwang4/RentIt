@@ -329,3 +329,11 @@ VALUES ('2017-10-02', '2017-10-09', 47.88, 'thebatman', 1, 'admin@gatech.edu');
 # Service Order
 insert into ServiceOrder (start_date, end_date, service_cost, Tool_Id)
 VALUES ('2017-10-02', '2017-10-09', 47.88, 1);
+
+# Tool Reservation
+INSERT INTO ToolReservations (Tool_Id, Reservations_Id) VALUES (1, 1);
+INSERT INTO ToolReservations (Tool_Id, Reservations_Id) VALUES (2, 1);
+
+# Tool Rentals
+INSERT INTO Rentals (Tool_Id, start_date, end_date, number_of_rentals) VALUES (1, '2017-10-02', '2017-10-12', 1);
+INSERT INTO Rentals (Tool_Id, start_date, end_date, number_of_rentals) VALUES (2, '2017-10-02', '2017-10-12', 2);

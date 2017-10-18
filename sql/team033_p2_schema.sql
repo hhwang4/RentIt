@@ -87,7 +87,13 @@ CREATE TABLE `ToolReservations` (
     PRIMARY KEY (`Tool_Id` , `Reservations_Id`)
 );
 
-
+CREATE TABLE `Rentals` (
+    `Tool_Id` INT NOT NULL,
+    `start_date` DATETIME NOT NULL,
+    `end_date` DATETIME NOT NULL,
+    `number_of_rentals` INT NOT NULL,
+    PRIMARY KEY (`Tool_Id`)
+);
 
 CREATE TABLE `Tool` (
     `id` INT NOT NULL AUTO_INCREMENT,
@@ -349,8 +355,9 @@ alter table `Reservation` add constraint `FK_Reservation_Customer_Customer_UserN
 alter table `Reservation` add constraint `FK_Reservation_Clerk_DropOffClerk_UserName`  foreign key (`DropOffClerk_UserName`) references `Clerk` ( `user_name`) ;
 alter table `Reservation` add constraint `FK_Reservation_Clerk_PickupClerk_UserName`  foreign key (`PickupClerk_UserName`) references `Clerk` ( `user_name`) ;
 alter table `ToolReservations` add constraint `FK_ToolAvailability_Tool_Tool_Id`  foreign key (`Tool_Id`) references `Tool` ( `id`)  on update cascade on delete cascade ;
-alter table `ToolReservations` add constraint `FK_ToolAvailability_Reservation_Reservations_Id`  foreign key (`Reservations_Id`) references `Reservation` ( `id`) ;
 alter table `Tool` add constraint `FK_Tool_Category_Category_Id`  foreign key (`Category_Id`) references `Category` ( `id`)  on update cascade on delete cascade ;
+alter table `Rentals` add constraint `FK_Rentals_Tool_Tool_Id`  foreign key (`Tool_Id`) references `Tool` ( `id`)  on update cascade on delete cascade ;
+alter table `ToolReservations` add constraint `FK_ToolAvailability_Reservation_Reservations_Id`  foreign key (`Reservations_Id`) references `Reservation` ( `id`) ;
 alter table `Tool` add constraint `FK_Tool_PowerSource_PowerSource_Id`  foreign key (`PowerSource_Id`) references `PowerSource` ( `id`)  on update cascade on delete cascade ;
 alter table `Tool` add constraint `FK_Tool_SubOption_SubOption_Id`  foreign key (`SubOption_Id`) references `SubOption` ( `id`)  on update cascade on delete cascade ;
 alter table `Tool` add constraint `FK_Tool_SubType_SubType_Id`  foreign key (`SubType_Id`) references `SubType` ( `id`)  on update cascade on delete cascade ;
