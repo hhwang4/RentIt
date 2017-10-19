@@ -23,11 +23,16 @@ insert into CreditCard (name, card_number, cvc, expiration_month, expiration_yea
 set @ccId = last_insert_id();
 
 set @primaryPhone = 1, @user_name = 'TheJoker', @first_name = 'Mr', @middle_name = 'J', @last_name = 'Joker', @email = 'crimeclown@aol.com', @password = 'bats';
-set @cellphoneId = NULL, @homephoneId = NULL, @workphoneId = NULL;
 
 
-INSERT INTO Customer (user_name, primary_phone, first_name, middle_name, last_name, email, password, Address_Id, CellPhoneNumber_Id, CreditCard_Id, HomePhoneNumber_Id, WorkPhoneNumber_Id)
-VALUES (@user_name, @primaryPhone, @first_name, @middle_name, @last_name, @email, @password, @addressId, @cellphoneId, @ccId, @homephoneId, @workphoneId);
+INSERT INTO Customer (user_name, first_name, middle_name, last_name, email, password, Address_Id, CreditCard_Id)
+VALUES (@user_name, @first_name, @middle_name, @last_name, @email, @password, @addressId, @ccId);
+
+set @areacode = '321', @pnum = '867-5309', @pext = NULL, @pType = 'Mobile', @primPhone = True;
+
+
+insert into PhoneNumber (area_code, number, extension, type, `primary`, Customer_UserName) values(@areacode, @pnum, @pext, @pType, @primPhone, @user_name);
+ 
 
 -- View PROFILE --
 ------------------
@@ -35,15 +40,14 @@ VALUES (@user_name, @primaryPhone, @first_name, @middle_name, @last_name, @email
 /* View Customer task */
 
 /* Find the User using the Username; Display the email, full name */
-SELECT email, first_name, middle_name, last_name, p.area_code as cellAc, p.extension as cellExt, p.number as cellNumber, 
-q.area_code as workAc, q.extension as workExt, q.number as workNumber, 
-r.area_code as homeAc, r.extension as homeExt, r.number as homeNumber,
-city, street, zip, state
+SELECT email, first_name, middle_name, last_name, 
+(select concat('(', area_code, ') ', `number`, case when extension is null then '' else concat(' x',extension) end) from PhoneNumber where Customer_UserName = @username and type = 'Home') as home_phone,
+(select concat('(', area_code, ') ', `number`, case when extension is null then '' else concat(' x',extension) end) from PhoneNumber where Customer_UserName = @username and type = 'Work') as work_phone,
+(select concat('(', area_code, ') ', `number`, case when extension is null then '' else concat(' x',extension) end) from PhoneNumber where Customer_UserName = @username and type = 'Mobile') as cell_phone,
+(concat(street, ', ', city, ', ', state, ' ', zip)) as address
+
 FROM Customer as c
 JOIN Address as a on a.id = c.Address_Id
-LEFT OUTER JOIN PhoneNumber as p on c.CellPhoneNumber_Id = p.id
-LEFT OUTER JOIN PhoneNumber as q on c.WorkPhoneNumber_Id = q.id
-LEFT OUTER JOIN PhoneNumber as r on c.HomePhoneNumber_Id = r.id
 WHERE user_name=@username;
 
 
@@ -1088,7 +1092,7 @@ order by CombinedTotal DESC;
 
 # Customer Report
 select id, first_name, middle_name, last_name, email,
-(select concat_ws('',area_code,number, extension) from PhoneNumber as p where p.id = c.primary_phone) as phone,
+(select concat('(', area_code, ') ', `number`, case when extension is null then '' else concat(' x',extension) end) from PhoneNumber as p where p.Customer_UserName = c.user_name and p.primary = true) as phone,
 (select count(Customer_UserName) from Reservation as r where r.Customer_UserName = c.user_name and MONTH(r.booking_date) = MONTH(NOW()) and YEAR(r.booking_date) = YEAR(NOW())) as totalReservations,
 (select count(Tool_id) from ToolReservations as tr where tr.Reservations_Id in
 (select id from Reservation as r where r.Customer_UserName = c.user_name and MONTH(r.booking_date) = MONTH(NOW()) and YEAR(r.booking_date) = YEAR(NOW()))) as ToolsRented

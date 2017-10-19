@@ -13,12 +13,13 @@ insert into CreditCard (name, card_number, cvc, expiration_month, expiration_yea
 
 set @creditCardId := last_insert_id();
 
-insert into PhoneNumber (area_code, number, extension) values('321', '867-5309', NULL);
+insert into Customer (user_name, first_name,middle_name,last_name,email,password,Address_Id, CreditCard_Id)
+values('thebatman', 'Bruce', 'Tyrone', 'Wayne', 'thebatman@aol.com', 'robin', @addressId, @creditCardId);
 
-set @phoneId := last_insert_id();
+insert into PhoneNumber (area_code, number, extension, type, `primary`, Customer_UserName) values('321', '867-5309', NULL, 'Mobile', TRUE, 'thebatman');
+insert into PhoneNumber (area_code, number, extension, type, `primary`, Customer_UserName) values('321', '867-5308', NULL, 'Work', False, 'thebatman');
+insert into PhoneNumber (area_code, number, extension, type, `primary`, Customer_UserName) values('444', '867-5308', NULL, 'Home', False, 'thebatman');
 
-insert into Customer (user_name, primary_phone, first_name,middle_name,last_name,email,password,Address_Id, CellPhoneNumber_Id, CreditCard_Id,HomePhoneNumber_Id,WorkPhoneNumber_Id)
-values('thebatman', 1, 'Bruce', 'Tyrone', 'Wayne', 'thebatman@aol.com', 'robin', @addressId, NULL, @creditCardId, NULL, @phoneId);
 
 
 # Category and subtypes
