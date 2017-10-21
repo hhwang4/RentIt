@@ -5,17 +5,13 @@ use cs6400_sfa17_team033;
 CREATE TABLE `Customer` (
 	`id` INT NOT NULL AUTO_INCREMENT,
     `user_name` NVARCHAR(128) NOT NULL,
-    `primary_phone` INT NOT NULL,
     `first_name` VARCHAR(128) NOT NULL,
     `middle_name` VARCHAR(128) NOT NULL,
     `last_name` VARCHAR(128) NOT NULL,
     `email` VARCHAR(128) NOT NULL,
     `password` LONGTEXT NOT NULL,
     `Address_Id` INT NOT NULL,
-    `CellPhoneNumber_Id` INT,
     `CreditCard_Id` INT NOT NULL,
-    `HomePhoneNumber_Id` INT,
-    `WorkPhoneNumber_Id` INT,
     PRIMARY KEY (`user_name`),
     UNIQUE(`email`),
     UNIQUE(`id`)
@@ -36,6 +32,9 @@ CREATE TABLE `PhoneNumber` (
     `area_code` VARCHAR(3) NOT NULL,
     `number` VARCHAR(12) NOT NULL,
     `extension` VARCHAR(10),
+    `type` VARCHAR(10) NOT NULL,
+    `primary` BOOL NOT NULL,
+    `Customer_UserName` NVARCHAR(128) NOT NULL,
     PRIMARY KEY (`id`)
 );
 
@@ -72,8 +71,6 @@ CREATE TABLE `Reservation` (
     `booking_date` DATETIME NOT NULL,
     `start_date` DATETIME NOT NULL,
     `end_date` DATETIME NOT NULL,
-    #`total_deposit_price` DECIMAL(18 , 2 ) NOT NULL, #removed because these should be derived
-    #`total_rental_price` DECIMAL(18 , 2 ) NOT NULL, #removed because these should be derived
     `Customer_UserName` NVARCHAR(128) NOT NULL,
     `DropOffClerk_UserName` NVARCHAR(128),
     `PickupClerk_UserName` NVARCHAR(128),
@@ -347,10 +344,8 @@ CREATE TABLE `RakeTool` (
     PRIMARY KEY (`id`)
 );
 alter table `Customer` add constraint `FK_Customer_Address_Address_Id`  foreign key (`Address_Id`) references `Address` ( `id`) ;
-alter table `Customer` add constraint `FK_Customer_PhoneNumber_CellPhoneNumber_Id`  foreign key (`CellPhoneNumber_Id`) references `PhoneNumber` ( `id`) ;
+alter table `PhoneNumber` add constraint `FK_Customer_PhoneNumber_Customer_Id`  foreign key (`Customer_UserName`) references `Customer` ( `user_name`) ;
 alter table `Customer` add constraint `FK_Customer_CreditCard_CreditCard_Id`  foreign key (`CreditCard_Id`) references `CreditCard` ( `id`)  on update cascade on delete cascade ;
-alter table `Customer` add constraint `FK_Customer_PhoneNumber_HomePhoneNumber_Id`  foreign key (`HomePhoneNumber_Id`) references `PhoneNumber` ( `id`) ;
-alter table `Customer` add constraint `FK_Customer_PhoneNumber_WorkPhoneNumber_Id`  foreign key (`WorkPhoneNumber_Id`) references `PhoneNumber` ( `id`) ;
 alter table `Reservation` add constraint `FK_Reservation_Customer_Customer_UserName`  foreign key (`Customer_UserName`) references `Customer` ( `user_name`) ;
 alter table `Reservation` add constraint `FK_Reservation_Clerk_DropOffClerk_UserName`  foreign key (`DropOffClerk_UserName`) references `Clerk` ( `user_name`) ;
 alter table `Reservation` add constraint `FK_Reservation_Clerk_PickupClerk_UserName`  foreign key (`PickupClerk_UserName`) references `Clerk` ( `user_name`) ;
