@@ -9,20 +9,26 @@ angular.module('myApp.login', ['ngRoute'])
         });
     }])
 
-    .controller('LoginCtrl', ['$scope', '$http', 'localStorageService', function ($scope, $http, localStorageService) {
+    .controller('LoginCtrl', ['$scope', '$http', 'localStorageService',
+        function ($scope, $http, localStorageService) {
         $scope.view = 'This is a scope variable1';
 
         var vm = this;
         vm.username = null;
         vm.password = null;
         vm.loginType = 'customer';
+        vm.error = null;
 
-        vm.canLogin = function() {
-          return vm.username != null &&  vm.password != null;
+        vm.hasError = function () {
+            return vm.error != null;
+        }
+
+        vm.canLogin = function () {
+            return vm.username != null && vm.password != null;
         };
 
         vm.login = function () {
-
+            vm.error = null;
             $http.post('/customer/login', {
                 "username": vm.username,
                 "password": vm.password,
@@ -35,7 +41,12 @@ angular.module('myApp.login', ['ngRoute'])
                 })
                 .error(function (err, status) {
                     console.log('Error', err, status);
+                    vm.error = err.message
                 });
+        };
+
+        vm.logout = function () {
+            localStorageService.remove('authorizationData');
         };
 
 

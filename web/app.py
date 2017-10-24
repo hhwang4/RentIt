@@ -10,8 +10,10 @@ app.config['MYSQL_DATABASE_USER'] = 'root'
 app.config['MYSQL_DATABASE_PASSWORD'] = 'mypassword'
 app.config['MYSQL_DATABASE_DB'] = 'cs6400_sfa17_team033'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
-app.config['MYSQL_DATABASE_HOST'] = 'mysql'  # mysql is the name of the docker container
+# app.config['MYSQL_DATABASE_HOST'] = 'mysql'  # mysql is the name of the docker container
 mysql.init_app(app)
+
+json_content = {'ContentType': 'application/json'}
 
 
 @app.route("/")
@@ -29,18 +31,34 @@ def login():
         sql_statement = "SELECT password from Clerk as c where c.user_name = '{}';".format(login_info['username'])
 
     cursor = mysql.connect().cursor()
-    cursor.execute(sql_statement)
-    result = cursor.fetchall()
+    try:
+        cursor.execute(sql_statement)
+        result = cursor.fetchall()
+    finally:
+        cursor.close()
 
-    if cursor.rownumber == 1:
-        pw = result[0][0]
-    else:
-        pw = None
+    if cursor.rownumber != 1:
+        return json.dumps(
+            {'success': False,
+             'type': login_info['type'],
+             'message': 'There is no {} with username {}'.format(login_info['type'], login_info['username'])
+             }), \
+               400, json_content
+
+    pw = result[0][0]
 
     if login_info["password"] == pw:
-        return json.dumps({'success': True, 'Type': login_info['type']}), 200, {'ContentType': 'application/json'}
+        return json.dumps({'success': True,
+                           'type': login_info['type'],
+                           'username': login_info['username']
+                           }), 200, json_content
     else:
-        return json.dumps({'success': False, 'Type': login_info['type']}), 400, {'ContentType': 'application/json'}
+        return json.dumps(
+            {'success': False,
+             'type': login_info['type'],
+             'message': 'Password is incorrect for {}'.format(login_info['username'])
+             }), \
+               400, json_content
 
 
 @app.route("/myindex")
