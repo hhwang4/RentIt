@@ -20,6 +20,20 @@ json_content = {'ContentType': 'application/json'}
 def hello():
     return render_template('index.html')
 
+@app.route("/old")
+def old_hello():
+    return render_template('index_old.html')
+
+@app.route("/addtool")
+def add_tool():
+    # code here
+    # grab data from request
+    # request data to database
+    # DB gives results
+    # result to json
+    return json.dumps(
+        {'success': True}),\
+           200, json_content
 
 @app.route("/customer/login", methods=['POST'])
 def login():
