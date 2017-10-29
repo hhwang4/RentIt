@@ -1,0 +1,34 @@
+<div class="container" data-ng-controller="LoginCtrl as vm">
+    <div class="alert alert-danger" role="alert" ng-hide="!vm.hasError()">
+        {{ vm.error }}
+    </div>
+
+    <div class="form-group">
+        <label for="userName">Username</label>
+        <input type="text" class="form-control" id="userName" aria-describedby="usernameHelp"
+               placeholder="Username" ng-model="vm.username">
+    </div>
+    <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" class="form-control" id="Password" placeholder="Password" ng-model="vm.password">
+    </div>
+    <div class="form-check">
+        <label class="form-check-label">
+            <input class="form-check-input" type="radio" name="loginType" id="customerLogin" value="customer"
+                   ng-model="vm.loginType"
+                   checked>
+            Customer
+        </label>
+    </div>
+    <div class="form-check">
+        <label class="form-check-label">
+            <input class="form-check-input" type="radio" name="loginType" id="clerkLogin" value="clerk"
+                   ng-model="vm.loginType">
+            Clerk
+        </label>
+    </div>
+    <div class="form-group">
+        <button type="submit" ng-disabled="!vm.canLogin()" class="btn btn-primary" ng-click="vm.login()">Sign In
+        </button>
+    </div>
+</div>
