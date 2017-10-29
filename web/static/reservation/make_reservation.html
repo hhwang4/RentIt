@@ -1,0 +1,91 @@
+<!-- Title -->
+<h2>Make Reservation</h2>
+<!-- Search feature -->
+<form>
+  <div class="form-row">
+    <div class="form-group col-sm">
+      <label for="start-date">Start Date:</label>
+      <input type="text" class="form-control" id="start-date" placeholder="06/30/2017">
+    </div>
+    <div class="form-group col-sm">
+      <label for="end-date">End Date:</label>
+      <input type="text" class="form-control" id="end-date" placeholder="07/30/2017">
+    </div>
+    <div class="form-group col-sm">
+      <label for="keyword">Custom Search:</label>
+      <input type="text" class="form-control" id="keyword" placeholder="Enter Keyword">
+    </div>
+    <div class="col-auto">
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+  </div>
+  <div class="form-inline">
+    <div class="form-check form-check-inline">
+      <label class="form-check-label">
+        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="type-all-tool" value="option1"> All Tools
+      </label>
+    </div>
+    <div class="form-check form-check-inline">
+      <label class="form-check-label">
+        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="type-hand-tool" value="option2"> Hand Tool
+      </label>
+    </div>
+    <div class="form-check form-check-inline">
+      <label class="form-check-label">
+        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="type-garden-tool" value="option3" > Garden Tool
+      </label>
+    </div>
+    <div class="form-check form-check-inline ">
+      <label class="form-check-label">
+        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="type-ladder" value="option4" > Ladder
+      </label>
+    </div>
+    <div class="form-check form-check-inline ">
+      <label class="form-check-label">
+        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="type-power-tool" value="option5" > Power Tool
+      </label>
+    </div>
+    <!-- Select Power Source and Sub-Type -->
+    <label for="power-source">Power Source:</label>
+    <select class="form-control" id="power-source">
+      <option>Drill</option>
+    </select>
+    <label for="sub-type">Sub-Type:</label>
+    <select class="form-control" id="sub-type">
+      <option>Type</option>
+    </select>
+  </div>
+</form>
+<!-- Display Available Tools For Rent-->
+<h2>Available Tools For Rent</h2>
+<div ng-if="!hasSearched">
+  <div class="alert alert-info" role="alert">
+    Click search to see results for tools available.
+  </div>
+</div>
+
+<div ng-if="hasSearched">
+  <div ng-if="!tools.length" class="alert alert-warning" role="alert">
+    No tools match your search criteria.
+  </div>
+  <div ng-if="tools.length">
+    <table class="table table-stripped">
+      <thead>
+        <th scope="col">Tool ID</th>
+        <th scope="col">Description</th>
+        <th scope="col">Rental Price</th>
+        <th scope="col">Deposit Price</th>
+        <th scope="col">Add</th>
+      </thead>
+      <tbody>
+        <tr ng-repeat="tool in tools">
+          <th scope"row">{{tool.id}}</th>
+          <td>{{tool.description}}</td>
+          <td>{{tool.rental_price}}</td>
+          <td>{{tool.deposit_price}}</td>
+          <td><input type="checkbox" aria-label="Add"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,11 +1,24 @@
-import json
-
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 from flask import abort
 from flaskext.mysql import MySQL
+import os
+import socket
+import decimal
+import flask.json
+import json
+
+class MyJSONEncoder(flask.json.JSONEncoder):
+    def default(self, obj):
+	if isinstance(obj, decimal.Decimal):
+            # Convert decimal instances to strings.
+            return str(obj)
+        return super(MyJSONEncoder, self).default(obj)
 
 app = Flask(__name__)
 mysql = MySQL()
+app.json_encoder = MyJSONEncoder
+
+
 app.config['MYSQL_DATABASE_USER'] = 'root'
 app.config['MYSQL_DATABASE_PASSWORD'] = 'mypassword'
 app.config['MYSQL_DATABASE_DB'] = 'cs6400_sfa17_team033'
@@ -77,12 +90,34 @@ def login():
 
 @app.route("/myindex")
 def myindex():
+    # cursor = mysql.connect().cursor()
+    # cursor.execute("SELECT * from Persons")
+    # data = cursor.fetchall()
+
+    # return render_template('index.html', data=data)
+    return render_template('index.html')
+
+@app.route("/make-reservation")
+def make_reservation():
+   """ Reserve specified tools"""
+   pass
+
+@app.route("/tools/")
+def tools():
+    result = []
+
     cursor = mysql.connect().cursor()
-    cursor.execute("SELECT * from Persons")
+    data = cursor.execute("SELECT id, manufacturer, rental_price, deposit_price FROM Tool")
+
     data = cursor.fetchall()
-
-    return render_template('index_old.html', data=data)
-
+    for tool_id, man, rent, deposit in data:
+        result.append({
+          'id': tool_id,
+          'description': man,
+          'rental_price': rent,
+          'deposit_price': deposit
+          })
+    return jsonify(result)
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=8080)
+  app.run(host='0.0.0.0', port=8080)
