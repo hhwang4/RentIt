@@ -5,11 +5,11 @@
   <div class="form-row">
     <div class="form-group col-sm">
       <label for="start-date">Start Date:</label>
-      <input type="text" class="form-control" id="start-date" placeholder="06/30/2017">
+      <input ng-model="start_date" type="text" class="form-control" id="start-date" placeholder="2017-06-30">
     </div>
     <div class="form-group col-sm">
       <label for="end-date">End Date:</label>
-      <input type="text" class="form-control" id="end-date" placeholder="07/30/2017">
+      <input ng-model="end_date" type="text" class="form-control" id="end-date" placeholder="2017-07-19">
     </div>
     <div class="form-group col-sm">
       <label for="keyword">Custom Search:</label>
@@ -83,9 +83,36 @@
           <td>{{tool.description}}</td>
           <td>{{tool.rental_price}}</td>
           <td>{{tool.deposit_price}}</td>
-          <td><input type="checkbox" aria-label="Add"></td>
+          <td ng-click="addTool($index)"><input type="checkbox" aria-label="Add" ng-model="tool.added"></td>
         </tr>
       </tbody>
     </table>
   </div>
+</div>
+<hr />
+<h2>Tools Added to Reservation</h2>
+<div>
+  <table class="table table-stripped">
+    <thead>
+      <th scope="col">Tool ID</th>
+      <th scope="col">Description</th>
+      <th scope="col">Rental Price</th>
+      <th scope="col">Deposit Price</th>
+      <th scope="col">Remove</th>
+    </thead>
+    <tbody>
+      <tr ng-repeat="tool in toolsAdded">
+        <th scope"row">{{tool.id}}</th>
+        <td>{{tool.description}}</td>
+        <td>{{tool.rental_price}}</td>
+        <td>{{tool.deposit_price}}</td>
+        <td ng-click="removeTool($index)"><input type="checkbox" aria-label="Remove"></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<button class="btn btn-primary" ng-click="open('lg')">Calculate Total</button>
+
+<!-- Modal -->
+<div class="confirmation-modal">
 </div>

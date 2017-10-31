@@ -1,0 +1,50 @@
+<div class="modal" id="confirmationModalLong" tabindex="-1" role="dialog" aria-labelledby="confirmationModalLongTitle" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-demo">
+        <div class="modal-header">
+          <h5 class="modal-title" id="confirmationModalLabel">Reservation Confirmation</h5>
+          <button ng-click="cancel()" type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div id="reservation-summary">
+            <p>Reservation Dates: {{start_date}} - {{end_date}}</p>
+            <p>Number of Days Rented: {{number_of_days_rented}}</p>
+            <p>Total Deposit Price: {{total_deposit_price}}</p>
+            <p>Total Rental Price: {{total_rental_price}}</p>
+          </div>
+          <hr />
+          <h2>Tools</h2>
+          <table class="table table-stripped">
+            <thead>
+              <th scope="col">Tool ID</th>
+              <th scope="col">Description</th>
+              <th scope="col">Rental Price</th>
+              <th scope="col">Deposit Price</th>
+            </thead>
+            <tbody>
+              <tr ng-repeat="tool in toolsAdded">
+                <th scope"row">{{tool.id}}</th>
+                <td>{{tool.description}}</td>
+                <td>{{tool.rental_price}}</td>
+                <td>{{tool.deposit_price}}</td>
+              </tr>
+              <tr>
+                <td><strong>Totals</strong></td>
+                <td />
+                  <td>{{total_rental_price}}</td>
+                  <td>{{total_deposit_price}}</td>
+                  </ tr>	
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button ng-click="reset()" type="button" class="btn btn-secondary" data-dismiss="modal">Reset</button>
+          <button ng-click="submit()" type="button" class="btn btn-primary">Submit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

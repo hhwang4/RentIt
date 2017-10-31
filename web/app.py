@@ -7,6 +7,8 @@ import decimal
 import flask.json
 import json
 
+from static.reservation.reservation import createReservation, searchReservation
+
 class MyJSONEncoder(flask.json.JSONEncoder):
     def default(self, obj):
 	if isinstance(obj, decimal.Decimal):
@@ -22,8 +24,8 @@ app.json_encoder = MyJSONEncoder
 app.config['MYSQL_DATABASE_USER'] = 'root'
 app.config['MYSQL_DATABASE_PASSWORD'] = 'mypassword'
 app.config['MYSQL_DATABASE_DB'] = 'cs6400_sfa17_team033'
-app.config['MYSQL_DATABASE_HOST'] = 'localhost'
-# app.config['MYSQL_DATABASE_HOST'] = 'mysql'  # mysql is the name of the docker container
+# app.config['MYSQL_DATABASE_HOST'] = 'localhost'
+app.config['MYSQL_DATABASE_HOST'] = 'mysql'  # mysql is the name of the docker container
 mysql.init_app(app)
 
 json_content = {'ContentType': 'application/json'}
@@ -87,7 +89,6 @@ def login():
              }), \
                400, json_content
 
-
 @app.route("/myindex")
 def myindex():
     # cursor = mysql.connect().cursor()
@@ -97,12 +98,17 @@ def myindex():
     # return render_template('index.html', data=data)
     return render_template('index.html')
 
-@app.route("/make-reservation")
+@app.route("/reservation", methods=['POST'])
 def make_reservation():
-   """ Reserve specified tools"""
-   pass
+    """ Reserve specified tools"""
+    con = mysql.connect()
+    data = request.json
+    result = createReservation(con, data['tools'], data['start_date'], data['end_date'], data['customer_username'])
+    con.commit()
 
-@app.route("/tools/")
+    return json.dumps({'success':True, "data": result}), 200, {'ContentType':'application/json'}
+
+@app.route("/tools")
 def tools():
     result = []
 
