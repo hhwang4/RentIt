@@ -104,9 +104,8 @@ def make_reservation():
     con = mysql.connect()
     data = request.json
     result = createReservation(con, data['tools'], data['start_date'], data['end_date'], data['customer_username'])
-    con.commit()
 
-    return json.dumps({'success':True, "data": result}), 200, {'ContentType':'application/json'}
+    return json.dumps({ 'success': result['success'], 'data': result }), result['status_code'], {'ContentType':'application/json'}
 
 @app.route("/tools")
 def tools():

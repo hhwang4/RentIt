@@ -50,8 +50,12 @@ angular.module('myApp.make_reservation', ['ngRoute', 'ngAnimate', ])
 
   $scope.addTool = function(index) {
     var tool = $scope.tools[index];
-    tool.added = true; 
-    $scope.toolsAdded.push(tool);
+    if ($scope.toolsAdded.indexOf(tool) === -1) {
+      $scope.toolsAdded.push(tool);
+      tool.added = true; 
+    } else {
+      $scope.removeTool($scope.toolsAdded.indexOf(tool));
+    }
   }
 
   $scope.removeTool = function(index) {
@@ -73,6 +77,8 @@ angular.module('myApp.make_reservation', ['ngRoute', 'ngAnimate', ])
       ariaDescribedBy: 'modal-body',
       templateUrl: 'static/reservation/confirmationModal.html',
 			controller: function($uibModalInstance, $scope, toolsAdded, start_date, end_date, customer_username) {
+        $scope.title = "Reservation Summary" 
+        $scope.isSummary = true;
         $scope.toolsAdded = toolsAdded;
         $scope.start_date = start_date;
         $scope.end_date = end_date;
@@ -93,19 +99,20 @@ angular.module('myApp.make_reservation', ['ngRoute', 'ngAnimate', ])
           var config = { header: { 'Content-Type': 'application/json' } };
           $http.post('/reservation', data, config)
             .success(function(response) {
-              
-  
-              $uibModalInstance.close('success');
+              var data = response.data;
+              $scope.isSummary = false;
+              $scope.reservation_id = data['reservation_id'];
             })
           .error(function(response) {
-
+            var data = response.data || {};
+            $uibModalInstance.close({status: 'fail', tool_ids: data['tool_ids']});
           });
         };
         $scope.cancel = function () {
-          $uibModalInstance.dismiss('cancel');
+          $uibModalInstance.dismiss({status: 'cancel'});
         };
         $scope.reset = function () {
-          $uibModalInstance.dismiss('reset');
+          $uibModalInstance.close({status: 'reset'});
         };
       },
       resolve: {
@@ -126,11 +133,22 @@ angular.module('myApp.make_reservation', ['ngRoute', 'ngAnimate', ])
     });
     modalInstance.result.then(function (response) {
       // Check to see if the make reservation table should be reset
-      if (response === "success" || response === "reset") {
+      if (response['status'] === "success" || response['status'] === "reset") {
         $scope.toolsAdded.forEach(function(tool) {
           tool.added = false;
         });
         $scope.toolsAdded = [];
+      } else if (response['status'] === "fail") {
+        var tool_ids = response['tool_ids'];
+        $scope.toolsAdded = $scope.toolsAdded.filter(function(tool) {
+          // Remove tools that cannot be reserved from tool list
+          if (tool_ids.indexOf(tool.id) !== -1) {
+            tool.added = false;
+            return false;
+          } else {
+            return true;
+          }
+        });
       }
     }, function () {
     });

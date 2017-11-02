@@ -3,12 +3,16 @@
     <div class="modal-content">
       <div class="modal-demo">
         <div class="modal-header">
-          <h5 class="modal-title" id="confirmationModalLabel">Reservation Confirmation</h5>
-          <button ng-click="cancel()" type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <h5 class="modal-title" id="confirmationModalLabel">{{title}}</h5>
+          <button ng-if="isSummary" ng-click="cancel()" type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <button ng-if="!isSummary" ng-click="reset()" type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body">
+          <div ng-if="!isSummary" id="reservation-confirmed">
+            <p><strong>Reservation ID: #{{reservation_id}}</strong></p>
+          </div>
           <div id="reservation-summary">
             <p>Reservation Dates: {{start_date}} - {{end_date}}</p>
             <p>Number of Days Rented: {{number_of_days_rented}}</p>
@@ -40,7 +44,7 @@
             </tbody>
           </table>
         </div>
-        <div class="modal-footer">
+        <div ng-show="isSummary" class="modal-footer">
           <button ng-click="reset()" type="button" class="btn btn-secondary" data-dismiss="modal">Reset</button>
           <button ng-click="submit()" type="button" class="btn btn-primary">Submit</button>
         </div>
