@@ -26,7 +26,6 @@ services:
       - 4000:8080
     volumes:
       - .:/code
-      #- ./web:/app
     links:
       - mysql:mysql
     restart: always
