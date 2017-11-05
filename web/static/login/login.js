@@ -29,7 +29,7 @@ angular.module('myApp.login', ['ngRoute'])
 
         vm.login = function () {
             vm.error = null;
-            $http.post('/customer/login', {
+            $http.post('/login', {
                 "username": vm.username,
                 "password": vm.password,
                 "type": vm.loginType
@@ -41,6 +41,9 @@ angular.module('myApp.login', ['ngRoute'])
                 })
                 .error(function (err, status) {
                     console.log('Error', err, status);
+                    if(status == 404) {
+                        console.log('FOUND 404');
+                    }
                     vm.error = err.message
                 });
         };

@@ -35,7 +35,7 @@ def add_tool():
         {'success': True}),\
            200, json_content
 
-@app.route("/customer/login", methods=['POST'])
+@app.route("/login", methods=['POST'])
 def login():
     login_info = request.json
 
@@ -57,7 +57,7 @@ def login():
              'type': login_info['type'],
              'message': 'There is no {} with username {}'.format(login_info['type'], login_info['username'])
              }), \
-               400, json_content
+               404, json_content
 
     pw = result[0][0]
 
