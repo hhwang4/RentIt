@@ -53,6 +53,9 @@ def datetime_handler(x):
     else:
         return x
 
+def check_query_parameters(data, parameters):
+    # TODO: Check the response data to make sure correct query parameter is provided, return error message
+    pass
 
 @app.route("/")
 def hello():
@@ -300,6 +303,35 @@ def make_reservation():
 
     return create_response(result)
 
+@app.route("/pickup_reservations/<int:reservation_id>", methods=['GET'])
+def get_pickup_reservations(reservation_id):
+    """Get all or a specific reservation"""
+    con = mysql.connect()
+    data = request.json
+    reservation = Reservation(con)
+    result = reservation.get_pickup_reservation(reservation_id)
+
+    return create_response(result)
+
+@app.route("/pickup_reservations", methods=['GET'])
+def get_reservation():
+    """Get all reservation pickups"""
+    con = mysql.connect()
+    data = request.json
+    reservation = Reservation(con)
+    result = reservation.get_pickup_reservations()
+
+    return create_response(result)
+
+@app.route("/pickup_reservations/<int:reservation_id>", methods=['POST'])
+def post_pickup_reservation(reservation_id):
+    con = mysql.connect()
+    clerk_username = request.args.get('clerk_username')
+    reservation = Reservation(con)
+    check_query_parameters(request, 'clerk_username')
+    result = reservation.pickup_reservation(reservation_id, clerk_username)
+
+    return create_response(result)
 
 @app.route("/tools")
 def tools():
