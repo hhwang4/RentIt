@@ -7,7 +7,7 @@ import decimal
 import flask.json
 import json
 
-from static.reservation.reservation import createReservation, searchReservation
+from static.reservation.reservation import Reservation
 
 class MyJSONEncoder(flask.json.JSONEncoder):
     def default(self, obj):
@@ -20,7 +20,6 @@ app = Flask(__name__)
 mysql = MySQL()
 app.json_encoder = MyJSONEncoder
 
-
 app.config['MYSQL_DATABASE_USER'] = 'root'
 app.config['MYSQL_DATABASE_PASSWORD'] = 'mypassword'
 app.config['MYSQL_DATABASE_DB'] = 'cs6400_sfa17_team033'
@@ -30,6 +29,8 @@ mysql.init_app(app)
 
 json_content = {'ContentType': 'application/json'}
 
+def create_response(result):
+    return json.dumps({ 'success': result['success'], 'data': result }), result['status_code'], {'ContentType':'application/json'}
 
 @app.route("/")
 def hello():
@@ -98,21 +99,23 @@ def myindex():
     # return render_template('index.html', data=data)
     return render_template('index.html')
 
-@app.route("/reservation", methods=['POST'])
+@app.route("/reservations", methods=['POST'])
 def make_reservation():
     """ Reserve specified tools"""
     con = mysql.connect()
     data = request.json
-    result = createReservation(con, data['tools'], data['start_date'], data['end_date'], data['customer_username'])
+    reservation = Reservation(con)
+    result = reservation.create_reservation(data['tools'], data['start_date'], data['end_date'], data['customer_username'])
 
-    return json.dumps({ 'success': result['success'], 'data': result }), result['status_code'], {'ContentType':'application/json'}
+    return create_response(result)
 
 @app.route("/tools")
 def tools():
     result = []
 
+    data = request.json
     cursor = mysql.connect().cursor()
-    data = cursor.execute("SELECT id, manufacturer, rental_price, deposit_price FROM Tool")
+    cursor.execute("SELECT id, manufacturer, rental_price, deposit_price FROM Tool")
 
     data = cursor.fetchall()
     for tool_id, man, rent, deposit in data:
