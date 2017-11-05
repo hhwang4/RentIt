@@ -97,7 +97,7 @@ angular.module('myApp.make_reservation', ['ngRoute', 'ngAnimate', ])
           };
 
           var config = { header: { 'Content-Type': 'application/json' } };
-          $http.post('/reservation', data, config)
+          $http.post('/reservations', data, config)
             .success(function(response) {
               var data = response.data;
               $scope.isSummary = false;
