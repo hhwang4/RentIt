@@ -31,6 +31,7 @@ angular.module('myApp.make_reservation', ['ngRoute', 'ngAnimate', ])
     });
   },
   function(response) {
+    // If tools don't load, load default list (temporary)
     $scope.tools = 
       [{
         id: 1,
@@ -62,10 +63,6 @@ angular.module('myApp.make_reservation', ['ngRoute', 'ngAnimate', ])
     var tool = $scope.toolsAdded[index];
     tool.added = false;
     $scope.toolsAdded.splice(index, 1);
-  }
-
-  $scope.calculateTotal = function() {
-    $scope.showModal = true;
   }
 
 	$scope.open = function(size, parentSelector) {
@@ -126,7 +123,7 @@ angular.module('myApp.make_reservation', ['ngRoute', 'ngAnimate', ])
           return $scope.end_date;
         },
         customer_username: function() {
-          return 'thebatman';
+          return 'thebatman'; // TODO: Get user from localStorage
         }
       },
       size: size,
@@ -142,6 +139,7 @@ angular.module('myApp.make_reservation', ['ngRoute', 'ngAnimate', ])
         var tool_ids = response['tool_ids'];
         $scope.toolsAdded = $scope.toolsAdded.filter(function(tool) {
           // Remove tools that cannot be reserved from tool list
+          // TODO: Display message indicating tools are removed
           if (tool_ids.indexOf(tool.id) !== -1) {
             tool.added = false;
             return false;
@@ -151,6 +149,7 @@ angular.module('myApp.make_reservation', ['ngRoute', 'ngAnimate', ])
         });
       }
     }, function () {
+      // TODO: Handle error case 
     });
   };	
 }]);

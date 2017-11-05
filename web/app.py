@@ -1,8 +1,6 @@
 from flask import Flask, render_template, request, jsonify
 from flask import abort
 from flaskext.mysql import MySQL
-import os
-import socket
 import decimal
 import flask.json
 import json
@@ -10,6 +8,10 @@ import json
 from static.reservation.reservation import Reservation
 
 class MyJSONEncoder(flask.json.JSONEncoder):
+    """
+        Custom json encorder to handle encoding Decimals
+        source: https://stackoverflow.com/questions/24706951/how-to-convert-all-decimals-in-a-python-data-structure-to-string#24707102
+    """
     def default(self, obj):
 	if isinstance(obj, decimal.Decimal):
             # Convert decimal instances to strings.
@@ -23,14 +25,15 @@ app.json_encoder = MyJSONEncoder
 app.config['MYSQL_DATABASE_USER'] = 'root'
 app.config['MYSQL_DATABASE_PASSWORD'] = 'mypassword'
 app.config['MYSQL_DATABASE_DB'] = 'cs6400_sfa17_team033'
-# app.config['MYSQL_DATABASE_HOST'] = 'localhost'
-app.config['MYSQL_DATABASE_HOST'] = 'mysql'  # mysql is the name of the docker container
+app.config['MYSQL_DATABASE_HOST'] = 'localhost'
+# app.config['MYSQL_DATABASE_HOST'] = 'mysql'  # mysql is the name of the docker container
 mysql.init_app(app)
 
 json_content = {'ContentType': 'application/json'}
 
+# Creates a json response
 def create_response(result):
-    return json.dumps({ 'success': result['success'], 'data': result }), result['status_code'], {'ContentType':'application/json'}
+    return json.dumps({ 'success': result.get('success'), 'data': result }), result.get('status_code'), {'ContentType':'application/json'}
 
 @app.route("/")
 def hello():
@@ -92,11 +95,6 @@ def login():
 
 @app.route("/myindex")
 def myindex():
-    # cursor = mysql.connect().cursor()
-    # cursor.execute("SELECT * from Persons")
-    # data = cursor.fetchall()
-
-    # return render_template('index.html', data=data)
     return render_template('index.html')
 
 @app.route("/reservations", methods=['POST'])
@@ -105,7 +103,7 @@ def make_reservation():
     con = mysql.connect()
     data = request.json
     reservation = Reservation(con)
-    result = reservation.create_reservation(data['tools'], data['start_date'], data['end_date'], data['customer_username'])
+    result = reservation.create_reservation(data.get('tools'), data.get('start_date'), data.get('end_date'), data.get('customer_username'))
 
     return create_response(result)
 
@@ -128,4 +126,4 @@ def tools():
     return jsonify(result)
 
 if __name__ == "__main__":
-  app.run(host='0.0.0.0', port=8080)
+    app.run(host='0.0.0.0', port=8080)
