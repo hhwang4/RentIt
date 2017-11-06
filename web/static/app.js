@@ -4,12 +4,15 @@
 angular.module('myApp', [
   'ngRoute',
   'LocalStorageModule',
+  'ngMessages',
+  'ngPassword',
   'ui.bootstrap',
-  'ngAnimate', 
+  'ngAnimate',
   'myApp.view1',
   'myApp.view2',
   'myApp.login',
   'myApp.make_reservation',
+  'myApp.register',
   'myApp.version'
 ]).
 config(['$locationProvider', '$routeProvider', function($locationProvider, $routeProvider) {
