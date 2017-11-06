@@ -9,8 +9,8 @@ angular.module('myApp.login', ['ngRoute'])
         });
     }])
 
-    .controller('LoginCtrl', ['$scope', '$http', 'localStorageService',
-        function ($scope, $http, localStorageService) {
+    .controller('LoginCtrl', ['$scope', '$http', 'localStorageService', '$location',
+        function ($scope, $http, localStorageService, $location) {
         $scope.view = 'This is a scope variable1';
 
         var vm = this;
@@ -29,20 +29,22 @@ angular.module('myApp.login', ['ngRoute'])
 
         vm.login = function () {
             vm.error = null;
+            vm.logout();
             $http.post('/login', {
                 "username": vm.username,
                 "password": vm.password,
                 "type": vm.loginType
             }, {headers: {'Content-Type': 'application/json'}})
                 .success(function (response) {
-                    localStorageService.set('authorizationData', {userName: response});
-                    console.log('It worked');
-                    console.log(response);
+                    localStorageService.set('authorizationData', response);
+                    $location.path('/dashboard');
                 })
                 .error(function (err, status) {
                     console.log('Error', err, status);
-                    if(status == 404) {
+                    if(status == 404 && err.type == 'customer') {
                         console.log('FOUND 404');
+                        alert(err.message + '. ' + 'Please register as a new customer!');
+                        $location.path('/register')
                     }
                     vm.error = err.message
                 });

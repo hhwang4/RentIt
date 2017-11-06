@@ -72,7 +72,7 @@ join
 (select Tool_id, Reservations_Id from ToolReservations as tr where tr.Reservations_Id = @ourReservationId) as trr on trr.Tool_id = t.id
 join SubOption as so on so.id = t.SubOption_Id
 join SubType as st on st.id = t.SubType_Id
-join Category as cat on cat.id = t.Category_IdCategoryCategory
+join Category as cat on cat.id = t.Category_Id
 join PowerSource as ps on ps.id = t.PowerSource_Id;
 
 

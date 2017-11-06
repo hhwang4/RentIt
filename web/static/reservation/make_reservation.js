@@ -4,7 +4,17 @@ angular.module('myApp.make_reservation', ['ngRoute', 'ngAnimate', ])
 .config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/make_reservation', {
     templateUrl: 'static/reservation/make_reservation.html',
-    controller: 'MakeReservationCtrl'
+    controller: 'MakeReservationCtrl',
+      resolve: {
+                accessToken: ['localStorageService', '$location', function ($localStorage, $location) {
+                    if ($localStorage.get('authorizationData'))
+                        return $localStorage.get('authorizationData')
+                    else {
+                        $location.path('/login');
+                        return;
+                    }
+                }]
+            }
   });
 }])
 .controller('MakeReservationCtrl', ['$scope', '$http', 'localStorageService', '$uibModal', function($scope, $http, localStorageService, $uibModal) {
@@ -32,7 +42,7 @@ angular.module('myApp.make_reservation', ['ngRoute', 'ngAnimate', ])
   },
   function(response) {
     // If tools don't load, load default list (temporary)
-    $scope.tools = 
+    $scope.tools =
       [{
         id: 1,
         description: 'Description',
@@ -53,7 +63,7 @@ angular.module('myApp.make_reservation', ['ngRoute', 'ngAnimate', ])
     var tool = $scope.tools[index];
     if ($scope.toolsAdded.indexOf(tool) === -1) {
       $scope.toolsAdded.push(tool);
-      tool.added = true; 
+      tool.added = true;
     } else {
       $scope.removeTool($scope.toolsAdded.indexOf(tool));
     }
@@ -66,7 +76,7 @@ angular.module('myApp.make_reservation', ['ngRoute', 'ngAnimate', ])
   }
 
 	$scope.open = function(size, parentSelector) {
-    var parentElem = parentSelector ? 
+    var parentElem = parentSelector ?
       angular.element($document[0].querySelector('.modal' + parentSelector)) : undefined;
     var modalInstance = $uibModal.open({
       animation: false,
@@ -74,7 +84,7 @@ angular.module('myApp.make_reservation', ['ngRoute', 'ngAnimate', ])
       ariaDescribedBy: 'modal-body',
       templateUrl: 'static/reservation/confirmationModal.html',
 			controller: function($uibModalInstance, $scope, toolsAdded, start_date, end_date, customer_username) {
-        $scope.title = "Reservation Summary" 
+        $scope.title = "Reservation Summary"
         $scope.isSummary = true;
         $scope.toolsAdded = toolsAdded;
         $scope.start_date = start_date;
@@ -149,8 +159,8 @@ angular.module('myApp.make_reservation', ['ngRoute', 'ngAnimate', ])
         });
       }
     }, function () {
-      // TODO: Handle error case 
+      // TODO: Handle error case
     });
-  };	
+  };
 }]);
 
