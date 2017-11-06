@@ -18,5 +18,5 @@ dist
 .sass-cache
 bower_components
 
-
+*.pyc
 *.idea
