@@ -1,11 +1,27 @@
-import json
-
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 from flask import abort
 from flaskext.mysql import MySQL
+import decimal
+import flask.json
+import json
+
+from static.reservation.reservation import Reservation
+
+class MyJSONEncoder(flask.json.JSONEncoder):
+    """
+        Custom json encorder to handle encoding Decimals
+        source: https://stackoverflow.com/questions/24706951/how-to-convert-all-decimals-in-a-python-data-structure-to-string#24707102
+    """
+    def default(self, obj):
+	if isinstance(obj, decimal.Decimal):
+            # Convert decimal instances to strings.
+            return str(obj)
+        return super(MyJSONEncoder, self).default(obj)
 
 app = Flask(__name__)
 mysql = MySQL()
+app.json_encoder = MyJSONEncoder
+
 app.config['MYSQL_DATABASE_USER'] = 'root'
 app.config['MYSQL_DATABASE_PASSWORD'] = 'mypassword'
 app.config['MYSQL_DATABASE_DB'] = 'cs6400_sfa17_team033'
@@ -15,6 +31,9 @@ mysql.init_app(app)
 
 json_content = {'ContentType': 'application/json'}
 
+# Creates a json response
+def create_response(result):
+    return json.dumps({ 'success': result.get('success'), 'data': result }), result.get('status_code'), {'ContentType':'application/json'}
 
 @app.route("/")
 def hello():
@@ -74,15 +93,37 @@ def login():
              }), \
                400, json_content
 
-
 @app.route("/myindex")
 def myindex():
+    return render_template('index.html')
+
+@app.route("/reservations", methods=['POST'])
+def make_reservation():
+    """ Reserve specified tools"""
+    con = mysql.connect()
+    data = request.json
+    reservation = Reservation(con)
+    result = reservation.create_reservation(data.get('tools'), data.get('start_date'), data.get('end_date'), data.get('customer_username'))
+
+    return create_response(result)
+
+@app.route("/tools")
+def tools():
+    result = []
+
+    data = request.json
     cursor = mysql.connect().cursor()
-    cursor.execute("SELECT * from Persons")
+    cursor.execute("SELECT id, manufacturer, rental_price, deposit_price FROM Tool")
+
     data = cursor.fetchall()
-
-    return render_template('index_old.html', data=data)
-
+    for tool_id, man, rent, deposit in data:
+        result.append({
+          'id': tool_id,
+          'description': man,
+          'rental_price': rent,
+          'deposit_price': deposit
+          })
+    return jsonify(result)
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=8080)
