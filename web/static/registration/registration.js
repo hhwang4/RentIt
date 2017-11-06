@@ -34,36 +34,62 @@ angular.module('myApp.register', ['ngRoute'])
             });
 
 
-            vm.username = null;
+            vm.userName = null;
+            vm.firstName = null;
+            vm.middleName = null;
+            vm.lastName = null;
+            vm.primaryPhone = 'home';
+            vm.email = null;
             vm.password = null;
-            vm.loginType = 'customer';
+            vm.repassword = null;
+            vm.address = null;
+            vm.city = null;
+            vm.state = "AL";
+            vm.zip = null;
+            vm.cardName = null;
+            vm.cardNumber = null;
+            vm.expirationMonth = {id: 1};
+            vm.expirationYear = 2017;
+            vm.cvc = null;
+            vm.id = null;
+
             vm.error = null;
 
             vm.hasError = function () {
                 return vm.error != null;
             }
 
-            vm.canLogin = function () {
-                return vm.username != null && vm.password != null;
-            };
-
-            vm.login = function () {
+            vm.register = function () {
                 vm.error = null;
-                $http.post('/login', {
-                    "username": vm.username,
+                var data = {
+                    "id": vm.id,
+                    "userName": vm.userName,
+                    "firstName": vm.firstName,
+                    "middleName": vm.middleName,
+                    "lastName": vm.lastName,
+                    "primaryPhone": vm.primaryPhone,
+                    "email": vm.email,
                     "password": vm.password,
-                    "type": vm.loginType
-                }, {headers: {'Content-Type': 'application/json'}})
+                    "repassword": vm.repassword,
+                    "address": vm.address,
+                    "city": vm.city,
+                    "state": vm.state,
+                    "zip": vm.zip,
+                    "cardName": vm.cardName,
+                    "cardNumber": vm.cardNumber,
+                    "expirationMonth": vm.expirationMonth,
+                    "expirationYear": vm.expirationYear,
+                    "cvc": vm.cvc
+                };
+
+                console.log("Data", data);
+                $http.post('/register', data, {headers: {'Content-Type': 'application/json'}})
                     .success(function (response) {
-                        localStorageService.set('authorizationData', {userName: response});
                         console.log('It worked');
                         console.log(response);
                     })
                     .error(function (err, status) {
                         console.log('Error', err, status);
-                        if (status == 404) {
-                            console.log('FOUND 404');
-                        }
                         vm.error = err.message
                     });
             };

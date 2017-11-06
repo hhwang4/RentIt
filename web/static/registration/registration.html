@@ -5,26 +5,56 @@
 
     <div>
         <h1>Customer Registration</h1>
-        <form>
+        <form name="user">
             <div class="form-row">
 
                 <div class="col">
                     <div class="form-group">
                         <label for="firstname">First Name</label>
                         <input type="text" class="form-control" id="firstName" placeholder="First Name"
-                               ng-model="vm.firstName">
+                               ng-minlength="3"
+                               ng-maxlength="50"
+                               name="firstName"
+                               ng-model="vm.firstName" required>
+
+                        <div ng-messages="user.firstName.$dirty && user.firstName.$error" style="color:maroon"
+                             role="alert">
+                            <div ng-message="required">This field must not be empty</div>
+                            <div ng-message="minlength">Must have at least 3 characters</div>
+                            <div ng-message="maxlength">Cannot have more than 50 characters</div>
+                        </div>
                     </div>
 
                     <div class="form-group">
                         <label for="middleName">Middle Name</label>
                         <input type="text" class="form-control" id="middleName" placeholder="Middle Name"
-                               ng-model="vm.middleName">
+                               ng-minlength="3"
+                               ng-maxlength="50"
+                               name="middleName"
+                               ng-model="vm.middleName" required>
+
+                        <div ng-messages="user.middleName.$dirty && user.middleName.$error" style="color:maroon"
+                             role="alert">
+                            <div ng-message="required">This field must not be empty</div>
+                            <div ng-message="minlength">Must have at least 3 characters</div>
+                            <div ng-message="maxlength">Cannot have more than 50 characters</div>
+                        </div>
                     </div>
 
                     <div class="form-group">
                         <label for="lastName">Last Name</label>
                         <input type="text" class="form-control" id="lastName" placeholder="Last Name"
-                               ng-model="vm.lastName">
+                               ng-minlength="3"
+                               ng-maxlength="50"
+                               name="lastName"
+                               ng-model="vm.lastName" required>
+
+                        <div ng-messages="user.lastName.$dirty && user.lastName.$error" style="color:maroon"
+                             role="alert">
+                            <div ng-message="required">This field must not be empty</div>
+                            <div ng-message="minlength">Must have at least 3 characters</div>
+                            <div ng-message="maxlength">Cannot have more than 50 characters</div>
+                        </div>
                     </div>
 
                     <div>
@@ -32,21 +62,21 @@
                         <div class="form-check">
                             <label class="form-check-label">
                                 <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1"
-                                       value="option1" checked>
+                                       value="home" ng-model="vm.primaryPhone" checked required>
                                 Home Phone
                             </label>
                         </div>
                         <div class="form-check">
                             <label class="form-check-label">
                                 <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2"
-                                       value="option2">
+                                       value="work" ng-model="vm.primaryPhone" required>
                                 Work Phone
                             </label>
                         </div>
                         <div class="form-check">
                             <label class="form-check-label">
                                 <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios3"
-                                       value="option3">
+                                       value="cell" ng-model="vm.primaryPhone" required>
                                 Cell Phone
                             </label>
                         </div>
@@ -56,37 +86,106 @@
 
                 <div class="col">
                     <div class="form-group">
+                        <label for="lastName">UserName</label>
+                        <input type="text" class="form-control" id="userName" placeholder="userName"
+                               ng-minlength="3"
+                               ng-maxlength="50"
+                               name="userName"
+                               ng-model="vm.userName" required>
+
+                        <div ng-messages="user.userName.$dirty && user.userName.$error" style="color:maroon"
+                             role="alert">
+                            <div ng-message="required">This field must not be empty</div>
+                            <div ng-message="minlength">Must have at least 3 characters</div>
+                            <div ng-message="maxlength">Cannot have more than 50 characters</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
                         <label for="email">Email</label>
-                        <input type="email" class="form-control" id="email" placeholder="Email" ng-model="vm.email">
+                        <input type="email" class="form-control" id="email" placeholder="Email" ng-model="vm.email"
+                               ng-minlength="3"
+                               ng-maxlength="50"
+                               name="email"
+                               required>
+
+                        <div ng-messages="user.email.$dirty && user.email.$error" style="color:maroon" role="alert">
+                            <div ng-message="required">This field must not be empty</div>
+                            <div ng-message="minlength">Must have at least 5 characters</div>
+                            <div ng-message="maxlength">Cannot have more than 50 characters</div>
+                            <div ng-message="email">Must be a valid email address.</div>
+                        </div>
                     </div>
 
                     <div class="form-group">
                         <label for="password">Password</label>
                         <input type="password" class="form-control" id="Password" placeholder="Password"
-                               ng-model="vm.password">
+                               ng-minlength="3"
+                               ng-maxlength="50"
+                               name="password"
+                               ng-model="vm.password" required>
+
+                        <div ng-messages="user.password.$dirty && user.password.$error" style="color:maroon"
+                             role="alert">
+                            <div ng-message="required">This field must not be empty</div>
+                            <div ng-message="minlength">Must have at least 5 characters</div>
+                            <div ng-message="maxlength">Cannot have more than 50 characters</div>
+                        </div>
+
+
                     </div>
 
                     <div class="form-group">
                         <label for="repassword">Re-type Password</label>
-                        <input type="password" class="form-control" id="rePassword" placeholder="Re-type Password"
-                               ng-model="vm.repassword">
+                        <input type="password" match-password="password" class="form-control" id="rePassword" placeholder="Re-type Password"
+                               ng-minlength="3"
+                               ng-maxlength="50"
+                               name="repassword"
+                               ng-model="vm.repassword" required>
+
+                        <div ng-messages="user.repassword.$dirty && user.repassword.$error" style="color:maroon"
+                             role="alert">
+                            <div ng-message="required">This field must not be empty</div>
+                            <div ng-message="minlength">Must have at least 5 characters</div>
+                            <div ng-message="maxlength">Cannot have more than 50 characters</div>
+                            <div ng-message="passwordMatch" class="message slide-left">Your passwords did not match</div>
+                        </div>
                     </div>
                 </div>
                 <div class="col">
                     <div class="form-group">
                         <label for="address">Street Address</label>
                         <input type="text" class="form-control" id="address" placeholder="Street Address"
-                               ng-model="vm.address">
+                               ng-minlength="1"
+                               ng-maxlength="100"
+                               name="address"
+                               ng-model="vm.address" required>
+
+                        <div ng-messages="user.address.$dirty && user.address.$error" style="color:maroon" role="alert">
+                            <div ng-message="required">This field must not be empty</div>
+                            <div ng-message="minlength">Must have at least 1 characters</div>
+                            <div ng-message="maxlength">Cannot have more than 100 characters</div>
+                        </div>
                     </div>
 
                     <div class="form-group">
                         <label for="city">City</label>
-                        <input type="text" class="form-control" id="city" placeholder="City" ng-model="vm.city">
+                        <input type="text" class="form-control" id="city" placeholder="City" ng-model="vm.city"
+                               ng-minlength="1"
+                               ng-maxlength="100"
+                               name="city"
+                               required>
+
+                        <div ng-messages="user.city.$dirty && user.city.$error" style="color:maroon" role="alert">
+                            <div ng-message="required">This field must not be empty</div>
+                            <div ng-message="minlength">Must have at least 1 characters</div>
+                            <div ng-message="maxlength">Cannot have more than 100 characters</div>
+                        </div>
                     </div>
 
                     <div class="form-group">
                         <label for="state">State</label>
-                        <select type="text" class="form-control" id="state" placeholder="State" ng-model="vm.state">
+                        <select type="text" class="form-control" id="state" ng-model="vm.state" required>
                             <option value="AL">Alabama</option>
                             <option value="AK">Alaska</option>
                             <option value="AZ">Arizona</option>
@@ -143,7 +242,19 @@
 
                     <div class="form-group">
                         <label for="zip">Zip</label>
-                        <input type="text" class="form-control" id="zip" placeholder="Zip" ng-model="vm.zip">
+                        <input type="text" class="form-control" id="zip" placeholder="Zip"
+                               ng-minlength="5"
+                               ng-maxlength="10"
+                               name="zip"
+                               pattern="^\d{5}-?\d{4}$"
+                               ng-model="vm.zip" required>
+
+                        <div ng-messages="user.zip.$dirty && user.zip.$error" style="color:maroon" role="alert">
+                            <div ng-message="required">This field must not be empty</div>
+                            <div ng-message="minlength">Must have at least 5 numbers</div>
+                            <div ng-message="maxlength">Cannot have more than 10 numbers</div>
+                            <div ng-message="pattern">Must be in the form #####-####</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -151,22 +262,46 @@
     </div>
 
     <hr/>
-    
+
     <div>
         <h1>Credit Card</h1>
-        <form>
+
+        <form name="credit">
+
             <div class="form-row">
                 <div class="col">
                     <div class="form-group">
                         <label for="cardName">Name on Card</label>
-                        <input type="text" class="form-control" id="cardName" placeholder="Name On Credit Card"
-                               ng-model="vm.cardName">
+                        <input type="text" name="cardName" class="form-control" id="cardName"
+                               placeholder="Name On Credit Card"
+                               ng-minlength="3"
+                               ng-maxlength="50"
+                               ng-model="vm.cardName" required>
+
+                        <div ng-messages="credit.cardName.$dirty && credit.cardName.$error" style="color:maroon"
+                             role="alert">
+                            <div ng-message="required">This field must not be empty</div>
+                            <div ng-message="minlength">Must have at least 3 characters</div>
+                            <div ng-message="maxlength">Cannot have more than 50 characters</div>
+                        </div>
                     </div>
 
                     <div class="form-group">
                         <label for="cardNumber">Card #</label>
-                        <input type="text" class="form-control" id="cardNumber" placeholder="Credit Card #"
-                               ng-model="vm.cardNumber">
+                        <input type="text" name="cardNumber" class="form-control" id="cardNumber"
+                               placeholder="Credit Card #"
+                               ng-minlength="10"
+                               ng-maxlength="16"
+                               pattern="\d+"
+                               ng-model="vm.cardNumber" required>
+
+                        <div ng-messages="credit.cardNumber.$dirty && credit.cardNumber.$error" style="color:maroon"
+                             role="alert">
+                            <div ng-message="required">This field must not be empty</div>
+                            <div ng-message="minlength">Must have at least 10 digits</div>
+                            <div ng-message="maxlength">Cannot have more than 16 digits</div>
+                            <div ng-message="pattern">Card Number must contain numbers.</div>
+                        </div>
                     </div>
                 </div>
                 <div class="col">
@@ -174,7 +309,7 @@
                         <label for="expirationMonth">Expiration Month</label>
                         <select type="text" class="form-control" id="expirationMonth" placeholder="Expiration Month"
                                 ng-options="m as m.name for m in vm.months track by m.id"
-                                ng-model="vm.expirationMonth">
+                                ng-model="vm.expirationMonth" required>
                         </select>
                         </select>
                     </div>
@@ -183,22 +318,39 @@
                         <label for="expirationYear">Expiration Year</label>
                         <select type="text" class="form-control" id="expirationYear" placeholder="Expiration Year"
                                 ng-options="y for y in vm.years"
-                                ng-model="vm.expirationYear">
+                                ng-model="vm.expirationYear" required>
                         </select>
                         </select>
                     </div>
 
                     <div class="form-group">
                         <label for="cvc">CVC</label>
-                        <input type="text" class="form-control" id="cvc" placeholder="cvc" ng-model="vm.cvc">
+                        <input type="text" name="cvc" class="form-control" id="cvc" placeholder="cvc"
+                               ng-minlength="3"
+                               ng-maxlength="3"
+                               pattern="\d+"
+                               ng-model="vm.cvc" required>
+
+                        <div ng-messages="credit.cvc.$dirty && credit.cvc.$error" style="color:maroon" role="alert">
+                            <div ng-message="required">This field must not be empty</div>
+                            <div ng-message="minlength">Must have at least 3 characters</div>
+                            <div ng-message="maxlength">Cannot have more than 3 characters</div>
+                            <div ng-message="pattern">Must be numbers</div>
+                        </div>
                     </div>
 
                 </div>
             </div>
             <div class="form-group">
-                <button type="submit" ng-disabled="!vm.canLogin()" class="btn btn-primary" ng-click="vm.login()">
+                <button type="submit" ng-disabled="!(user.$valid && credit.$valid)" class="btn btn-primary"
+                        ng-click="vm.register()">
                     Register
                 </button>
+                <code>user form {{ user.$valid}}</code><br>
+                <code>cc form {{ credit.$valid}}</code><br>
+            </div>
+            <div class="alert alert-danger" role="alert" ng-hide="!vm.hasError()">
+                {{ vm.error }}
             </div>
         </form>
     </div>
