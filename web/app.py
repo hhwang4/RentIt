@@ -6,17 +6,21 @@ import flask.json
 import json
 
 from static.reservation.reservation import Reservation
+from static.registration.registration import Customer
+
 
 class MyJSONEncoder(flask.json.JSONEncoder):
     """
         Custom json encorder to handle encoding Decimals
         source: https://stackoverflow.com/questions/24706951/how-to-convert-all-decimals-in-a-python-data-structure-to-string#24707102
     """
+
     def default(self, obj):
-	if isinstance(obj, decimal.Decimal):
+        if isinstance(obj, decimal.Decimal):
             # Convert decimal instances to strings.
             return str(obj)
         return super(MyJSONEncoder, self).default(obj)
+
 
 app = Flask(__name__)
 mysql = MySQL()
@@ -31,17 +35,22 @@ mysql.init_app(app)
 
 json_content = {'ContentType': 'application/json'}
 
+
 # Creates a json response
 def create_response(result):
-    return json.dumps({ 'success': result.get('success'), 'data': result }), result.get('status_code'), {'ContentType':'application/json'}
+    return json.dumps({'success': result.get('success'), 'data': result}), result.get('status_code'), {
+        'ContentType': 'application/json'}
+
 
 @app.route("/")
 def hello():
     return render_template('index.html')
 
+
 @app.route("/old")
 def old_hello():
     return render_template('index_old.html')
+
 
 @app.route("/addtool")
 def add_tool():
@@ -51,8 +60,9 @@ def add_tool():
     # DB gives results
     # result to json
     return json.dumps(
-        {'success': True}),\
+        {'success': True}), \
            200, json_content
+
 
 @app.route("/login", methods=['POST'])
 def login():
@@ -93,9 +103,44 @@ def login():
              }), \
                400, json_content
 
+
 @app.route("/myindex")
 def myindex():
     return render_template('index.html')
+
+
+@app.route("/register", methods=['POST'])
+def register_customer():
+    reg_info = request.json
+    db = mysql.connect()
+    cursor = db.cursor()
+
+    try:
+        customer = Customer(reg_info)
+        email_check = customer.can_register_email(cursor)
+        username_check = customer.can_register_username(cursor)
+        if  email_check and username_check :
+            customer.register(db, cursor)
+        else:
+            if not email_check:
+                return json.dumps(
+                    {'success': False,
+                     'message': 'A user already has the email address {}. Try another'.format(customer.email)
+                     }), 400, json_content
+            elif not username_check:
+                return json.dumps(
+                    {'success': False,
+                     'message': 'A user already has the username {}. Try another'.format(customer.userName)
+                     }), 400, json_content
+
+    except Exception as e:
+        print(e)
+    finally:
+        cursor.close()
+    return json.dumps(
+        {'success': True}), \
+           200, json_content
+
 
 @app.route("/reservations", methods=['POST'])
 def make_reservation():
@@ -103,9 +148,11 @@ def make_reservation():
     con = mysql.connect()
     data = request.json
     reservation = Reservation(con)
-    result = reservation.create_reservation(data.get('tools'), data.get('start_date'), data.get('end_date'), data.get('customer_username'))
+    result = reservation.create_reservation(data.get('tools'), data.get('start_date'), data.get('end_date'),
+                                            data.get('customer_username'))
 
     return create_response(result)
+
 
 @app.route("/tools")
 def tools():
@@ -118,12 +165,13 @@ def tools():
     data = cursor.fetchall()
     for tool_id, man, rent, deposit in data:
         result.append({
-          'id': tool_id,
-          'description': man,
-          'rental_price': rent,
-          'deposit_price': deposit
-          })
+            'id': tool_id,
+            'description': man,
+            'rental_price': rent,
+            'deposit_price': deposit
+        })
     return jsonify(result)
+
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=8080)

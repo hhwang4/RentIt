@@ -14,7 +14,7 @@ CREATE TABLE `Customer` (
     `CreditCard_Id` INT NOT NULL,
     PRIMARY KEY (`user_name`),
     UNIQUE(`email`),
-    UNIQUE(`id`)
+    UNIQUE INDEX(`id`)
 );
 
 CREATE TABLE `Address` (

@@ -85,8 +85,194 @@
                 </div>
 
                 <div class="col">
+
                     <div class="form-group">
-                        <label for="lastName">UserName</label>
+                        <label for="homePhoneAreaCode">Home Phone Area Code</label>
+                        <input type="text" class="form-control" id="homePhoneAreaCode"
+                               placeholder="Home Phone Area Code"
+                               ng-minlength="3"
+                               ng-maxlength="3"
+                               name="homePhoneAreaCode"
+                               pattern="\d{3}"
+                               ng-required="vm.primaryPhone == 'home'"
+                               ng-model="vm.homePhoneAreaCode">
+
+                        <div ng-messages="user.homePhoneAreaCode.$dirty && user.homePhoneAreaCode.$error"
+                             style="color:maroon"
+                             role="alert">
+                            <div ng-message="required">This field must not be empty</div>
+                            <div ng-message="minlength">Must have at least 3 characters</div>
+                            <div ng-message="maxlength">Cannot have more than 3 characters</div>
+                            <div ng-message="pattern">Must be in number format ###</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="homePhone">Home Phone</label>
+                        <input type="text" class="form-control" id="homePhone" placeholder="Home Phone"
+                               ng-minlength="8"
+                               ng-maxlength="8"
+                               name="homePhone"
+                               pattern="\d{3}-\d{4}"
+                               ng-required="vm.primaryPhone == 'home'"
+                               ng-model="vm.homePhone">
+
+                        <div ng-messages="user.homePhone.$dirty && user.homePhone.$error" style="color:maroon"
+                             role="alert">
+                            <div ng-message="required">This field must not be empty</div>
+                            <div ng-message="minlength">Must have at least 8 characters</div>
+                            <div ng-message="maxlength">Cannot have more than 8 characters</div>
+                            <div ng-message="pattern">Must be in number format ###-####</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="homePhoneExt">Home Phone Extension</label>
+                        <input type="text" class="form-control" id="homePhoneExt"
+                               placeholder="Home Phone Extension"
+                               ng-minlength="3"
+                               ng-maxlength="3"
+                               name="homePhoneExt"
+                               pattern="\d{1,4}"
+                               ng-model="vm.homePhoneExt">
+
+                        <div ng-messages="user.homePhoneExt.$dirty && user.homePhoneExt.$error" style="color:maroon"
+                             role="alert">
+                            <div ng-message="required">This field must not be empty</div>
+                            <div ng-message="minlength">Must have at least 3 characters</div>
+                            <div ng-message="maxlength">Cannot have more than 3 characters</div>
+                            <div ng-message="pattern">Must be in number format ###</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col">
+
+                    <div class="form-group">
+                        <label for="cellPhoneAreaCode">Cell Phone Area Code</label>
+                        <input type="text" class="form-control" id="cellPhoneAreaCode"
+                               placeholder="Cell Phone Area Code"
+                               ng-minlength="3"
+                               ng-maxlength="3"
+                               name="cellPhoneAreaCode"
+                               pattern="\d{3}"
+                               ng-required="vm.primaryPhone == 'cell'"
+                               ng-model="vm.cellPhoneAreaCode">
+
+                        <div ng-messages="user.cellPhoneAreaCode.$dirty && user.cellPhoneAreaCode.$error"
+                             style="color:maroon"
+                             role="alert">
+                            <div ng-message="required">This field must not be empty</div>
+                            <div ng-message="minlength">Must have at least 3 characters</div>
+                            <div ng-message="maxlength">Cannot have more than 3 characters</div>
+                            <div ng-message="pattern">Must be in number format ###</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cellPhone">Cell Phone</label>
+                        <input type="text" class="form-control" id="cellPhone" placeholder="Cell Phone"
+                               ng-minlength="8"
+                               ng-maxlength="8"
+                               name="cellPhone"
+                               pattern="\d{3}-\d{4}"
+                               ng-required="vm.primaryPhone == 'cell'"
+                               ng-model="vm.cellPhone">
+
+                        <div ng-messages="user.cellPhone.$dirty && user.cellPhone.$error" style="color:maroon"
+                             role="alert">
+                            <div ng-message="required">This field must not be empty</div>
+                            <div ng-message="minlength">Must have at least 8 characters</div>
+                            <div ng-message="maxlength">Cannot have more than 8 characters</div>
+                            <div ng-message="pattern">Must be in number format ###-####</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cellPhoneExt">Cell Phone Extension</label>
+                        <input type="text" class="form-control" id="cellPhoneExt"
+                               placeholder="Cell Phone Extension"
+                               ng-minlength="3"
+                               ng-maxlength="3"
+                               name="cellPhoneExt"
+                               pattern="\d{1,4}"
+                               ng-model="vm.cellPhoneExt">
+
+                        <div ng-messages="user.cellPhoneExt.$dirty && user.cellPhoneExt.$error" style="color:maroon"
+                             role="alert">
+                            <div ng-message="required">This field must not be empty</div>
+                            <div ng-message="minlength">Must have at least 3 characters</div>
+                            <div ng-message="maxlength">Cannot have more than 3 characters</div>
+                            <div ng-message="pattern">Must be in number format ###</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col">
+
+                    <div class="form-group">
+                        <label for="workPhoneAreaCode">Work Phone Area Code</label>
+                        <input type="text" class="form-control" id="workPhoneAreaCode"
+                               placeholder="Work Phone Area Code"
+                               ng-minlength="3"
+                               ng-maxlength="3"
+                               name="workPhoneAreaCode"
+                               pattern="\d{3}"
+                               ng-required="vm.primaryPhone == 'work'"
+                               ng-model="vm.workPhoneAreaCode">
+
+                        <div ng-messages="user.workPhoneAreaCode.$dirty && user.workPhoneAreaCode.$error"
+                             style="color:maroon"
+                             role="alert">
+                            <div ng-message="required">This field must not be empty</div>
+                            <div ng-message="minlength">Must have at least 3 characters</div>
+                            <div ng-message="maxlength">Cannot have more than 3 characters</div>
+                            <div ng-message="pattern">Must be in number format ###</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="workPhone">Work Phone</label>
+                        <input type="text" class="form-control" id="workPhone" placeholder="Work Phone"
+                               ng-minlength="8"
+                               ng-maxlength="8"
+                               name="workPhone"
+                               pattern="\d{3}-\d{4}"
+                               ng-required="vm.primaryPhone == 'work'"
+                               ng-model="vm.workPhone">
+
+                        <div ng-messages="user.workPhone.$dirty && user.workPhone.$error" style="color:maroon"
+                             role="alert">
+                            <div ng-message="required">This field must not be empty</div>
+                            <div ng-message="minlength">Must have at least 8 characters</div>
+                            <div ng-message="maxlength">Cannot have more than 8 characters</div>
+                            <div ng-message="pattern">Must be in number format ###-####</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="workPhoneExt">Work Phone Extension</label>
+                        <input type="text" class="form-control" id="workPhoneExt"
+                               placeholder="Work Phone Extension"
+                               ng-minlength="3"
+                               ng-maxlength="3"
+                               name="workPhoneExt"
+                               pattern="\d{1,4}"
+                               ng-model="vm.workPhoneExt">
+
+                        <div ng-messages="user.workPhoneExt.$dirty && user.workPhoneExt.$error" style="color:maroon"
+                             role="alert">
+                            <div ng-message="required">This field must not be empty</div>
+                            <div ng-message="minlength">Must have at least 3 characters</div>
+                            <div ng-message="maxlength">Cannot have more than 3 characters</div>
+                            <div ng-message="pattern">Must be in number format ###</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="form-group">
+                        <label for="username">UserName</label>
                         <input type="text" class="form-control" id="userName" placeholder="userName"
                                ng-minlength="3"
                                ng-maxlength="50"
@@ -120,7 +306,7 @@
                     <div class="form-group">
                         <label for="password">Password</label>
                         <input type="password" class="form-control" id="Password" placeholder="Password"
-                               ng-minlength="3"
+                               ng-minlength="5"
                                ng-maxlength="50"
                                name="password"
                                ng-model="vm.password" required>
@@ -137,8 +323,9 @@
 
                     <div class="form-group">
                         <label for="repassword">Re-type Password</label>
-                        <input type="password" match-password="password" class="form-control" id="rePassword" placeholder="Re-type Password"
-                               ng-minlength="3"
+                        <input type="password" match-password="password" class="form-control" id="rePassword"
+                               placeholder="Re-type Password"
+                               ng-minlength="5"
                                ng-maxlength="50"
                                name="repassword"
                                ng-model="vm.repassword" required>
@@ -148,7 +335,8 @@
                             <div ng-message="required">This field must not be empty</div>
                             <div ng-message="minlength">Must have at least 5 characters</div>
                             <div ng-message="maxlength">Cannot have more than 50 characters</div>
-                            <div ng-message="passwordMatch" class="message slide-left">Your passwords did not match</div>
+                            <div ng-message="passwordMatch" class="message slide-left">Your passwords did not match
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -346,8 +534,7 @@
                         ng-click="vm.register()">
                     Register
                 </button>
-                <code>user form {{ user.$valid}}</code><br>
-                <code>cc form {{ credit.$valid}}</code><br>
+
             </div>
             <div class="alert alert-danger" role="alert" ng-hide="!vm.hasError()">
                 {{ vm.error }}

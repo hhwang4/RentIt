@@ -38,6 +38,15 @@ angular.module('myApp.register', ['ngRoute'])
             vm.firstName = null;
             vm.middleName = null;
             vm.lastName = null;
+            vm.homePhone = null;
+            vm.homePhoneAreaCode = null;
+            vm.homePhoneExt = null;
+            vm.workPhone = null;
+            vm.workPhoneAreaCode = null;
+            vm.workPhoneExt = null;
+            vm.cellPhone = null;
+            vm.cellPhoneAreaCode = null;
+            vm.cellPhoneExt = null;
             vm.primaryPhone = 'home';
             vm.email = null;
             vm.password = null;
@@ -68,6 +77,15 @@ angular.module('myApp.register', ['ngRoute'])
                     "middleName": vm.middleName,
                     "lastName": vm.lastName,
                     "primaryPhone": vm.primaryPhone,
+                    "homePhone": vm.homePhone,
+                    "homePhoneAreaCode": vm.homePhoneAreaCode,
+                    "homePhoneExt": vm.homePhoneExt,
+                    "workPhone": vm.workPhone,
+                    "workPhoneAreaCode": vm.workPhoneAreaCode,
+                    "workPhoneExt": vm.workPhoneExt,
+                    "cellPhone": vm.cellPhone,
+                    "cellPhoneAreaCode": vm.cellPhoneAreaCode,
+                    "cellPhoneExt": vm.cellPhoneExt,
                     "email": vm.email,
                     "password": vm.password,
                     "repassword": vm.repassword,
@@ -77,7 +95,7 @@ angular.module('myApp.register', ['ngRoute'])
                     "zip": vm.zip,
                     "cardName": vm.cardName,
                     "cardNumber": vm.cardNumber,
-                    "expirationMonth": vm.expirationMonth,
+                    "expirationMonth": vm.expirationMonth.id,
                     "expirationYear": vm.expirationYear,
                     "cvc": vm.cvc
                 };
