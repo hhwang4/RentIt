@@ -17,6 +17,8 @@
 <body>
   <ul class="menu">
     <li><a href="#!/login">Login</a></li>
+    <li><a href="#!/dashboard">Dashboard</a></li>
+    <li><a href="#!/profile">Profile</a></li>
     <li><a href="#!/register">Register Customer</a></li>
     <li><a href="#!/make_reservation">Make Reservation</a></li>
   </ul>
@@ -34,6 +36,7 @@
   <!-- In production use:
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
   -->
+  <script src="{{ url_for('static',filename='bower_components/moment/min/moment.min.js') }}"></script>
   <script src="{{ url_for('static',filename='bower_components/angular/angular.js') }}"></script>
   <script src="{{ url_for('static',filename='bower_components/angular-route/angular-route.js') }}"></script>
   <script src="{{ url_for('static',filename='bower_components/angular-local-storage/dist/angular-local-storage.min.js') }}"></script>
@@ -45,7 +48,10 @@
   <script src="{{ url_for('static',filename='view1/view1.js') }}"></script>
   <script src="{{ url_for('static',filename='view2/view2.js') }}"></script>
   <script src="{{ url_for('static',filename='login/login.js') }}"></script>
+  <script src="{{ url_for('static',filename='login/logout.js') }}"></script>
+  <script src="{{ url_for('static',filename='profile/profile.js') }}"></script>
   <script src="{{ url_for('static',filename='registration/registration.js') }}"></script>
+  <script src="{{ url_for('static',filename='dashboard/dashboard.js') }}"></script>
   <script src="{{ url_for('static',filename='reservation/make_reservation.js') }}"></script>
   <script src="{{ url_for('static',filename='components/version/version.js') }}"></script>
   <script src="{{ url_for('static',filename='components/version/version-directive.js') }}"></script>

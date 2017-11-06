@@ -11,8 +11,11 @@ angular.module('myApp', [
   'myApp.view1',
   'myApp.view2',
   'myApp.login',
+  'myApp.logout',
+  'myApp.profile',
   'myApp.make_reservation',
   'myApp.register',
+  'myApp.dashboard',
   'myApp.version'
 ]).
 config(['$locationProvider', '$routeProvider', function($locationProvider, $routeProvider) {

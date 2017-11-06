@@ -16,9 +16,9 @@ set @creditCardId := last_insert_id();
 insert into Customer (user_name, first_name,middle_name,last_name,email,password,Address_Id, CreditCard_Id)
 values('thebatman', 'Bruce', 'Tyrone', 'Wayne', 'thebatman@aol.com', 'robin', @addressId, @creditCardId);
 
-insert into PhoneNumber (area_code, number, extension, type, `primary`, Customer_UserName) values('321', '867-5309', NULL, 'Mobile', TRUE, 'thebatman');
-insert into PhoneNumber (area_code, number, extension, type, `primary`, Customer_UserName) values('321', '867-5308', NULL, 'Work', False, 'thebatman');
-insert into PhoneNumber (area_code, number, extension, type, `primary`, Customer_UserName) values('444', '867-5308', NULL, 'Home', False, 'thebatman');
+insert into PhoneNumber (area_code, number, extension, type, `primary`, Customer_UserName) values('321', '867-5309', NULL, 'cell', TRUE, 'thebatman');
+insert into PhoneNumber (area_code, number, extension, type, `primary`, Customer_UserName) values('321', '867-5308', NULL, 'work', False, 'thebatman');
+insert into PhoneNumber (area_code, number, extension, type, `primary`, Customer_UserName) values('444', '867-5308', NULL, 'home', False, 'thebatman');
 
 
 

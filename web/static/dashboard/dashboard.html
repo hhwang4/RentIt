@@ -1,0 +1,14 @@
+<div class="container" data-ng-controller="DashboardCtrl as vm">
+    <div class="alert alert-danger" role="alert" ng-hide="!vm.hasError()">
+        {{ vm.error }}
+    </div>
+
+    <h1>{{ vm.loginType }} Dashboard</h1>
+
+    <h2> Welcome {{ vm.username }}</h2>
+
+    <ul ng-repeat="l in vm.links">
+        <li><a href="{{ l.url }}">{{ l.name }}</a></li>
+    </ul>
+
+</div>

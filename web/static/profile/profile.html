@@ -1,0 +1,77 @@
+<div class="container" data-ng-controller="ProfileCtrl as vm">
+    <div class="alert alert-danger" role="alert" ng-hide="!vm.hasError()">
+        {{ vm.error }}
+    </div>
+
+    <div>
+
+
+        <h1>Customer Info</h1>
+        <div>
+            <label style="font-weight: bold;">Email: </label>
+            <span>{{ vm.email }}</span>
+        </div>
+
+        <div>
+            <label style="font-weight: bold;">Full Name: </label>
+            <span>{{ vm.fullName }}</span>
+        </div>
+
+        <div>
+            <label style="font-weight: bold;">Home Phone: </label>
+            <span>{{ vm.homePhone }}</span>
+        </div>
+
+        <div>
+            <label style="font-weight: bold;">Work Phone: </label>
+            <span>{{ vm.workPhone }}</span>
+        </div>
+
+        <div>
+            <label style="font-weight: bold;">Cell Phone: </label>
+            <span>{{ vm.cellPhone }}</span>
+        </div>
+
+        <div>
+            <label style="font-weight: bold;">Address: </label>
+            <span>{{ vm.address }}</span>
+        </div>
+    </div>
+
+    <hr/>
+
+    <div>
+        <h1>Reservations</h1>
+        <table class="table table-stripped">
+            <thead>
+            <th scope="col" style="width: 20px">Reservation ID</th>
+            <th scope="col" style="width: 200px">Tools</th>
+            <th scope="col">Start Date</th>
+            <th scope="col">End Date</th>
+            <th scope="col">Pick-up Clerk</th>
+            <th scope="col">Drop-off Clerk</th>
+            <th scope="col">Number of Days</th>
+            <th scope="col">Total Deposit Price</th>
+            <th scope="col">Total Rental Price</th>
+            </thead>
+            <tbody>
+            <tr ng-repeat="r in vm.reservations">
+                <th scope=row">{{ r.id }}</th>
+                <td>
+                    <div ng-repeat="t in r.tools">
+                        {{ ((t.powerSource !== 'Manual') ? t.powerSource : '')  + ' ' + t.subOption + ' ' + t.subType }}
+                    </div>
+                </td>
+                <td>{{ r.startDate }}</td>
+                <td>{{ r.endDate }}</td>
+                <td>{{ r.pickupClerk }}</td>
+                <td>{{ r.dropOffClerk }}</td>
+                <td>{{ r.numDays }}</td>
+                <td>${{ r.totalDepositPrice }}</td>
+                <td>${{ r.totalRentalPrice }}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>

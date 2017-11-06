@@ -103,8 +103,9 @@ angular.module('myApp.register', ['ngRoute'])
                 console.log("Data", data);
                 $http.post('/register', data, {headers: {'Content-Type': 'application/json'}})
                     .success(function (response) {
-                        console.log('It worked');
-                        console.log(response);
+
+                        localStorageService.set('authorizationData', {username: vm.userName, type: 'customer'});
+                        $location.path('/dashboard');
                     })
                     .error(function (err, status) {
                         console.log('Error', err, status);
@@ -116,5 +117,6 @@ angular.module('myApp.register', ['ngRoute'])
                 localStorageService.remove('authorizationData');
             };
 
+            vm.logout();
 
         }]);

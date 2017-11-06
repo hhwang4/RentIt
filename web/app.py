@@ -4,7 +4,7 @@ from flaskext.mysql import MySQL
 import decimal
 import flask.json
 import json
-
+import datetime
 from static.reservation.reservation import Reservation
 from static.registration.registration import Customer
 
@@ -19,6 +19,8 @@ class MyJSONEncoder(flask.json.JSONEncoder):
         if isinstance(obj, decimal.Decimal):
             # Convert decimal instances to strings.
             return str(obj)
+        # if isinstance(obj, datetime.dateime):
+        #     return obj.strftime("%Y-%m-%d %H:%M:%S")
         return super(MyJSONEncoder, self).default(obj)
 
 
@@ -41,6 +43,14 @@ def create_response(result):
     return json.dumps({'success': result.get('success'), 'data': result}), result.get('status_code'), {
         'ContentType': 'application/json'}
 
+def datetime_handler(x):
+    if isinstance(x, datetime.datetime):
+        return x.isoformat()
+    if isinstance(x, decimal.Decimal):
+        # Convert decimal instances to strings.
+        return str(x)
+    else:
+        return x
 
 @app.route("/")
 def hello():
@@ -108,6 +118,59 @@ def login():
 def myindex():
     return render_template('index.html')
 
+@app.route("/customer/<username>")
+def get_customer_profile(username):
+    db = mysql.connect()
+    cursor = db.cursor()
+
+    try:
+        cursor.callproc("CustomerInfo", [username])
+        result = cursor.fetchone()
+        return json.dumps(
+            {'success': True,
+             'data': result
+             }), 200, json_content
+    except Exception as e:
+        print(e)
+        return json.dumps(
+            {'success': False,
+             'message': 'User {} doesnt exist.'.format(username)
+             }), 404, json_content
+    finally:
+        cursor.close()
+        db.close()
+
+@app.route("/reservations/<username>")
+def get_customer_reservation(username):
+    db = mysql.connect()
+    cursor = db.cursor()
+
+    try:
+        cursor.callproc("ReservationsByUser", [username])
+        result = cursor.fetchall()
+
+        full_result = []
+        if len(result) > 0 and result[0][0] is not None:
+            for r in result:
+                cursor.callproc("ToolNameShortByReservationId", [r[0]])
+                tools = cursor.fetchall()
+                full_result.append(list(r) + [tools])
+                x = 0
+
+
+        return json.dumps(
+            {'success': True,
+             'data': full_result
+             }, default=datetime_handler), 200, json_content
+    except Exception as e:
+        print(e)
+        return json.dumps(
+            {'success': False,
+             'message': 'User {} doesnt exist.'.format(username)
+             }, default=datetime_handler), 404, json_content
+    finally:
+        cursor.close()
+        db.close()
 
 @app.route("/register", methods=['POST'])
 def register_customer():
@@ -137,6 +200,7 @@ def register_customer():
         print(e)
     finally:
         cursor.close()
+        db.close()
     return json.dumps(
         {'success': True}), \
            200, json_content
