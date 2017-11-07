@@ -1,0 +1,8 @@
+<h1>{{ vm.savedCreds.type }} Area</h1>
+<h2>Select a Report</h2>
+
+<ul>
+    <ul ng-repeat="l in vm.links">
+        <li><a href="{{ l.url }}">{{ l.name }}</a></li>
+    </ul>
+</ul>

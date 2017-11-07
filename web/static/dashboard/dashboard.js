@@ -29,16 +29,6 @@ angular.module('myApp.dashboard', ['ngRoute'])
             vm.loginType = savedCreds.type;
             vm.error = null;
 
-//         -Customer Registration (mike)
-// -Login (mike)
-// -View Profile (mike)
-// -Make reservation (david)
-// -Check Tool Availability (yasmine)
-// From the "Clerk Main Menu" (figure 11)
-// -Picking up reservations (david)
-// -Dropping off reservations (david)
-// -Add New Tool (haohao)
-// -Generate Reports (mike)
 
             vm.links = [
                 {name: 'View Profile', url: '/#!/profile'},
@@ -46,6 +36,16 @@ angular.module('myApp.dashboard', ['ngRoute'])
                 {name: 'Check tool Availability', url: '/#!/toolavil'},
                 {name: 'Logout', url: '/#!/logout'},
             ]
+
+            if(vm.loginType == 'clerk') {
+                vm.links = [
+                {name: 'Pick up Reservations', url: '/#!/pickup'},
+                {name: 'Drop off Reservations', url: '/#!/dropoff'},
+                {name: 'Add new tool', url: '/#!/newtool'},
+                {name: 'Generate Reports', url: '/#!/reports'},
+                {name: 'Logout', url: '/#!/logout'},
+            ]
+            }
 
 
             vm.hasError = function () {
