@@ -1,1 +1,71 @@
-tool report
+<style>
+    .available {
+        background-color: green;
+        color: white;
+    }
+
+    .rented {
+        background-color: yellow;
+        color: black;
+    }
+
+    .inrepair {
+        background-color: red;
+        color: white;
+    }
+
+    .forsale {
+        background-color: grey;
+        color: white;
+    }
+
+    .sold {
+        background-color: black;
+        color: white;
+    }
+</style>
+
+<div class="container">
+    <div class="alert alert-danger" role="alert" ng-hide="!vm.hasError()">
+        {{ vm.error }}
+    </div>
+
+    <h1>Tool Inventory Report</h1>
+    <p>The list of tools where their total profit and cost are shown for all time {{ vm.month + '/' + vm.year }}.</p>
+
+    <div>
+        TODO Select TOOL CATEGORY HERE
+        TODO SEARCH BAR HERE
+    </div>
+
+    <div>
+        <table class="table table-stripped">
+            <thead>
+            <th scope="col" style="width: 20px">Tool ID</th>
+            <th scope="col">Current Status</th>
+            <th scope="col">Date</th>
+            <th scope="col">Description</th>
+            <th scope="col">Rental Profit</th>
+            <th scope="col">Total Cost</th>
+            <th scope="col">Total Profit</th>
+            </thead>
+            <tbody>
+            <tr ng-repeat="r in vm.tools">
+                <th scope=row">{{ r.id }}</th>
+                <td ng-class="{
+                available: r.status == 'Available',
+                rented: r.status == 'Rented',
+                inrepair: r.status == 'In Repair',
+                forsale: r.status == 'For Sale',
+                sold: r.status == 'Sold'}">{{ r.status }}</td>
+                <td>{{ r.date }}</td>
+                <td>{{ r.description }}</td>
+                <td>{{ r.rentalProfit }}</td>
+                <td>{{ r.totalCost }}</td>
+                <td>{{ r.totalProfit }}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>

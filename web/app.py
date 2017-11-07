@@ -216,6 +216,29 @@ def get_customer_report(year, month):
         cursor.close()
         db.close()
 
+@app.route("/reports/tool")
+def get_tool_report():
+    db = mysql.connect()
+    cursor = db.cursor()
+
+    try:
+        #todo replace with category ID and Date from request object
+        cursor.callproc("ToolInventoryReport", [1, '2017-11-7'])
+        result = cursor.fetchall()
+
+        return json.dumps(
+            {'success': True,
+             'data': result
+             }, default=datetime_handler), 200, json_content
+    except Exception as e:
+        print(e)
+        return json.dumps(
+            {'success': False,
+             }, default=datetime_handler), 404, json_content
+    finally:
+        cursor.close()
+        db.close()
+
 @app.route("/register", methods=['POST'])
 def register_customer():
     reg_info = request.json
