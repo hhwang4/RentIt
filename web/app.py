@@ -172,6 +172,50 @@ def get_customer_reservation(username):
         cursor.close()
         db.close()
 
+@app.route("/reports/clerk/<year>/<month>")
+def get_clerk_report(year, month):
+    db = mysql.connect()
+    cursor = db.cursor()
+
+    try:
+        cursor.callproc("ClerkReport", [month, year])
+        result = cursor.fetchall()
+
+        return json.dumps(
+            {'success': True,
+             'data': result
+             }, default=datetime_handler), 200, json_content
+    except Exception as e:
+        print(e)
+        return json.dumps(
+            {'success': False,
+             }, default=datetime_handler), 404, json_content
+    finally:
+        cursor.close()
+        db.close()
+
+@app.route("/reports/customer/<year>/<month>")
+def get_customer_report(year, month):
+    db = mysql.connect()
+    cursor = db.cursor()
+
+    try:
+        cursor.callproc("CustomerReport", [month, year])
+        result = cursor.fetchall()
+
+        return json.dumps(
+            {'success': True,
+             'data': result
+             }, default=datetime_handler), 200, json_content
+    except Exception as e:
+        print(e)
+        return json.dumps(
+            {'success': False,
+             }, default=datetime_handler), 404, json_content
+    finally:
+        cursor.close()
+        db.close()
+
 @app.route("/register", methods=['POST'])
 def register_customer():
     reg_info = request.json

@@ -1,1 +1,38 @@
-customer report
+<div class="container">
+    <div class="alert alert-danger" role="alert" ng-hide="!vm.hasError()">
+        {{ vm.error }}
+    </div>
+
+    <h1>Customer Report</h1>
+    <p>The list of customers and reservation with tools for the last month {{ vm.month + '/' + vm.year }}.</p>
+
+    <div>
+        <table class="table table-stripped">
+            <thead>
+            <th scope="col" style="width: 20px">Customer ID</th>
+            <th scope="col">Profile</th>
+            <th scope="col">First Name</th>
+            <th scope="col">Middle Name</th>
+            <th scope="col">Last Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Phone</th>
+            <th scope="col">Total # Reservations</th>
+            <th scope="col">Total # Tools Rented</th>
+            </thead>
+            <tbody>
+            <tr ng-repeat="r in vm.customers">
+                <th scope=row">{{ r.id }}</th>
+                <td><a href="{{ '#!/profile/' + r.userName }}">View Profile</a></td>
+                <td>{{ r.firstName }}</td>
+                <td>{{ r.middleName }}</td>
+                <td>{{ r.lastName }}</td>
+                <td>{{ r.email }}</td>
+                <td>{{ r.phone }}</td>
+                <td>{{ r.totalReservations }}</td>
+                <td>${{ r.totalRented }}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>

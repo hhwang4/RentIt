@@ -1086,7 +1086,7 @@ select first_name, middle_name, last_name, email, date_of_hire, employee_number,
 (select count(DropOffClerk_UserName) from Reservation as q where q.DropOffClerk_UserName = c.user_name and MONTH(q.booking_date) = MONTH(NOW()) and YEAR(q.booking_date) = YEAR(NOW()))
 ) as CombinedTotal
 from Clerk as c
-order by CombinedTotal DESC;
+order by numPickups DESC, numDropOffs DESC;
 
 
 
@@ -1101,8 +1101,8 @@ order by ToolsRented, last_name;
 
 # Tool Inventory Report
 set @categoryId = 1;
-set @startdate :='2017-10-02 00:00:00';
-set @enddate :='2017-10-12 00:00:00';
+-- set @startdate :='2017-10-02 00:00:00';
+-- set @enddate :='2017-10-12 00:00:00';
 
 select t.id as toolId,
 concat_ws(' ',so.name, st.name) as description,
