@@ -1101,8 +1101,8 @@ order by ToolsRented, last_name;
 
 # Tool Inventory Report
 set @categoryId = 1;
-set @startdate :='2017-10-02 00:00:00';
-set @enddate :='2017-10-12 00:00:00';
+-- set @startdate :='2017-10-02 00:00:00';
+-- set @enddate :='2017-10-12 00:00:00';
 
 select t.id as toolId,
 concat_ws(' ',so.name, st.name) as description,
