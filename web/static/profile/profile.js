@@ -10,7 +10,7 @@ function Tool(t) {
 function Reservation(d) {
     this.id = d[0];
     this.startDate = moment(d[1]).format('MM/DD/YY');
-    this.endDate =  moment(d[2]).format('MM/DD/YY');
+    this.endDate = moment(d[2]).format('MM/DD/YY');
     this.pickupClerk = d[3];
     this.dropOffClerk = d[4];
     this.numDays = d[5];
@@ -25,7 +25,7 @@ function Reservation(d) {
 angular.module('myApp.profile', ['ngRoute'])
 
     .config(['$routeProvider', function ($routeProvider) {
-        $routeProvider.when('/profile', {
+        $routeProvider.when('/profile/:username', {
             templateUrl: 'static/profile/profile.html',
             // controller: 'ProfileCtrl',
             resolve: {
@@ -41,13 +41,13 @@ angular.module('myApp.profile', ['ngRoute'])
         });
     }])
 
-    .controller('ProfileCtrl', ['$scope', '$http', 'localStorageService', '$location',
-        function ($scope, $http, localStorageService, $location) {
+    .controller('ProfileCtrl', ['$scope', '$http', 'localStorageService', '$location', '$routeParams',
+        function ($scope, $http, localStorageService, $location, $routeParams) {
             $scope.view = 'This is a scope variable1';
 
             var savedCreds = localStorageService.get('authorizationData');
             var vm = this;
-            vm.username = savedCreds.username;
+            vm.username = $routeParams.username;
             vm.loginType = savedCreds.type;
             vm.error = null;
             vm.email = null;
@@ -71,12 +71,15 @@ angular.module('myApp.profile', ['ngRoute'])
                 }).then(function successCallback(response) {
                     console.log(response);
                     var r = response.data.data;
-                    vm.email = r[0];
-                    vm.fullName = r[1] + ' ' + r[2] + ' ' + r[3];
-                    vm.homePhone = r[4];
-                    vm.workPhone = r[5];
-                    vm.cellPhone = r[6];
-                    vm.address = r[7];
+                    if (r) {
+                        vm.email = r[0];
+                        vm.fullName = r[1] + ' ' + r[2] + ' ' + r[3];
+                        vm.homePhone = r[4];
+                        vm.workPhone = r[5];
+                        vm.cellPhone = r[6];
+                        vm.address = r[7];
+                    }
+
 
                 }, function errorCallback(response) {
                     vm.error = response.message;

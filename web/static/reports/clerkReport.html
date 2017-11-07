@@ -1,1 +1,40 @@
-test
+<div class="container">
+    <div class="alert alert-danger" role="alert" ng-hide="!vm.hasError()">
+        {{ vm.error }}
+    </div>
+
+    <h1>Clerk Report</h1>
+    <p>The list of clerks where their total pickups and dropoffs are shown for the past month {{ vm.month + '/' + vm.year }}.</p>
+
+    <div>
+        <table class="table table-stripped">
+            <thead>
+            <th scope="col" style="width: 20px">Clerk ID</th>
+            <th scope="col" style="width: 200px">First Name</th>
+            <th scope="col">Middle Name</th>
+            <th scope="col">Last Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Hire Date</th>
+            <th scope="col">Number of Pickups</th>
+            <th scope="col">Number of Dropoffs</th>
+            <th scope="col">Combined Total</th>
+            </thead>
+            <tbody>
+            <tr ng-repeat="r in vm.clerks">
+                <th scope=row">{{ r.id }}</th>
+                <td>
+                   {{ r.firstName }}
+                </td>
+                <td>{{ r.middleName }}</td>
+                <td>{{ r.lastName }}</td>
+                <td>{{ r.email }}</td>
+                <td>{{ r.hireDate }}</td>
+                <td>{{ r.numPickups }}</td>
+                <td>${{ r.numDropoffs }}</td>
+                <td>${{ r.combinedTotal }}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>

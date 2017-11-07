@@ -58,14 +58,14 @@ select first_name, middle_name, last_name, email, date_of_hire, employee_number,
 (select count(DropOffClerk_UserName) from Reservation as q where q.DropOffClerk_UserName = c.user_name and MONTH(q.booking_date) = var_month and YEAR(q.booking_date) = var_year)
 ) as CombinedTotal
 from Clerk as c
-order by CombinedTotal DESC;
+order by numPickups DESC, numDropOffs DESC;
 END$$
 DELIMITER ;
 
 DELIMITER $$
 CREATE DEFINER=`root`@`%` PROCEDURE `CustomerReport`(in var_month int, in var_year int)
 BEGIN
-select id, first_name, middle_name, last_name, email,
+select id, first_name, middle_name, last_name, email, user_name,
 (select concat('(', area_code, ') ', `number`, case when extension is null then '' else concat(' x',extension) end) from PhoneNumber as p where p.Customer_UserName = c.user_name and p.primary = true) as phone,
 (select count(Customer_UserName) from Reservation as r where r.Customer_UserName = c.user_name and MONTH(r.booking_date) = var_month and YEAR(r.booking_date) = var_year) as totalReservations,
 (select count(Tool_id) from ToolReservations as tr where tr.Reservations_Id in

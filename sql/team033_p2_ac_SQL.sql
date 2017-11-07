@@ -1086,7 +1086,7 @@ select first_name, middle_name, last_name, email, date_of_hire, employee_number,
 (select count(DropOffClerk_UserName) from Reservation as q where q.DropOffClerk_UserName = c.user_name and MONTH(q.booking_date) = MONTH(NOW()) and YEAR(q.booking_date) = YEAR(NOW()))
 ) as CombinedTotal
 from Clerk as c
-order by CombinedTotal DESC;
+order by numPickups DESC, numDropOffs DESC;
 
 
 
