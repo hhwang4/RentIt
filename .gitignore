@@ -12,11 +12,9 @@
 hs_err_pid*
 
 # components modules and temp files
-node_modules
 dist
 .tmp
 .sass-cache
-bower_components
 
 *.pyc
 *.idea
