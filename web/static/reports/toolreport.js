@@ -75,11 +75,20 @@ angular.module('myApp.toolReport', ['ngRoute'])
             vm.maxSize = 1;
             vm.itemsPerPage = 5;
             vm.itemsPerPageOptions = [5, 10, 25, 50, 100, 200]
-
+            vm.searchText = '';
+            vm.toolType = 'All';
 
             vm.hasError = function () {
                 return vm.error != null;
             }
+
+            vm.filter = function(tool) {
+                if(vm.toolType === 'All'){
+                    return true;
+                } else {
+                    return vm.toolType === tool.category;
+                }
+            };
 
             $scope.pageChanged = function () {
                 vm.fetchToolReport();

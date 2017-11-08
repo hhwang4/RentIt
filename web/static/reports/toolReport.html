@@ -36,10 +36,22 @@
 
     <h1>Tool Inventory Report</h1>
     <p>The list of tools where their total profit and cost are shown for all time {{ vm.month + '/' + vm.year }}.</p>
-
     <div>
-        TODO Select TOOL CATEGORY HERE
-        TODO SEARCH BAR HERE
+        <div class="form-group">
+            <label>Tool Category</label>
+            <select type="text" class="form-control" ng-model="vm.toolType" style="height: 100%" required>
+                <option value="All">All</option>
+                <option value="Hand">Hand</option>
+                <option value="Garden">Garden</option>
+                <option value="Ladder">Ladder</option>
+                <option value="Power">Power Tool</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Custom Search</label>
+            <input class="form-control" type=text placeholder="keyword" ng-model="vm.searchText">
+        </div>
     </div>
 
     <div>
@@ -54,7 +66,7 @@
             <th scope="col">Total Profit</th>
             </thead>
             <tbody>
-            <tr ng-repeat="r in vm.tools">
+            <tr ng-repeat="r in vm.tools | filter: vm.searchText | filter: vm.filter">
                 <th scope=row">{{ r.id }}</th>
                 <td ng-class="{
                 available: r.status == 'Available',
@@ -64,23 +76,31 @@
                 sold: r.status == 'Sold'}">{{ r.status }}</td>
                 <td>{{ r.date }}</td>
                 <td>{{ r.description }}</td>
-                <td>{{ r.rentalProfit }}</td>
-                <td>{{ r.totalCost }}</td>
-                <td>{{ r.totalProfit }}</td>
+                <td>${{ r.rentalProfit }}</td>
+                <td>${{ r.totalCost }}</td>
+                <td>${{ r.totalProfit }}</td>
             </tr>
             </tbody>
         </table>
     </div>
 
+    <div>
+        <label>Total Results Found: {{ vm.maxSize }}</label>
+    </div>
 
-    <label for="pageSize">Results Per Page</label>
-    <select type="text" id="pageSize"
-            ng-options="y for y in vm.itemsPerPageOptions"
-            ng-change="pageChanged()"
-            ng-model="vm.itemsPerPage">
-    </select>
-    <br/>
-    <ul uib-pagination total-items="vm.maxSize" items-per-page="vm.itemsPerPage" ng-model="vm.currentPage"
-        ng-change="pageChanged()"></ul>
+    <div>
+        <label for="pageSize">Results Per Page</label>
+        <select type="text" id="pageSize"
+                ng-options="y for y in vm.itemsPerPageOptions"
+                ng-change="pageChanged()"
+                ng-model="vm.itemsPerPage">
+        </select>
+    </div>
+
+    <div>
+        <ul uib-pagination total-items="vm.maxSize" items-per-page="vm.itemsPerPage" ng-model="vm.currentPage"
+            ng-change="pageChanged()"></ul>
+    </div>
+
 
 </div>

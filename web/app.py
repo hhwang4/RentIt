@@ -232,7 +232,8 @@ def get_tool_report(pagenumber, itemsPerPage):
     try:
         # LIMIT ({pagenumber}-1)*{itemsPerPage},{itemsPerPage}
         # todo replace with category ID and Date from request object
-        cursor.callproc("ToolInventoryReport", [itemsPerPage, (pagenumber - 1) * itemsPerPage, '2017-11-7'])
+        day = datetime.datetime.now().strftime("%Y-%m-%d")
+        cursor.callproc("ToolInventoryReport", [itemsPerPage, (pagenumber - 1) * itemsPerPage, day])
         result = cursor.fetchall()
 
         cursor.execute("select count(*) from Tool;")
