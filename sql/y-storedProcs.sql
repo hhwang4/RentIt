@@ -76,9 +76,9 @@ END$$
 DELIMITER ;
 
 DELIMITER $$
-CREATE DEFINER=`root`@`%` PROCEDURE `ToolInventoryReport`(in var_catId int, in var_date datetime)
+CREATE DEFINER=`root`@`%` PROCEDURE `ToolInventoryReport`(in var_ipp int, in var_pagenum int, in var_date datetime)
 BEGIN
-select t.id as toolId,
+select t.id as toolId, 
 concat_ws(' ',so.name, st.name) as description,
 EXISTS(select id from Tool t2 where t.id = t2.id 
 and t2.id not in (select Tool_Id from ToolReservations as tr where tr.Tool_Id = t2.id)
@@ -98,12 +98,15 @@ EXISTS(select id from SaleOrder as so where so.sold_date is not NULL and so.Tool
 (t.original_price + IFNULL((select sum(service_cost) from ServiceOrder as so where so.Tool_Id = t.id),0)) as TotalCost,
 ((IFNULL((select sum(DATEDIFF(end_date, start_date)) from Reservation as r join ToolReservations as tr on tr.Reservations_Id = r.id where t.id = tr.Tool_Id),0) * rental_price)
 -
-(t.original_price + IFNULL((select sum(service_cost) from ServiceOrder as so where so.Tool_Id = t.id),0))) as TotalProfit
+(t.original_price + IFNULL((select sum(service_cost) from ServiceOrder as so where so.Tool_Id = t.id),0))) as TotalProfit,
+c.name
 from Tool as t
 join SubOption as so on so.id = t.SubOption_Id
 join SubType as st on st.id = t.SubType_Id
-where t.Category_Id = var_catId
-order by TotalProfit DESC;
+join Category as c on c.id = t.Category_Id
+-- where t.Category_Id = var_catId
+order by TotalProfit DESC
+LIMIT var_pagenum,var_ipp;
 END$$
 DELIMITER ;
 
