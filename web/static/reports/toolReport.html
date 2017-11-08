@@ -1,3 +1,7 @@
+<header>
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+</header>
+
 <style>
     .available {
         background-color: green;
@@ -67,5 +71,16 @@
             </tbody>
         </table>
     </div>
+
+
+    <label for="pageSize">Results Per Page</label>
+    <select type="text" id="pageSize"
+            ng-options="y for y in vm.itemsPerPageOptions"
+            ng-change="pageChanged()"
+            ng-model="vm.itemsPerPage">
+    </select>
+    <br/>
+    <ul uib-pagination total-items="vm.maxSize" items-per-page="vm.itemsPerPage" ng-model="vm.currentPage"
+        ng-change="pageChanged()"></ul>
 
 </div>

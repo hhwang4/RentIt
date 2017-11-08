@@ -16,6 +16,7 @@ function Tool(d) {
     this.rentalProfit = d[11];
     this.totalCost = d[12];
     this.totalProfit = d[13];
+    this.category = d[14];
 
     if (this.available === 1) {
         this.status = 'Available';
@@ -70,17 +71,27 @@ angular.module('myApp.toolReport', ['ngRoute'])
             vm.test = 'lol'
             vm.savedCreds = localStorageService.get('authorizationData');
             vm.tools = [];
+            vm.currentPage = 1;
+            vm.maxSize = 1;
+            vm.itemsPerPage = 5;
+            vm.itemsPerPageOptions = [5, 10, 25, 50, 100, 200]
+
 
             vm.hasError = function () {
                 return vm.error != null;
             }
 
+            $scope.pageChanged = function () {
+                vm.fetchToolReport();
+            };
+
             vm.fetchToolReport = function () {
                 $http({
                     method: 'GET',
-                    url: '/reports/tool'
+                    url: '/reports/tool/' + vm.currentPage + '/' + vm.itemsPerPage
                 }).then(function successCallback(response) {
                     console.log(response.data);
+                    vm.maxSize = response.data.totalsize;
                     vm.tools = response.data.data.map(function (f) {
                         return new Tool(f);
                     });
@@ -88,6 +99,10 @@ angular.module('myApp.toolReport', ['ngRoute'])
                 }, function errorCallback(response) {
                     vm.error = response.message;
                 });
+            };
+
+            vm.pageChanged = function () {
+
             };
 
             vm.fetchToolReport();

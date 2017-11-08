@@ -43,6 +43,7 @@ def create_response(result):
     return json.dumps({'success': result.get('success'), 'data': result}), result.get('status_code'), {
         'ContentType': 'application/json'}
 
+
 def datetime_handler(x):
     if isinstance(x, datetime.datetime):
         return x.isoformat()
@@ -51,6 +52,7 @@ def datetime_handler(x):
         return str(x)
     else:
         return x
+
 
 @app.route("/")
 def hello():
@@ -118,6 +120,7 @@ def login():
 def myindex():
     return render_template('index.html')
 
+
 @app.route("/customer/<username>")
 def get_customer_profile(username):
     db = mysql.connect()
@@ -140,6 +143,7 @@ def get_customer_profile(username):
         cursor.close()
         db.close()
 
+
 @app.route("/reservations/<username>")
 def get_customer_reservation(username):
     db = mysql.connect()
@@ -157,7 +161,6 @@ def get_customer_reservation(username):
                 full_result.append(list(r) + [tools])
                 x = 0
 
-
         return json.dumps(
             {'success': True,
              'data': full_result
@@ -171,6 +174,7 @@ def get_customer_reservation(username):
     finally:
         cursor.close()
         db.close()
+
 
 @app.route("/reports/clerk/<year>/<month>")
 def get_clerk_report(year, month):
@@ -194,6 +198,7 @@ def get_clerk_report(year, month):
         cursor.close()
         db.close()
 
+
 @app.route("/reports/customer/<year>/<month>")
 def get_customer_report(year, month):
     db = mysql.connect()
@@ -216,18 +221,27 @@ def get_customer_report(year, month):
         cursor.close()
         db.close()
 
-@app.route("/reports/tool")
-def get_tool_report():
+
+@app.route("/reports/tool/<pagenumber>/<itemsPerPage>")
+def get_tool_report(pagenumber, itemsPerPage):
+    pagenumber = int(pagenumber)
+    itemsPerPage = int(itemsPerPage)
     db = mysql.connect()
     cursor = db.cursor()
 
     try:
-        #todo replace with category ID and Date from request object
-        cursor.callproc("ToolInventoryReport", [1, '2017-11-7'])
+        # LIMIT ({pagenumber}-1)*{itemsPerPage},{itemsPerPage}
+        # todo replace with category ID and Date from request object
+        cursor.callproc("ToolInventoryReport", [itemsPerPage, (pagenumber - 1) * itemsPerPage, '2017-11-7'])
         result = cursor.fetchall()
+
+        cursor.execute("select count(*) from Tool;")
+        total_rows = cursor.fetchone()
+        total_rows = 0 if total_rows is None or len(total_rows) == 0 else total_rows[0]
 
         return json.dumps(
             {'success': True,
+             'totalsize': total_rows,
              'data': result
              }, default=datetime_handler), 200, json_content
     except Exception as e:
@@ -239,6 +253,7 @@ def get_tool_report():
         cursor.close()
         db.close()
 
+
 @app.route("/register", methods=['POST'])
 def register_customer():
     reg_info = request.json
@@ -249,7 +264,7 @@ def register_customer():
         customer = Customer(reg_info)
         email_check = customer.can_register_email(cursor)
         username_check = customer.can_register_username(cursor)
-        if  email_check and username_check :
+        if email_check and username_check:
             customer.register(db, cursor)
         else:
             if not email_check:
