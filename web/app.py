@@ -146,6 +146,33 @@ def get_customer_profile(username):
         cursor.close()
         db.close()
 
+@app.route("/customer/<username>/credit_cards", methods=['POST'])
+def update_customer_credit_card(username):
+    db = mysql.connect()
+    cursor = db.cursor()
+    credit_card_info = request.json
+
+    try:
+        cc = CreditCard(credit_card_info)
+        cc = cc.create()
+        query = 'UPDATE Customer SET CreditCard_Id=%s WHERE user_name=%s'
+        cursor.execute(query, (cc.id, username))
+        db.commit
+        result = cc.id
+
+        return json.dumps(
+            {'success': True,
+             'data': result
+             }), 200, json_content
+    except Exception as e:
+        print(e)
+        return json.dumps(
+            {'success': False,
+             'message': 'Credit card could not be updated for {}'.format(username)
+             }), 404, json_content
+    finally:
+        cursor.close()
+        db.close()
 
 @app.route("/reservations/<username>")
 def get_customer_reservation(username):
@@ -307,7 +334,6 @@ def make_reservation():
 def get_pickup_reservations(reservation_id):
     """Get all or a specific reservation"""
     con = mysql.connect()
-    data = request.json
     reservation = Reservation(con)
     result = reservation.get_pickup_reservation(reservation_id)
 
@@ -317,7 +343,6 @@ def get_pickup_reservations(reservation_id):
 def get_reservation():
     """Get all reservation pickups"""
     con = mysql.connect()
-    data = request.json
     reservation = Reservation(con)
     result = reservation.get_pickup_reservations()
 
@@ -326,7 +351,8 @@ def get_reservation():
 @app.route("/pickup_reservations/<int:reservation_id>", methods=['POST'])
 def post_pickup_reservation(reservation_id):
     con = mysql.connect()
-    clerk_username = request.args.get('clerk_username')
+    data = request.json
+    clerk_username = data.get('clerk_username')
     reservation = Reservation(con)
     check_query_parameters(request, 'clerk_username')
     result = reservation.pickup_reservation(reservation_id, clerk_username)

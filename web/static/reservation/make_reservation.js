@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('myApp.make_reservation', ['ngRoute', 'ngAnimate', ])
+angular.module('myApp.makeReservation', ['ngRoute', 'ngAnimate', ])
 .config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/make_reservation', {
     templateUrl: 'static/reservation/make_reservation.html',

@@ -1,6 +1,4 @@
 from flask import jsonify
-import datetime
-from decimal import Decimal
 
 class Reservation:
     def __init__(self, con=None, username=""):
@@ -75,13 +73,13 @@ class Reservation:
         self._checkConnection()
 
         cursor = self.con.cursor()
-        query = 'SELECT R.id AS ReservationNumber, C.user_name AS CustomerUsername, C.id AS CustomerId, concat(C.first_name, " ", C.last_name) AS CustomerName, R.start_date, R.end_date FROM Customer AS C INNER JOIN Reservation AS R ON C.user_name=R.Customer_UserName WHERE R.DropOffClerk_UserName IS NULL'
+        query = 'SELECT R.id AS ReservationNumber, C.user_name AS CustomerUsername, C.id AS CustomerId, concat(C.first_name, " ", C.last_name) AS CustomerName, R.start_date, R.end_date FROM Customer AS C INNER JOIN Reservation AS R ON C.user_name=R.Customer_UserName WHERE R.PickupClerk_UserName IS NULL'
         cursor.execute(query)
         data = cursor.fetchall()
 
         reservations = []
 
-        for  reservation_id, customer_username, customer_id, customer_name, start_date, end_date in data:
+        for reservation_id, customer_username, customer_id, customer_name, start_date, end_date in data:
             reservations.append({
                 "reservation_id": reservation_id,
                 "customer_username": customer_username,
@@ -103,9 +101,11 @@ class Reservation:
         self._checkConnection()
 
         cursor = self.con.cursor()
+
         # update the reservation with pickup clerk
         query = 'UPDATE Reservation SET PickupClerk_UserName=%s, booking_date=NOW() WHERE id=%s'
         cursor.execute(query, (clerk_username, reservation_id))
+
         # get all tools in reservation and add them to rentals
         query = 'SELECT TR.Tool_id, T.manufacturer, T.deposit_price, T.rental_price FROM ToolReservations AS TR  INNER JOIN Tool AS T ON TR.Tool_Id=T.id WHERE TR.Reservations_id=%s'
         cursor.execute(query, (reservation_id))
@@ -126,16 +126,19 @@ class Reservation:
     def get_pickup_reservation(self, reservation_id):
         self._checkConnection()
         cursor = self.con.cursor()
-        query = 'SELECT concat(C.first_name, " ", C.last_name) AS CustomerName, SUM(rental_price), SUM(deposit_price) FROM Customer AS C INNER JOIN Reservation AS R ON C.user_name=R.Customer_UserName INNER JOIN ToolReservations AS TR ON TR.Reservations_Id=R.id INNER JOIN Tool AS T ON T.id=TR.Tool_id WHERE R.id=%s'
+        query = 'SELECT concat(C.first_name, " ", C.last_name) AS CustomerName, C.user_name, SUM(rental_price), SUM(deposit_price), R.start_date, R.end_date FROM Customer AS C INNER JOIN Reservation AS R ON C.user_name=R.Customer_UserName INNER JOIN ToolReservations AS TR ON TR.Reservations_Id=R.id INNER JOIN Tool AS T ON T.id=TR.Tool_id WHERE R.id=%s'
         cursor.execute(query, (reservation_id))
         data = cursor.fetchone()
         details = None
         if data:
-            customer_full_name, total_rental_price, total_deposit_price = data
+            customer_full_name, customer_username, total_rental_price, total_deposit_price, start_date, end_date = data
             details = {
                     'customer_full_name': customer_full_name,
+                    'customer_username': customer_username,
                     'total_rental_price': str(total_rental_price),
-                    'total_deposit_price': str(total_deposit_price)
+                    'total_deposit_price': str(total_deposit_price),
+                    'start_date': start_date.strftime('%m/%d/%Y'),
+                    'end_date': end_date.strftime('%m/%d/%Y')
                     }
 
         response = { 'success': True, 'status_code': 200, 'reservation_id': reservation_id, 'details': details }
@@ -157,7 +160,7 @@ class Reservation:
 
         reservations = []
 
-        for  reservation_id, customer_username, customer_id, customer_name, start_date, end_date in data:
+        for reservation_id, customer_username, customer_id, customer_name, start_date, end_date in data:
             reservations.append({
                 "reservation_id": reservation_id,
                 "customer_username": customer_username,
