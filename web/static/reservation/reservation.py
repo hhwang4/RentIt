@@ -77,7 +77,7 @@ class Reservation:
                 'FROM Customer AS C INNER JOIN Reservation AS R ON C.user_name=R.Customer_UserName ' \
                 'INNER JOIN ToolReservations AS TR ON TR.Reservations_Id=R.id ' \
                 'INNER JOIN Tool AS T ON T.id=TR.Tool_id ' \
-                'WHERE R.PickupClerk_UserName IS NULL'
+                'WHERE R.PickupClerk_UserName IS NULL GROUP BY R.id'
         cursor.execute(query)
         data = cursor.fetchall()
 
@@ -169,7 +169,7 @@ class Reservation:
                 'FROM Customer AS C INNER JOIN Reservation AS R ON C.user_name=R.Customer_UserName ' \
                 'INNER JOIN ToolReservations AS TR ON TR.Reservations_Id=R.id ' \
                 'INNER JOIN Tool AS T ON T.id=TR.Tool_id ' \
-                'WHERE R.DropOffClerk_UserName IS NULL'
+                'WHERE R.DropOffClerk_UserName IS NULL AND R.PickupClerk_UserName IS NOT NULL GROUP BY R.id'
         cursor.execute(query)
         data = cursor.fetchall()
 
