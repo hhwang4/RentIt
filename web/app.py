@@ -6,7 +6,7 @@ import json
 import datetime
 from static.reservation.reservation import Reservation
 from static.registration.registration import Customer
-
+from static.add_tool import find_tool
 
 class MyJSONEncoder(flask.json.JSONEncoder):
     """
@@ -30,8 +30,8 @@ app.json_encoder = MyJSONEncoder
 app.config['MYSQL_DATABASE_USER'] = 'root'
 app.config['MYSQL_DATABASE_PASSWORD'] = 'mypassword'
 app.config['MYSQL_DATABASE_DB'] = 'cs6400_sfa17_team033'
-app.config['MYSQL_DATABASE_HOST'] = 'localhost'
-# app.config['MYSQL_DATABASE_HOST'] = 'mysql'  # mysql is the name of the docker container
+#app.config['MYSQL_DATABASE_HOST'] = 'localhost'
+app.config['MYSQL_DATABASE_HOST'] = 'mysql'  # mysql is the name of the docker container
 mysql.init_app(app)
 
 json_content = {'ContentType': 'application/json'}
@@ -65,18 +65,41 @@ def hello():
 def old_hello():
     return render_template('index_old.html')
 
-
 @app.route("/addtool")
-def add_tool():
-    # code here
-    # grab data from request
-    # request data to database
-    # DB gives results
-    # result to json
-    return json.dumps(
-        {'success': True}), \
-           200, json_content
+def add_tool_get():
+    db = mysql.connect()
+    cursor = db.cursor()
 
+    result = dict()
+    cursor.execute("SELECT Name FROM Category")
+    category = [x[0] for x in cursor.fetchall()]
+    for cat in category:
+        result[cat] = dict()
+        cursor.execute("SELECT SubType.Name FROM SubType, Category where SubType.Category_Id = Category.id AND Category.Name = %s", [cat])
+        subtype = [x[0] for x in cursor.fetchall()]
+        for t in subtype:
+            cursor.execute("SELECT SubOption.Name FROM SubType, SubOption where SubOption.SubType_Id = SubType.id AND SubType.Name = %s", [t])
+            result[cat][t] = [x[0] for x in cursor.fetchall()]
+    cursor.close()
+    db.close()
+    return json.dumps({'success': True, 'data': result}), 200, json_content
+
+
+@app.route("/addtool", methods=['POST'])
+def add_tool_post():
+    params = request.get_json()
+
+    tool = find_tool(params)
+
+    db = mysql.connect()
+    cursor = db.cursor()
+
+    tool.create(cursor)
+
+    db.commit()
+    cursor.close()
+    db.close()
+    return json.dumps({'success': True}), 200, json_content
 
 @app.route("/login", methods=['POST'])
 def login():
