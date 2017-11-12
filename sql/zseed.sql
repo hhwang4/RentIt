@@ -61,7 +61,7 @@ insert into PowerSourceCategory (PowerSource_Id, Category_Id) VALUES (@gasPowerS
 
 
 # Sub Types Hand
-insert into SubType (name) VALUES ('Screwdriver');
+insert into SubType (name, Category_Id) VALUES ('Screwdriver', @handCategoryId);
 set @lastSubtype := last_insert_id();
 
 insert into SubOption (name, SubType_Id) VALUES ('phillips (cross)', @lastSubtype);
@@ -70,19 +70,19 @@ insert into SubOption (name, SubType_Id) VALUES ('torx', @lastSubtype);
 insert into SubOption (name, SubType_Id) VALUES ('slotted (flat)', @lastSubtype);
 
 
-insert into SubType (name) VALUES ('Socket');
+insert into SubType (name, Category_Id) VALUES ('Socket', @handCategoryId);
 set @lastSubtype := last_insert_id();
 
 insert into SubOption (name, SubType_Id) VALUES ('deep', @lastSubtype);
 insert into SubOption (name, SubType_Id) VALUES ('standard', @lastSubtype);
 
-insert into SubType (name) VALUES ('Ratchet');
+insert into SubType (name, Category_Id) VALUES ('Ratchet', @handCategoryId);
 set @lastSubtype := last_insert_id();
 
 insert into SubOption (name, SubType_Id) VALUES ('adjustable', @lastSubtype);
 insert into SubOption (name, SubType_Id) VALUES ('fixed', @lastSubtype);
 
-insert into SubType (name) VALUES ('Wrench');
+insert into SubType (name, Category_Id) VALUES ('Wrench', @handCategoryId);
 set @lastSubtype := last_insert_id();
 
 insert into SubOption (name, SubType_Id) VALUES ('crescent', @lastSubtype);
@@ -90,7 +90,7 @@ insert into SubOption (name, SubType_Id) VALUES ('torque', @lastSubtype);
 insert into SubOption (name, SubType_Id) VALUES ('pipe', @lastSubtype);
 
 
-insert into SubType (name) VALUES ('Pliers');
+insert into SubType (name, Category_Id) VALUES ('Pliers', @handCategoryId);
 set @lastSubtype := last_insert_id();
 
 insert into SubOption (name, SubType_Id) VALUES ('needle nose', @lastSubtype);
@@ -98,13 +98,13 @@ insert into SubOption (name, SubType_Id) VALUES ('cutting', @lastSubtype);
 insert into SubOption (name, SubType_Id) VALUES ('crimper', @lastSubtype);
 
 
-insert into SubType (name) VALUES ('Gun');
+insert into SubType (name, Category_Id) VALUES ('Gun', @handCategoryId);
 set @lastSubtype := last_insert_id();
 
 insert into SubOption (name, SubType_Id) VALUES ('nail', @lastSubtype);
 insert into SubOption (name, SubType_Id) VALUES ('staple', @lastSubtype);
 
-insert into SubType (name) VALUES ('Hammer');
+insert into SubType (name, Category_Id) VALUES ('Hammer', @handCategoryId);
 set @lastSubtype := last_insert_id();
 
 insert into SubOption (name, SubType_Id) VALUES ('claw', @lastSubtype);
@@ -114,7 +114,7 @@ insert into SubOption (name, SubType_Id) VALUES ('framing', @lastSubtype);
 
 # Garden Subtypes
 
-insert into SubType (name) VALUES ('Digger');
+insert into SubType (name, Category_Id) VALUES ('Digger', @gardenCategoryId);
 set @lastSubtype := last_insert_id();
 
 insert into SubOption (name, SubType_Id) VALUES ('pointed shovel', @lastSubtype);
@@ -123,27 +123,27 @@ insert into SubOption (name, SubType_Id) VALUES ('scoop shovel', @lastSubtype);
 insert into SubOption (name, SubType_Id) VALUES ('edger', @lastSubtype);
 
 
-insert into SubType (name) VALUES ('Pruner');
+insert into SubType (name, Category_Id) VALUES ('Pruner', @gardenCategoryId);
 set @lastSubtype := last_insert_id();
 
 insert into SubOption (name, SubType_Id) VALUES ('sheer', @lastSubtype);
 insert into SubOption (name, SubType_Id) VALUES ('loppers', @lastSubtype);
 insert into SubOption (name, SubType_Id) VALUES ('hedge', @lastSubtype);
 
-insert into SubType (name) VALUES ('Rakes');
+insert into SubType (name, Category_Id) VALUES ('Rakes', @gardenCategoryId);
 set @lastSubtype := last_insert_id();
 
 insert into SubOption (name, SubType_Id) VALUES ('leaf', @lastSubtype);
 insert into SubOption (name, SubType_Id) VALUES ('landscaping', @lastSubtype);
 insert into SubOption (name, SubType_Id) VALUES ('rock', @lastSubtype);
 
-insert into SubType (name) VALUES ('Wheelbarrows');
+insert into SubType (name, Category_Id) VALUES ('Wheelbarrows', @gardenCategoryId);
 set @lastSubtype := last_insert_id();
 
 insert into SubOption (name, SubType_Id) VALUES ('1-wheel', @lastSubtype);
 insert into SubOption (name, SubType_Id) VALUES ('2-wheel', @lastSubtype);
 
-insert into SubType (name) VALUES ('Striking');
+insert into SubType (name, Category_Id) VALUES ('Striking', @gardenCategoryId);
 set @lastSubtype := last_insert_id();
 
 insert into SubOption (name, SubType_Id) VALUES ('bar pry', @lastSubtype);
@@ -154,13 +154,13 @@ insert into SubOption (name, SubType_Id) VALUES ('single bit axe', @lastSubtype)
 
 
 # Ladder
-insert into SubType (name) VALUES ('Straight');
+insert into SubType (name, Category_Id) VALUES ('Straight', @ladderCategoryId);
 set @lastSubtype := last_insert_id();
 
 insert into SubOption (name, SubType_Id) VALUES ('rigid', @lastSubtype);
 insert into SubOption (name, SubType_Id) VALUES ('telescoping', @lastSubtype);
 
-insert into SubType (name) VALUES ('Step');
+insert into SubType (name, Category_Id) VALUES ('Step', @ladderCategoryId);
 set @lastSubtype := last_insert_id();
 
 insert into SubOption (name, SubType_Id) VALUES ('folding', @lastSubtype);
@@ -169,20 +169,20 @@ insert into SubOption (name, SubType_Id) VALUES ('multi-position', @lastSubtype)
 
 # Power
 
-insert into SubType (name) VALUES ('Drill');
+insert into SubType (name, Category_Id) VALUES ('Drill', @powerCategoryId);
 set @lastSubtype := last_insert_id();
 
 insert into SubOption (name, SubType_Id) VALUES ('driver', @lastSubtype);
 insert into SubOption (name, SubType_Id) VALUES ('hammer', @lastSubtype);
 
-insert into SubType (name) VALUES ('Saw');
+insert into SubType (name, Category_Id) VALUES ('Saw', @powerCategoryId);
 set @lastSubtype := last_insert_id();
 
 insert into SubOption (name, SubType_Id) VALUES ('circular', @lastSubtype);
 insert into SubOption (name, SubType_Id) VALUES ('reciprocating', @lastSubtype);
 insert into SubOption (name, SubType_Id) VALUES ('jig', @lastSubtype);
 
-insert into SubType (name) VALUES ('Sander');
+insert into SubType (name, Category_Id) VALUES ('Sander', @powerCategoryId);
 set @lastSubtype := last_insert_id();
 
 insert into SubOption (name, SubType_Id) VALUES ('finish', @lastSubtype);
@@ -190,17 +190,17 @@ insert into SubOption (name, SubType_Id) VALUES ('sheet', @lastSubtype);
 insert into SubOption (name, SubType_Id) VALUES ('belt', @lastSubtype);
 insert into SubOption (name, SubType_Id) VALUES ('random orbital', @lastSubtype);
 
-insert into SubType (name) VALUES ('Air-Compressor');
+insert into SubType (name, Category_Id) VALUES ('Air-Compressor', @powerCategoryId);
 set @lastSubtype := last_insert_id();
 
 insert into SubOption (name, SubType_Id) VALUES ('reciprocating', @lastSubtype);
 
-insert into SubType (name) VALUES ('Mixer');
+insert into SubType (name, Category_Id) VALUES ('Mixer', @powerCategoryId);
 set @lastSubtype := last_insert_id();
 
 insert into SubOption (name, SubType_Id) VALUES ('concrete', @lastSubtype);
 
-insert into SubType (name) VALUES ('Generator');
+insert into SubType (name, Category_Id) VALUES ('Generator', @powerCategoryId);
 set @lastSubtype := last_insert_id();
 
 insert into SubOption (name, SubType_Id) VALUES ('electric', @lastSubtype);
