@@ -15,7 +15,7 @@
           <div  ng-show="isSummary" id="reservation-summary">
             <p><strong>Reservation ID: #{{reservation_id}}</strong></p>
             <br />
-            <p><strong>Customer Name: </strong>{{customer_name}}</p>
+            <p><strong>Customer Name: </strong>{{customer_full_name}}</p>
             <p>Total Deposit Price: {{total_deposit_price}}</p>
             <p>Total Rental Price: {{total_rental_price}}</p>
             <div class="credit-card">
@@ -106,13 +106,6 @@
 
                     </div>
                   </div>
-                  <div class="form-group">
-                    <button type="submit" ng-disabled="!(user.$valid && credit.$valid)" class="btn btn-primary"
-                            ng-click="vm.register()">
-                      Register
-                    </button>
-
-                  </div>
                   <div class="alert alert-danger" role="alert" ng-hide="!vm.hasError()">
                     {{ vm.error }}
                   </div>
@@ -123,7 +116,7 @@
           <div  ng-show="!isSummary" id="reservation-confirmation">
             <h4>Rental Contract</h4>
             <p><strong>Pick-up Clerk: </strong>{{clerk_name}}</p>
-            <p><strong>Customer Name: </strong>{{customer_name}}</p>
+            <p><strong>Customer Name: </strong>{{customer_full_name}}</p>
             <p><strong>Credit Card #: </strong>XXXX-XXXX-XXXX-XXXX</p>
             <p><strong>Start Date: </strong>{{start_date}}</p>
             <p><strong>End Date: </strong>{{end_date}}</p>
@@ -152,6 +145,35 @@
               </tr>
               </tbody>
             </table>
+          </div>
+
+          <div ng-show="!isSummary" class="signature">
+            <h3>Signatures</h3>
+            <div class="row">
+              <div class="col-lg-6">
+                <p>X</p>
+                <hr />
+                <p><strong>Pickup Clerk - {{ clerk_full_name }}</strong></p>
+              </div>
+              <div class="col-lg-3">
+                <p><strong>Date: </strong></p>
+                <hr />
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-6">
+                <p>X</p>
+                <hr />
+                <p><strong>Customer - {{customer_full_name}}</strong></p>
+              </div>
+              <div class="col-lg-3">
+                <p><strong>Date: </strong></p>
+                <hr />
+              </div>
+            </div>
+            <div class="row">
+              <button type="button" class="btn btn-primary">Print Contract</button>
+            </div>
           </div>
         </div>
         <div ng-show="isSummary" class="modal-footer">

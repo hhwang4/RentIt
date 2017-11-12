@@ -8,7 +8,7 @@ angular.module('myApp.pickupReservation', ['ngRoute', 'ngAnimate', ])
       resolve: {
         accessToken: ['localStorageService', '$location', function ($localStorage, $location) {
           if ($localStorage.get('authorizationData'))
-            return $localStorage.get('authorizationData')
+            return $localStorage.get('authorizationData');
           else {
             $location.path('/login');
             return;
@@ -17,9 +17,20 @@ angular.module('myApp.pickupReservation', ['ngRoute', 'ngAnimate', ])
       }
     });
   }])
-  .controller('PickupReservationCtrl', ['$scope', '$http', 'localStorageService', '$uibModal', function($scope, $http, localStorageService, $uibModal) {
+  .controller('PickupReservationCtrl', ['$scope', '$http', '$sce', 'localStorageService', '$uibModal', function($scope, $http, $sce, $localStorage, $uibModal) {
+    var user_info =  $localStorage.get('authorizationData') || {};
     $scope.reservations = [];
     $scope.reservation_id = null;
+    $scope.clerk_full_name = user_info.full_name; // TODO: Add user full_name to cache
+    $scope.clerk_username = user_info.username;
+    $scope.htmlPopover = function(index) {
+      var reservation = $scope.reservations[index];
+      return ('<div class="container reservation-details"><h6><b>Reservation ID: #</b>' + reservation.id +'</h6>'
+        + '<br /><b>Customer Name: </b>' + reservation.customer_name
+        + '<br /><b>Total Deposit: </b>' + reservation.total_deposit_price
+        + '<br /><b>Total Rental Price: </b>' + reservation.total_rental_price
+        + '</div>')
+    };
     $http({
       method: 'GET',
       url: '/pickup_reservations'
@@ -34,7 +45,9 @@ angular.module('myApp.pickupReservation', ['ngRoute', 'ngAnimate', ])
               'customer_name': reservation.customer_name,
               'customer_id': reservation.customer_id,
               'start_date': reservation.start_date,
-              'end_date': reservation.end_date
+              'end_date': reservation.end_date,
+              'total_deposit_price': reservation.total_deposit_price,
+              'total_rental_price': reservation.total_rental_price
             });
           });
         },
@@ -65,9 +78,10 @@ angular.module('myApp.pickupReservation', ['ngRoute', 'ngAnimate', ])
         ariaLabelledBy: 'modal-title',
         ariaDescribedBy: 'modal-body',
         templateUrl: 'static/reservation/confirmation_pickup_reservation.html',
-        controller: function($uibModalInstance, $scope, reservation_id, clerk_username) {
+        controller: function($uibModalInstance, $scope, reservation_id, clerk_username, clerk_full_name) {
           $scope.reservation_id = reservation_id;
           $scope.clerk_username = clerk_username;
+          $scope.clerk_full_name = clerk_full_name ;
           $scope.card_option = 'existing';
           $scope.vm = {};
           $scope.vm.months = [
@@ -168,7 +182,10 @@ angular.module('myApp.pickupReservation', ['ngRoute', 'ngAnimate', ])
             return $scope.reservation_id;
           },
           clerk_username: function() {
-            return 'admin@gatech.edu'; // TODO: Get user from localStorage
+            return $scope.clerk_username;
+          },
+          clerk_full_name: function() {
+           return $scope.clerk_full_name;
           }
         },
         size: size

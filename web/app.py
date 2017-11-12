@@ -1,5 +1,4 @@
 from flask import Flask, render_template, request, jsonify
-from flask import abort
 from flaskext.mysql import MySQL
 import decimal
 import flask.json
@@ -150,25 +149,23 @@ def get_customer_profile(username):
 def update_customer_credit_card(username):
     db = mysql.connect()
     cursor = db.cursor()
-    credit_card_info = request.json
+    cc_info = request.json
 
     try:
-        cc = CreditCard(credit_card_info)
-        cc = cc.create()
-        query = 'UPDATE Customer SET CreditCard_Id=%s WHERE user_name=%s'
-        cursor.execute(query, (cc.id, username))
-        db.commit
-        result = cc.id
+        query = 'UPDATE CreditCard AS CC INNER JOIN Customer AS C ON CC.id=C.CreditCard_Id SET name=%s, card_number=%s, cvc=%s, expiration_month=%s, expiration_year=%s WHERE C.user_name=%s'
+        cursor.execute(query, (cc_info.get('cardName'), cc_info.get('cardNumber'), cc_info.get('cvc'),
+                        cc_info.get('expirationMonth'), cc_info.get('expirationYear'), username))
+        db.commit()
 
         return json.dumps(
             {'success': True,
-             'data': result
+             'data': 'Done'
              }), 200, json_content
     except Exception as e:
         print(e)
         return json.dumps(
             {'success': False,
-             'message': 'Credit card could not be updated for {}'.format(username)
+             'message': 'Credit card could not be updated for {}'.format(username),
              }), 404, json_content
     finally:
         cursor.close()
@@ -339,6 +336,7 @@ def get_pickup_reservations(reservation_id):
 
     return create_response(result)
 
+
 @app.route("/pickup_reservations", methods=['GET'])
 def get_reservation():
     """Get all reservation pickups"""
@@ -347,6 +345,7 @@ def get_reservation():
     result = reservation.get_pickup_reservations()
 
     return create_response(result)
+
 
 @app.route("/pickup_reservations/<int:reservation_id>", methods=['POST'])
 def post_pickup_reservation(reservation_id):
@@ -358,6 +357,7 @@ def post_pickup_reservation(reservation_id):
     result = reservation.pickup_reservation(reservation_id, clerk_username)
 
     return create_response(result)
+
 
 @app.route("/tools")
 def tools():

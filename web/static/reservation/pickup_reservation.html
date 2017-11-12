@@ -15,7 +15,14 @@
     </thead>
     <tbody>
     <tr ng-repeat="reservation in reservations">
-      <th scope="row">{{reservation.id}}</th>
+      <th scope="row">
+        <button
+            popover-animation="false"
+            popover-placement="right-top"
+            uib-popover-html="htmlPopover($index)" class="btn btn-light">
+         {{reservation.id}}
+        </button>
+      </th>
       <td>{{reservation.customer_name}}</td>
       <td>{{reservation.customer_id}}</td>
       <td>{{reservation.start_date}}</td>
