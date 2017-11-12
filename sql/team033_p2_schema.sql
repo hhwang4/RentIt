@@ -126,12 +126,13 @@ CREATE TABLE `PowerSource` (
 CREATE TABLE `SubType` (
     `id` INT NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(128) NOT NULL,
+    `Category_Id` INT NOT NULL,
     PRIMARY KEY (`id`)
 );
 CREATE TABLE `SubOption` (
     `id` INT NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(128) NOT NULL,
-    `SubType_Id` INT,
+    `SubType_Id` INT NOT NULL,
     PRIMARY KEY (`id`)
 );
 
@@ -139,7 +140,7 @@ CREATE TABLE `Accessory` (
     `id` INT NOT NULL AUTO_INCREMENT,
     `description` LONGTEXT NOT NULL,
     `quantity` INT NOT NULL,
-    `PowerTool_Id` INT,
+    `PowerTool_Id` INT NOT NULL,
     PRIMARY KEY (`id`)
 );
 
@@ -357,6 +358,7 @@ alter table `Tool` add constraint `FK_Tool_PowerSource_PowerSource_Id`  foreign 
 alter table `Tool` add constraint `FK_Tool_SubOption_SubOption_Id`  foreign key (`SubOption_Id`) references `SubOption` ( `id`)  on update cascade on delete cascade ;
 alter table `Tool` add constraint `FK_Tool_SubType_SubType_Id`  foreign key (`SubType_Id`) references `SubType` ( `id`)  on update cascade on delete cascade ;
 alter table `SubOption` add constraint `FK_SubOption_SubType_SubType_Id`  foreign key (`SubType_Id`) references `SubType` ( `id`) ;
+alter table `SubType` add constraint `FK_SubType_Category_Category_Id`  foreign key (`Category_Id`) references `Category` ( `id`) ;
 alter table `Accessory` add constraint `FK_Accessory_PowerTool_PowerTool_Id`  foreign key (`PowerTool_Id`) references `PowerTool` ( `id`) ;
 alter table `ServiceOrder` add constraint `FK_ServiceOrder_Tool_Tool_Id`  foreign key (`Tool_Id`) references `Tool` ( `id`)  on update cascade on delete cascade ;
 alter table `SaleOrder` add constraint `FK_SaleOrder_Customer_Customer_UserName`  foreign key (`Customer_UserName`) references `Customer` ( `user_name`) ;
