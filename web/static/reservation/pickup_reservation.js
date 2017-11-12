@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('myApp.pickupReservation', ['ngRoute', 'ngAnimate', ])
+angular.module('myApp.pickupReservation', ['ngRoute', 'ngAnimate'])
   .config(['$routeProvider', function($routeProvider) {
     $routeProvider.when('/pickup_reservation', {
       templateUrl: 'static/reservation/pickup_reservation.html',
@@ -17,7 +17,7 @@ angular.module('myApp.pickupReservation', ['ngRoute', 'ngAnimate', ])
       }
     });
   }])
-  .controller('PickupReservationCtrl', ['$scope', '$http', '$sce', 'localStorageService', '$uibModal', function($scope, $http, $sce, $localStorage, $uibModal) {
+  .controller('PickupReservationCtrl', ['$scope', '$http', '$sce', 'localStorageService', '$location', '$uibModal', function($scope, $http, $sce, $localStorage, $location, $uibModal) {
     var user_info =  $localStorage.get('authorizationData') || {};
     $scope.reservations = [];
     $scope.reservation_id = null;
@@ -176,6 +176,11 @@ angular.module('myApp.pickupReservation', ['ngRoute', 'ngAnimate', ])
           $scope.reset = function () {
             $uibModalInstance.close({status: 'reset'});
           };
+          $scope.close = function () {
+            $uibModalInstance.close({status: 'close'});
+            $location.path('/dashboard');
+          };
+
         },
         resolve: {
           reservation_id: function () {

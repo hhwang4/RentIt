@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('myApp.makeReservation', ['ngRoute', 'ngAnimate', ])
+angular.module('myApp.makeReservation', ['ngRoute', 'ngAnimate'])
   .config(['$routeProvider', function($routeProvider) {
     $routeProvider.when('/make_reservation', {
       templateUrl: 'static/reservation/make_reservation.html',
@@ -17,13 +17,17 @@ angular.module('myApp.makeReservation', ['ngRoute', 'ngAnimate', ])
       }
     });
   }])
-  .controller('MakeReservationCtrl', ['$scope', '$http', 'localStorageService', '$uibModal', function($scope, $http, localStorageService, $uibModal) {
+  .controller('MakeReservationCtrl', ['$scope', '$http', 'localStorageService', '$uibModal', function($scope, $http, $localStorage, $uibModal) {
+    var user_info = $localStorage.get('authorizationData') || {};
+
     $scope.tools = [];
     $scope.toolsAdded = [];
     $scope.hasSearched = true;
     $scope.showModal = false;
     $scope.end_date;
     $scope.start_date;
+    $scope.customer_full_name = user_info.full_name; // TODO: Add user full_name to cache
+    $scope.customer_username = user_info.username;
 
     $http({
       method: 'GET',
@@ -133,10 +137,10 @@ angular.module('myApp.makeReservation', ['ngRoute', 'ngAnimate', ])
             return $scope.end_date;
           },
           customer_username: function() {
-            return 'thebatman'; // TODO: Get user from localStorage
+            return $scope.customer_username
           }
         },
-        size: size,
+        size: size
       });
       modalInstance.result.then(function (response) {
         // Check to see if the make reservation table should be reset

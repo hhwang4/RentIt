@@ -165,21 +165,29 @@ class Reservation:
         self._checkConnection()
 
         cursor = self.con.cursor()
-        query = 'SELECT R.id AS ReservationNumber, C.user_name AS CustomerUsername, concat(C.first_name, " ", C.last_name) AS CustomerName, R.start_date, R.end_date FROM Customer AS C INNER JOIN Reservation AS R ON C.user_name=R.Customer_UserName WHERE R.DropOffClerk_UserName IS NULL'
+        query = 'SELECT R.id AS ReservationNumber, C.user_name AS CustomerUsername, C.id AS CustomerId, concat(C.first_name, " ", C.last_name) AS CustomerName, R.start_date, R.end_date, SUM(rental_price), SUM(deposit_price) ' \
+                'FROM Customer AS C INNER JOIN Reservation AS R ON C.user_name=R.Customer_UserName ' \
+                'INNER JOIN ToolReservations AS TR ON TR.Reservations_Id=R.id ' \
+                'INNER JOIN Tool AS T ON T.id=TR.Tool_id ' \
+                'WHERE R.DropOffClerk_UserName IS NULL'
         cursor.execute(query)
         data = cursor.fetchall()
 
         reservations = []
 
-        for reservation_id, customer_username, customer_id, customer_name, start_date, end_date in data:
-            reservations.append({
-                "reservation_id": reservation_id,
-                "customer_username": customer_username,
-                "customer_name": customer_name,
-                "customer_id": customer_id,
-                "start_date": start_date.strftime('%m/%d/%Y'),
-                "end_date": end_date.strftime('%m/%d/%Y')
-            })
+        if len(data):
+            for reservation_id, customer_username, customer_id, customer_name, start_date, end_date, total_rental_price, total_deposit_price in data:
+                if reservation_id:
+                    reservations.append({
+                        "reservation_id": reservation_id,
+                        "customer_username": customer_username,
+                        "customer_name": customer_name,
+                        "customer_id": customer_id,
+                        "start_date": (start_date and start_date.strftime('%m/%d/%Y')) or None,
+                        "end_date": (end_date and end_date.strftime('%m/%d/%Y')) or None,
+                        'total_rental_price': str(total_rental_price),
+                        'total_deposit_price': str(total_deposit_price),
+                    })
 
         response = {'success': True, 'status_code': 200, 'reservations': reservations}
         self._closeConnection(cursor)
@@ -228,19 +236,44 @@ class Reservation:
     def get_dropoff_reservation(self, reservation_id):
         self._checkConnection()
         cursor = self.con.cursor()
-        query = 'SELECT concat(C.first_name, " ", C.last_name) AS CustomerName, SUM(rental_price), SUM(deposit_price) FROM Customer AS C INNER JOIN Reservation AS R ON C.user_name=R.Customer_UserName INNER JOIN ToolReservations AS TR ON TR.Reservations_Id=R.id INNER JOIN Tool AS T ON T.id=TR.Tool_id WHERE R.id=%s'
+        query = 'SELECT concat(C.first_name, " ", C.last_name) AS CustomerName, C.user_name, SUM(rental_price), SUM(deposit_price), R.start_date, R.end_date FROM Customer AS C INNER JOIN Reservation AS R ON C.user_name=R.Customer_UserName INNER JOIN ToolReservations AS TR ON TR.Reservations_Id=R.id INNER JOIN Tool AS T ON T.id=TR.Tool_id WHERE R.id=%s'
         cursor.execute(query, (reservation_id))
         data = cursor.fetchone()
         details = None
         if data:
-            customer_full_name, total_rental_price, total_deposit_price = data
+            customer_full_name, customer_username, total_rental_price, total_deposit_price, start_date, end_date = data
             details = {
                 'customer_full_name': customer_full_name,
+                'customer_username': customer_username,
                 'total_rental_price': str(total_rental_price),
-                'total_deposit_price': str(total_deposit_price)
+                'total_deposit_price': str(total_deposit_price),
+                'start_date': start_date.strftime('%m/%d/%Y'),
+                'end_date': end_date.strftime('%m/%d/%Y')
             }
 
-        response = {'success': True, 'status_code': 200, 'reservation_id': reservation_id, 'details': details}
+        # Get all tools in reservation and update end dates in Rentals
+        query = 'SELECT TR.Tool_id, T.manufacturer, T.deposit_price, T.rental_price FROM ToolReservations AS TR  INNER JOIN Tool AS T ON TR.Tool_Id=T.id WHERE TR.Reservations_id=%s'
+        cursor.execute(query, (reservation_id))
+        tools_in_reservation = cursor.fetchall()
+        tool_ids = tools = None
+        if len(tools_in_reservation):
+            tools = [{'id': tool_id, 'description': manufacturer, 'deposit_price': str(deposit_price),
+                      'rental_price': str(rental_price)} for tool_id, manufacturer, deposit_price, rental_price in
+                     tools_in_reservation]
+            tool_ids = [(tool.get('id')) for tool in tools]
+            query = 'UPDATE Rentals SET end_date=NOW() WHERE Tool_Id in (%s)'
+            cursor.executemany(query, tool_ids)
+            # Check for rentals over 50 and add sales order
+            query = 'SELECT Tool_Id FROM Rentals WHERE number_of_rentals >= 50'
+            cursor.execute(query)
+            result = cursor.fetchall()
+            if len(result) > 0:
+                tool_ids = [(tool_id, tool_id) for tool_id, in result]
+                query = 'INSERT INTO SaleOrder (Tool_Id, for_sale_date, purchase_price, Clerk_UserName) VALUES (%s, NOW(), (SELECT original_price FROM Tool WHERE id=%s) * 0.5, "jwatson@tools4rent.com")'
+                cursor.executemany(query, tool_ids)
+
+        response = {'success': True, 'status_code': 200, 'reservation_id': reservation_id, 'details': details, 'tool_ids': tool_ids,
+                    'tools': tools}
         self._closeConnection(cursor)
 
         return response

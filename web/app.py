@@ -358,6 +358,37 @@ def post_pickup_reservation(reservation_id):
 
     return create_response(result)
 
+@app.route("/dropoff_reservations/<int:reservation_id>", methods=['GET'])
+def get_dropoff_reservations(reservation_id):
+    """Get all or a specific reservation"""
+    con = mysql.connect()
+    reservation = Reservation(con)
+    result = reservation.get_dropoff_reservation(reservation_id)
+
+    return create_response(result)
+
+
+@app.route("/dropoff_reservations", methods=['GET'])
+def get_dropoff_all_reservation():
+    """Get all reservation dropoffs"""
+    con = mysql.connect()
+    reservation = Reservation(con)
+    result = reservation.get_dropoff_reservations()
+
+    return create_response(result)
+
+
+@app.route("/dropoff_reservations/<int:reservation_id>", methods=['POST'])
+def post_dropoff_reservation(reservation_id):
+    con = mysql.connect()
+    data = request.json
+    clerk_username = data.get('clerk_username')
+    reservation = Reservation(con)
+    check_query_parameters(request, 'clerk_username')
+    result = reservation.dropoff_reservation(reservation_id, clerk_username)
+
+    return create_response(result)
+
 
 @app.route("/tools")
 def tools():
