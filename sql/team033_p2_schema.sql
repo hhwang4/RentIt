@@ -212,6 +212,12 @@ CREATE TABLE `HandRatchet` (
     PRIMARY KEY (`id`)
 );
 
+CREATE TABLE `HandWrench` (
+    `id` INT NOT NULL,
+    `drive_size` DOUBLE NOT NULL,
+    PRIMARY KEY (`id`)
+);
+
 CREATE TABLE `HandPlier` (
     `id` INT NOT NULL,
     `adjustable` BOOL NOT NULL,
@@ -374,6 +380,7 @@ alter table `HandTool` add constraint `FK_HandTool_Tool_id`  foreign key (`id`) 
 alter table `ScrewDriver` add constraint `FK_ScrewDriver_HandTool_id`  foreign key (`id`) references `HandTool` ( `id`) ;
 alter table `HandSocket` add constraint `FK_HandSocket_HandTool_id`  foreign key (`id`) references `HandTool` ( `id`) ;
 alter table `HandRatchet` add constraint `FK_HandRatchet_HandTool_id`  foreign key (`id`) references `HandTool` ( `id`) ;
+alter table `HandWrench` add constraint `FK_HandWrench_HandTool_id`  foreign key (`id`) references `HandTool` ( `id`) ;
 alter table `HandPlier` add constraint `FK_HandPlier_HandTool_id`  foreign key (`id`) references `HandTool` ( `id`) ;
 alter table `HandGun` add constraint `FK_HandGun_HandTool_id`  foreign key (`id`) references `HandTool` ( `id`) ;
 alter table `HandHammer` add constraint `FK_HandHammer_HandTool_id`  foreign key (`id`) references `HandTool` ( `id`) ;
