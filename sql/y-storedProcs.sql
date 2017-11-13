@@ -1,3 +1,5 @@
+use cs6400_sfa17_team033;
+
 DELIMITER $$
 CREATE DEFINER=`root`@`%` PROCEDURE `CustomerInfo`(IN var_username VARCHAR(128))
 BEGIN
