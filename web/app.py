@@ -319,20 +319,36 @@ def register_customer():
 @app.route("/reservations", methods=['POST'])
 def make_reservation():
     """ Reserve specified tools"""
-    con = mysql.connect()
+    db = mysql.connect()
+    cursor = db.cursor()
     data = request.json
-    reservation = Reservation(con)
-    result = reservation.create_reservation(data.get('tools'), data.get('start_date'), data.get('end_date'),
-                                            data.get('customer_username'))
+
+    try:
+        reservation = Reservation(db, cursor)
+        result = reservation.create_reservation(data.get('tools'), data.get('start_date'), data.get('end_date'),
+                                                data.get('customer_username'))
+    except Exception as e:
+        result = {'success': False, 'status_code': 404, 'message': 'Tools could not be reserved'}
+    finally:
+        cursor.close()
+        db.close()
 
     return create_response(result)
 
 @app.route("/pickup_reservations/<int:reservation_id>", methods=['GET'])
 def get_pickup_reservations(reservation_id):
     """Get all or a specific reservation"""
-    con = mysql.connect()
-    reservation = Reservation(con)
-    result = reservation.get_pickup_reservation(reservation_id)
+    db = mysql.connect()
+    cursor = db.cursor()
+
+    try:
+        reservation = Reservation(db, cursor)
+        result = reservation.get_pickup_reservation(reservation_id)
+    except Exception as e:
+        result = {'success': False, 'status_code': 404, 'message': "Could retrieve pickup reservation #{}".format(reservation_id)}
+    finally:
+        cursor.close()
+        db.close()
 
     return create_response(result)
 
@@ -340,30 +356,55 @@ def get_pickup_reservations(reservation_id):
 @app.route("/pickup_reservations", methods=['GET'])
 def get_reservation():
     """Get all reservation pickups"""
-    con = mysql.connect()
-    reservation = Reservation(con)
-    result = reservation.get_pickup_reservations()
+    db = mysql.connect()
+    cursor = db.cursor()
+
+    try:
+        reservation = Reservation(db, cursor)
+        result = reservation.get_pickup_reservations()
+    except Exception as e:
+        result = {'success': False, 'status_code': 404, 'message': 'Could not retrieve pickup reservations details'}
+    finally:
+        cursor.close()
+        db.close()
 
     return create_response(result)
 
 
 @app.route("/pickup_reservations/<int:reservation_id>", methods=['POST'])
 def post_pickup_reservation(reservation_id):
-    con = mysql.connect()
+    db = mysql.connect()
+    cursor = db.cursor()
     data = request.json
     clerk_username = data.get('clerk_username')
-    reservation = Reservation(con)
-    check_query_parameters(request, 'clerk_username')
-    result = reservation.pickup_reservation(reservation_id, clerk_username)
+
+    try:
+        reservation = Reservation(db, cursor)
+        check_query_parameters(request, 'clerk_username')
+        result = reservation.pickup_reservation(reservation_id, clerk_username)
+    except Exception as e:
+        print(e)
+        result = {'success': False, 'status_code': 404, 'message': "Could not insert reservation #{} data".format(reservation_id)}
+    finally:
+        cursor.close()
+        db.close()
 
     return create_response(result)
 
 @app.route("/dropoff_reservations/<int:reservation_id>", methods=['GET'])
 def get_dropoff_reservations(reservation_id):
     """Get all or a specific reservation"""
-    con = mysql.connect()
-    reservation = Reservation(con)
-    result = reservation.get_dropoff_reservation(reservation_id)
+    db = mysql.connect()
+    cursor = db.cursor()
+
+    try:
+        reservation = Reservation(db, cursor)
+        result = reservation.get_dropoff_reservation(reservation_id)
+    except Exception as e:
+        result = {'success': False, 'status_code': 404, 'message': "Could not retrieve drop-off reservation #{}".format(reservation_id)}
+    finally:
+        cursor.close()
+        db.close()
 
     return create_response(result)
 
@@ -371,21 +412,37 @@ def get_dropoff_reservations(reservation_id):
 @app.route("/dropoff_reservations", methods=['GET'])
 def get_dropoff_all_reservation():
     """Get all reservation dropoffs"""
-    con = mysql.connect()
-    reservation = Reservation(con)
-    result = reservation.get_dropoff_reservations()
+    db = mysql.connect()
+    cursor = db.cursor()
+
+    try:
+        reservation = Reservation(db, cursor)
+        result = reservation.get_dropoff_reservations()
+    except Exception as e:
+        result = {'success': False, 'status_code': 404, 'message': 'Could not get list of dropoff reservations'}
+    finally:
+        cursor.close()
+        db.close()
 
     return create_response(result)
 
 
 @app.route("/dropoff_reservations/<int:reservation_id>", methods=['POST'])
 def post_dropoff_reservation(reservation_id):
-    con = mysql.connect()
+    db = mysql.connect()
+    cursor = db.cursor()
     data = request.json
     clerk_username = data.get('clerk_username')
-    reservation = Reservation(con)
-    check_query_parameters(request, 'clerk_username')
-    result = reservation.dropoff_reservation(reservation_id, clerk_username)
+
+    try:
+        reservation = Reservation(db, cursor)
+        check_query_parameters(request, 'clerk_username')
+        result = reservation.dropoff_reservation(reservation_id, clerk_username)
+    except Exception as e:
+        result = {'success': False, 'status_code': 404, 'message': "Could not dropoff reservation #{}".format(reservation_id)}
+    finally:
+        cursor.close()
+        db.close()
 
     return create_response(result)
 

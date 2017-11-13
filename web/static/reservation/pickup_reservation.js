@@ -31,6 +31,16 @@ angular.module('myApp.pickupReservation', ['ngRoute', 'ngAnimate'])
         + '<br /><b>Total Rental Price: </b>' + reservation.total_rental_price
         + '</div>')
     };
+    $scope.disable_pickup_button = function() {
+      var invalid = true;
+      if ($scope.reservation_id) {
+        invalid = $scope.reservations.findIndex(function (r) {
+          return r.id === $scope.reservation_id;
+        }) === -1;
+      }
+      return invalid;
+    };
+
     $http({
       method: 'GET',
       url: '/pickup_reservations'

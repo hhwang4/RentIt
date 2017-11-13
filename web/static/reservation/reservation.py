@@ -1,16 +1,13 @@
-from flask import jsonify
-
 class Reservation:
-    def __init__(self, con=None, username=""):
+    def __init__(self, con=None, cursor=None, username=""):
         self.con = con
+        self.cursor = cursor
         self.user = username
-
-    def create_reservation(self, tools, start_date, end_date, customer_username):
         self._checkConnection()
 
-        toolsNotReserved = []
-        toolsReserved = []
-        cursor = self.con.cursor()
+    def create_reservation(self, tools, start_date, end_date, customer_username):
+
+        cursor = self.cursor
 
         # Check all ids to see if any can't be reserved
         tool_ids = [(tool.get('id')) for tool in tools]
@@ -34,17 +31,13 @@ class Reservation:
             tool_ids = [tool_id for tool_id, in tools_with_reservations_found]
             response = {'success': False, 'status_code': 500, 'tool_ids': tool_ids}
 
-        # close connection
-        self._closeConnection(cursor)
-
         return response
 
     def old_get_pickup_reservation(self, reservation_id):
         """
             Pickup a specific reservation for a customer.
         """
-        self._checkConnection()
-        cursor = self.con.cursor()
+        cursor = self.cursor
         query = 'SELECT R.id AS ReservationNumber, C.user_name AS CustomerUsername, c.id AS CustomerId, concat(C.first_name, " ", C.last_name) AS CustomerName, R.start_date, R.end_date FROM Customer AS C INNER JOIN Reservation AS R ON C.user_name=R.Customer_UserName WHERE R.id=%s'
         cursor.execute(query, (reservation_id))
         data = cursor.fetchone()
@@ -62,7 +55,6 @@ class Reservation:
             reservation = None
 
         response = {'success': True, 'status_code': 200, 'reservations': jsonify(reservation)}
-        self._closeConnection(cursor)
 
         return response
 
@@ -70,9 +62,7 @@ class Reservation:
         """
             Get all available reservation for this customer.
         """
-        self._checkConnection()
-
-        cursor = self.con.cursor()
+        cursor = self.cursor
         query = 'SELECT R.id AS ReservationNumber, C.user_name AS CustomerUsername, C.id AS CustomerId, concat(C.first_name, " ", C.last_name) AS CustomerName, R.start_date, R.end_date, SUM(rental_price), SUM(deposit_price) ' \
                 'FROM Customer AS C INNER JOIN Reservation AS R ON C.user_name=R.Customer_UserName ' \
                 'INNER JOIN ToolReservations AS TR ON TR.Reservations_Id=R.id ' \
@@ -98,7 +88,6 @@ class Reservation:
                     })
 
         response = {'success': True, 'status_code': 200, 'reservations': reservations}
-        self._closeConnection(cursor)
 
         return response
 
@@ -106,9 +95,7 @@ class Reservation:
         """
             Record a reservation as picked up and add tools reserved to rentals.
         """
-        self._checkConnection()
-
-        cursor = self.con.cursor()
+        cursor = self.cursor
 
         # update the reservation with pickup clerk
         query = 'UPDATE Reservation SET PickupClerk_UserName=%s, booking_date=NOW() WHERE id=%s'
@@ -130,13 +117,11 @@ class Reservation:
 
         response = {'success': True, 'status_code': 200, 'reservation_id': reservation_id, 'tool_ids': tool_ids,
                     'tools': tools}
-        self._closeConnection(cursor)
 
         return response
 
     def get_pickup_reservation(self, reservation_id):
-        self._checkConnection()
-        cursor = self.con.cursor()
+        cursor = self.cursor
         query = 'SELECT concat(C.first_name, " ", C.last_name) AS CustomerName, C.user_name, SUM(rental_price), SUM(deposit_price), R.start_date, R.end_date FROM Customer AS C INNER JOIN Reservation AS R ON C.user_name=R.Customer_UserName INNER JOIN ToolReservations AS TR ON TR.Reservations_Id=R.id INNER JOIN Tool AS T ON T.id=TR.Tool_id WHERE R.id=%s'
         cursor.execute(query, (reservation_id))
         data = cursor.fetchone()
@@ -153,7 +138,6 @@ class Reservation:
             }
 
         response = {'success': True, 'status_code': 200, 'reservation_id': reservation_id, 'details': details}
-        self._closeConnection(cursor)
 
         return response
 
@@ -162,9 +146,7 @@ class Reservation:
         """
             Get all available reservation for this customer.
         """
-        self._checkConnection()
-
-        cursor = self.con.cursor()
+        cursor = self.cursor
         query = 'SELECT R.id AS ReservationNumber, C.user_name AS CustomerUsername, C.id AS CustomerId, concat(C.first_name, " ", C.last_name) AS CustomerName, R.start_date, R.end_date, SUM(rental_price), SUM(deposit_price) ' \
                 'FROM Customer AS C INNER JOIN Reservation AS R ON C.user_name=R.Customer_UserName ' \
                 'INNER JOIN ToolReservations AS TR ON TR.Reservations_Id=R.id ' \
@@ -190,7 +172,6 @@ class Reservation:
                     })
 
         response = {'success': True, 'status_code': 200, 'reservations': reservations}
-        self._closeConnection(cursor)
 
         return response
 
@@ -198,9 +179,7 @@ class Reservation:
         """
             Record a reservation as picked up and add tools reserved to rentals.
         """
-        self._checkConnection()
-
-        cursor = self.con.cursor()
+        cursor = self.cursor
         # Update the reservation with dropoff clerk
         query = 'UPDATE Reservation SET DropOffClerk_UserName=%s WHERE id=%s'
         cursor.execute(query, (clerk_username, reservation_id))
@@ -229,13 +208,11 @@ class Reservation:
 
         response = {'success': True, 'status_code': 200, 'reservation_id': reservation_id, 'tool_ids': tool_ids,
                     'tools': tools}
-        self._closeConnection(cursor)
 
         return response
 
     def get_dropoff_reservation(self, reservation_id):
-        self._checkConnection()
-        cursor = self.con.cursor()
+        cursor = self.cursor
         query = 'SELECT concat(C.first_name, " ", C.last_name) AS CustomerName, C.user_name, SUM(rental_price), SUM(deposit_price), R.start_date, R.end_date FROM Customer AS C INNER JOIN Reservation AS R ON C.user_name=R.Customer_UserName INNER JOIN ToolReservations AS TR ON TR.Reservations_Id=R.id INNER JOIN Tool AS T ON T.id=TR.Tool_id WHERE R.id=%s'
         cursor.execute(query, (reservation_id))
         data = cursor.fetchone()
@@ -274,7 +251,6 @@ class Reservation:
 
         response = {'success': True, 'status_code': 200, 'reservation_id': reservation_id, 'details': details, 'tool_ids': tool_ids,
                     'tools': tools}
-        self._closeConnection(cursor)
 
         return response
         # HELPER  METHODS
@@ -282,7 +258,3 @@ class Reservation:
     def _checkConnection(self):
         if self.con == None:
             raise "Connection to database should be set first"
-
-    def _closeConnection(self, cursor=None):
-        self.con.close()
-        cursor.close()

@@ -28,6 +28,24 @@ angular.module('myApp.makeReservation', ['ngRoute', 'ngAnimate'])
     $scope.start_date;
     $scope.customer_full_name = user_info.full_name; // TODO: Add user full_name to cache
     $scope.customer_username = user_info.username;
+    $scope.dateOptions = {
+      formatYear: 'yy',
+      maxDate: new Date(2020, 5, 22),
+      minDate: new Date(),
+      startingDay: 1
+    };
+    $scope.open1 = function() {
+      $scope.popup1.opened = true;
+    };
+    $scope.popup1 = {
+      opened: false
+    };
+    $scope.open2 = function() {
+      $scope.popup2.opened = true;
+    };
+    $scope.popup2 = {
+      opened: false
+    };
 
     $http({
       method: 'GET',
@@ -88,11 +106,13 @@ angular.module('myApp.makeReservation', ['ngRoute', 'ngAnimate'])
         ariaDescribedBy: 'modal-body',
         templateUrl: 'static/reservation/confirmationModal.html',
         controller: function($uibModalInstance, $scope, toolsAdded, start_date, end_date, customer_username) {
-          $scope.title = "Reservation Summary"
+          $scope.title = "Reservation Summary";
           $scope.isSummary = true;
           $scope.toolsAdded = toolsAdded;
-          $scope.start_date = start_date;
-          $scope.end_date = end_date;
+          $scope.start_date = moment(start_date).format('YYYY-MM-DD');
+          $scope.end_date = moment(end_date).format('YYYY-MM-DD');
+          $scope.number_of_days_rented = moment($scope.end_date).diff(moment($scope.start_date), 'days');
+
           $scope.total_deposit_price = $scope.toolsAdded.reduce(function(total, tool) {
             return total + parseFloat(tool.deposit_price);
           }, 0);

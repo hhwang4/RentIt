@@ -4,16 +4,28 @@
 <form>
   <div class="form-row">
     <div class="form-group col-sm">
-      <label for="start-date">Start Date:</label>
-      <input ng-model="start_date" type="text" class="form-control" id="start-date" placeholder="2017-06-30">
+      <p class="input-group">
+        <label for="start-date">Start Date:</label>
+        <input required type="text" class="form-control" uib-datepicker-popup ng-model="start_date" is-open="popup1.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" />
+        <span class="input-group-btn">
+          <button type="button" class="btn btn-default" ng-click="open1()"><i class="glyphicon glyphicon-calendar"></i></button>
+        </span>
+      </p>
     </div>
     <div class="form-group col-sm">
-      <label for="end-date">End Date:</label>
-      <input ng-model="end_date" type="text" class="form-control" id="end-date" placeholder="2017-07-19">
+      <p class="input-group">
+        <label for="end-date">End Date:</label>
+        <input required type="text" class="form-control" uib-datepicker-popup ng-model="end_date" is-open="popup2.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" />
+        <span class="input-group-btn">
+        <button type="button" class="btn btn-default" ng-click="open2()"><i class="glyphicon glyphicon-calendar"></i></button>
+      </span>
+      </p>
     </div>
     <div class="form-group col-sm">
-      <label for="keyword">Custom Search:</label>
-      <input type="text" class="form-control" id="keyword" placeholder="Enter Keyword">
+      <p class="input-group">
+        <label for="keyword">Custom Search:</label>
+        <input type="text" class="form-control" id="keyword" placeholder="Enter Keyword">
+      </p>
     </div>
     <div class="col-auto">
       <button type="submit" class="btn btn-primary">Submit</button>
@@ -71,20 +83,20 @@
   <div ng-if="tools.length">
     <table class="table table-stripped">
       <thead>
-        <th scope="col">Tool ID</th>
-        <th scope="col">Description</th>
-        <th scope="col">Rental Price</th>
-        <th scope="col">Deposit Price</th>
-        <th scope="col">Add</th>
+      <th scope="col">Tool ID</th>
+      <th scope="col">Description</th>
+      <th scope="col">Rental Price</th>
+      <th scope="col">Deposit Price</th>
+      <th scope="col">Add</th>
       </thead>
       <tbody>
-        <tr ng-repeat="tool in tools">
-          <th scope="row">{{tool.id}}</th>
-          <td>{{tool.description}}</td>
-          <td>{{tool.rental_price}}</td>
-          <td>{{tool.deposit_price}}</td>
-          <td ng-click="addTool($index)"><input type="checkbox" aria-label="Add" ng-model="tool.added"></td>
-        </tr>
+      <tr ng-repeat="tool in tools">
+        <th scope="row">{{tool.id}}</th>
+        <td>{{tool.description}}</td>
+        <td>{{tool.rental_price}}</td>
+        <td>{{tool.deposit_price}}</td>
+        <td ng-click="addTool($index)"><input type="checkbox" aria-label="Add" ng-model="tool.added"></td>
+      </tr>
       </tbody>
     </table>
   </div>
@@ -94,21 +106,21 @@
 <div>
   <table class="table table-stripped">
     <thead>
-      <th scope="col">Tool ID</th>
-      <th scope="col">Description</th>
-      <th scope="col">Rental Price</th>
-      <th scope="col">Deposit Price</th>
-      <th scope="col">Remove</th>
+    <th scope="col">Tool ID</th>
+    <th scope="col">Description</th>
+    <th scope="col">Rental Price</th>
+    <th scope="col">Deposit Price</th>
+    <th scope="col">Remove</th>
     </thead>
     <tbody>
-      <tr ng-repeat="tool in toolsAdded">
-        <th scope="row">{{tool.id}}</th>
-        <td>{{tool.description}}</td>
-        <td>{{tool.rental_price}}</td>
-        <td>{{tool.deposit_price}}</td>
-        <td ng-click="removeTool($index)"><input type="checkbox" aria-label="Remove"></td>
-      </tr>
+    <tr ng-repeat="tool in toolsAdded">
+      <th scope="row">{{tool.id}}</th>
+      <td>{{tool.description}}</td>
+      <td>{{tool.rental_price}}</td>
+      <td>{{tool.deposit_price}}</td>
+      <td ng-click="removeTool($index)"><input type="checkbox" aria-label="Remove"></td>
+    </tr>
     </tbody>
   </table>
 </div>
-<button class="btn btn-primary" ng-click="open('lg')">Calculate Total</button>
+<button ng-disabled="toolsAdded.length === 0" class="btn btn-primary" ng-click="open('lg')">Calculate Total</button>
