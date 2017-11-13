@@ -1,0 +1,185 @@
+<div class="modal" id="confirmationModalLong" tabindex="-1" role="dialog" aria-labelledby="confirmationModalLongTitle" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-demo">
+        <div class="modal-header">
+          <h3 class="modal-title" id="confirmationModalLabel">{{title}}</h3>
+          <button ng-if="isSummary" ng-click="cancel()" type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <button ng-if="!isSummary" ng-click="close()" type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div  ng-show="isSummary" id="reservation-summary">
+            <p><strong>Reservation ID: #{{reservation_id}}</strong></p>
+            <br />
+            <p><strong>Customer Name: </strong>{{customer_full_name}}</p>
+            <p>Total Deposit Price: {{total_deposit_price}}</p>
+            <p>Total Rental Price: {{total_rental_price}}</p>
+            <div class="credit-card">
+              <h5>Credit Card</h5>
+              <div class="col-lg-6">
+                <div ng-init="card_option='existing'" class="input-group">
+                    <span class="input-group-addon">
+                      <label>
+                        <input checked="" type="radio" ng-model="card_option" value="existing" aria-label="Radio button for following text input">
+                        Existing
+                      </label>
+                      <label>
+                        <input type="radio" ng-model="card_option" value="new" aria-label="Radio button for following text input">
+                        New
+                      </label>
+                    </span>
+                </div>
+              </div>
+
+              <div ng-if="card_option==='new'">
+                <h4>Enter Updated Credit Card Information</h4>
+                <form name="credit">
+                  <div class="form-row">
+                    <div class="col">
+                      <div class="form-group">
+                        <label for="cardName">Name on Card</label>
+                        <input type="text" name="cardName" class="form-control" id="cardName"
+                               placeholder="Name On Credit Card"
+                               ng-minlength="3"
+                               ng-maxlength="50"
+                               ng-model="vm.cardName" required>
+                        <div ng-messages="credit.cardName.$dirty && credit.cardName.$error" style="color:maroon"
+                             role="alert">
+                          <div ng-message="required">This field must not be empty</div>
+                          <div ng-message="minlength">Must have at least 3 characters</div>
+                          <div ng-message="maxlength">Cannot have more than 50 characters</div>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="cardNumber">Card #</label>
+                        <input type="text" name="cardNumber" class="form-control" id="cardNumber"
+                               placeholder="Credit Card #"
+                               ng-minlength="10"
+                               ng-maxlength="16"
+                               pattern="\d+"
+                               ng-model="vm.cardNumber" required>
+                        <div ng-messages="credit.cardNumber.$dirty && credit.cardNumber.$error" style="color:maroon"
+                             role="alert">
+                          <div ng-message="required">This field must not be empty</div>
+                          <div ng-message="minlength">Must have at least 10 digits</div>
+                          <div ng-message="maxlength">Cannot have more than 16 digits</div>
+                          <div ng-message="pattern">Card Number must contain numbers.</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="form-group">
+                        <label for="expirationMonth">Expiration Month</label>
+                        <select type="text" class="form-control" id="expirationMonth" placeholder="Expiration Month"
+                                ng-options="m as m.name for m in vm.months track by m.id"
+                                ng-model="vm.expirationMonth" required>
+                        </select>
+                      </div>
+
+                      <div class="form-group">
+                        <label for="expirationYear">Expiration Year</label>
+                        <select type="text" class="form-control" id="expirationYear" placeholder="Expiration Year"
+                                ng-options="y for y in vm.years"
+                                ng-model="vm.expirationYear" required>
+                        </select>
+                      </div>
+
+                      <div class="form-group">
+                        <label for="cvc">CVC</label>
+                        <input type="text" name="cvc" class="form-control" id="cvc" placeholder="cvc"
+                               ng-minlength="3"
+                               ng-maxlength="3"
+                               pattern="\d+"
+                               ng-model="vm.cvc" required>
+
+                        <div ng-messages="credit.cvc.$dirty && credit.cvc.$error" style="color:maroon" role="alert">
+                          <div ng-message="required">This field must not be empty</div>
+                          <div ng-message="minlength">Must have at least 3 characters</div>
+                          <div ng-message="maxlength">Cannot have more than 3 characters</div>
+                          <div ng-message="pattern">Must be numbers</div>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                  <div class="alert alert-danger" role="alert" ng-hide="!vm.hasError()">
+                    {{ vm.error }}
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          <div  ng-show="!isSummary" id="reservation-confirmation">
+            <h4>Rental Contract</h4>
+            <p><strong>Pick-up Clerk: </strong>{{clerk_name}}</p>
+            <p><strong>Customer Name: </strong>{{customer_full_name}}</p>
+            <p><strong>Credit Card #: </strong>XXXX-XXXX-XXXX-XXXX</p>
+            <p><strong>Start Date: </strong>{{start_date}}</p>
+            <p><strong>End Date: </strong>{{end_date}}</p>
+          </div>
+          <div ng-if="tools.length" id="reservation-tools">
+            <h4>Tools</h4>
+            <table class="table table-stripped">
+              <thead>
+              <th scope="col">Tool ID</th>
+              <th scope="col">Description</th>
+              <th scope="col">Rental Price</th>
+              <th scope="col">Deposit Price</th>
+              </thead>
+              <tbody>
+              <tr ng-repeat="tool in tools">
+                <th scope="row">{{tool.id}}</th>
+                <td>{{tool.description}}</td>
+                <td>{{tool.rental_price}}</td>
+                <td>{{tool.deposit_price}}</td>
+              </tr>
+              <tr>
+                <td><strong>Totals</strong></td>
+                <td />
+                <td>{{total_rental_price}}</td>
+                <td>{{total_deposit_price}}</td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div ng-show="!isSummary" class="signature">
+            <h3>Signatures</h3>
+            <div class="row">
+              <div class="col-lg-6">
+                <p>X</p>
+                <hr />
+                <p><strong>Pickup Clerk - {{ clerk_full_name }}</strong></p>
+              </div>
+              <div class="col-lg-3">
+                <p><strong>Date: </strong></p>
+                <hr />
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-6">
+                <p>X</p>
+                <hr />
+                <p><strong>Customer - {{customer_full_name}}</strong></p>
+              </div>
+              <div class="col-lg-3">
+                <p><strong>Date: </strong></p>
+                <hr />
+              </div>
+            </div>
+            <div class="row">
+              <button ng-click="close()" type="button" class="btn btn-primary mx-auto">Print Contract</button>
+            </div>
+          </div>
+        </div>
+        <div ng-show="isSummary" class="modal-footer">
+          <button ng-click="submit()" type="button" class="btn btn-primary">Confirm Pickup</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

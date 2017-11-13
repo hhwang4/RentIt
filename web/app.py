@@ -1,5 +1,4 @@
 from flask import Flask, render_template, request, jsonify
-from flask import abort
 from flaskext.mysql import MySQL
 import decimal
 import flask.json
@@ -53,6 +52,9 @@ def datetime_handler(x):
     else:
         return x
 
+def check_query_parameters(data, parameters):
+    # TODO: Check the response data to make sure correct query parameter is provided, return error message
+    pass
 
 @app.route("/")
 def hello():
@@ -143,6 +145,31 @@ def get_customer_profile(username):
         cursor.close()
         db.close()
 
+@app.route("/customer/<username>/credit_cards", methods=['POST'])
+def update_customer_credit_card(username):
+    db = mysql.connect()
+    cursor = db.cursor()
+    cc_info = request.json
+
+    try:
+        query = 'UPDATE CreditCard AS CC INNER JOIN Customer AS C ON CC.id=C.CreditCard_Id SET name=%s, card_number=%s, cvc=%s, expiration_month=%s, expiration_year=%s WHERE C.user_name=%s'
+        cursor.execute(query, (cc_info.get('cardName'), cc_info.get('cardNumber'), cc_info.get('cvc'),
+                        cc_info.get('expirationMonth'), cc_info.get('expirationYear'), username))
+        db.commit()
+
+        return json.dumps(
+            {'success': True,
+             'data': 'Done'
+             }), 200, json_content
+    except Exception as e:
+        print(e)
+        return json.dumps(
+            {'success': False,
+             'message': 'Credit card could not be updated for {}'.format(username),
+             }), 404, json_content
+    finally:
+        cursor.close()
+        db.close()
 
 @app.route("/reservations/<username>")
 def get_customer_reservation(username):
@@ -292,11 +319,130 @@ def register_customer():
 @app.route("/reservations", methods=['POST'])
 def make_reservation():
     """ Reserve specified tools"""
-    con = mysql.connect()
+    db = mysql.connect()
+    cursor = db.cursor()
     data = request.json
-    reservation = Reservation(con)
-    result = reservation.create_reservation(data.get('tools'), data.get('start_date'), data.get('end_date'),
-                                            data.get('customer_username'))
+
+    try:
+        reservation = Reservation(db, cursor)
+        result = reservation.create_reservation(data.get('tools'), data.get('start_date'), data.get('end_date'),
+                                                data.get('customer_username'))
+    except Exception as e:
+        result = {'success': False, 'status_code': 404, 'message': 'Tools could not be reserved'}
+    finally:
+        cursor.close()
+        db.close()
+
+    return create_response(result)
+
+@app.route("/pickup_reservations/<int:reservation_id>", methods=['GET'])
+def get_pickup_reservations(reservation_id):
+    """Get all or a specific reservation"""
+    db = mysql.connect()
+    cursor = db.cursor()
+
+    try:
+        reservation = Reservation(db, cursor)
+        result = reservation.get_pickup_reservation(reservation_id)
+    except Exception as e:
+        result = {'success': False, 'status_code': 404, 'message': "Could retrieve pickup reservation #{}".format(reservation_id)}
+    finally:
+        cursor.close()
+        db.close()
+
+    return create_response(result)
+
+
+@app.route("/pickup_reservations", methods=['GET'])
+def get_reservation():
+    """Get all reservation pickups"""
+    db = mysql.connect()
+    cursor = db.cursor()
+
+    try:
+        reservation = Reservation(db, cursor)
+        result = reservation.get_pickup_reservations()
+    except Exception as e:
+        result = {'success': False, 'status_code': 404, 'message': 'Could not retrieve pickup reservations details'}
+    finally:
+        cursor.close()
+        db.close()
+
+    return create_response(result)
+
+
+@app.route("/pickup_reservations/<int:reservation_id>", methods=['POST'])
+def post_pickup_reservation(reservation_id):
+    db = mysql.connect()
+    cursor = db.cursor()
+    data = request.json
+    clerk_username = data.get('clerk_username')
+
+    try:
+        reservation = Reservation(db, cursor)
+        check_query_parameters(request, 'clerk_username')
+        result = reservation.pickup_reservation(reservation_id, clerk_username)
+    except Exception as e:
+        print(e)
+        result = {'success': False, 'status_code': 404, 'message': "Could not insert reservation #{} data".format(reservation_id)}
+    finally:
+        cursor.close()
+        db.close()
+
+    return create_response(result)
+
+@app.route("/dropoff_reservations/<int:reservation_id>", methods=['GET'])
+def get_dropoff_reservations(reservation_id):
+    """Get all or a specific reservation"""
+    db = mysql.connect()
+    cursor = db.cursor()
+
+    try:
+        reservation = Reservation(db, cursor)
+        result = reservation.get_dropoff_reservation(reservation_id)
+    except Exception as e:
+        result = {'success': False, 'status_code': 404, 'message': "Could not retrieve drop-off reservation #{}".format(reservation_id)}
+    finally:
+        cursor.close()
+        db.close()
+
+    return create_response(result)
+
+
+@app.route("/dropoff_reservations", methods=['GET'])
+def get_dropoff_all_reservation():
+    """Get all reservation dropoffs"""
+    db = mysql.connect()
+    cursor = db.cursor()
+
+    try:
+        reservation = Reservation(db, cursor)
+        result = reservation.get_dropoff_reservations()
+    except Exception as e:
+        result = {'success': False, 'status_code': 404, 'message': 'Could not get list of dropoff reservations'}
+    finally:
+        cursor.close()
+        db.close()
+
+    return create_response(result)
+
+
+@app.route("/dropoff_reservations/<int:reservation_id>", methods=['POST'])
+def post_dropoff_reservation(reservation_id):
+    db = mysql.connect()
+    cursor = db.cursor()
+    data = request.json
+    clerk_username = data.get('clerk_username')
+
+    try:
+        reservation = Reservation(db, cursor)
+        check_query_parameters(request, 'clerk_username')
+        result = reservation.dropoff_reservation(reservation_id, clerk_username)
+    except Exception as e:
+        result = {'success': False, 'status_code': 404, 'message': "Could not dropoff reservation #{}".format(reservation_id)}
+    finally:
+        cursor.close()
+        db.close()
 
     return create_response(result)
 

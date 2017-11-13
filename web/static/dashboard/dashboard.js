@@ -39,11 +39,11 @@ angular.module('myApp.dashboard', ['ngRoute'])
 
             if(vm.loginType == 'clerk') {
                 vm.links = [
-                {name: 'Pick up Reservations', url: '/#!/pickup'},
-                {name: 'Drop off Reservations', url: '/#!/dropoff'},
+                {name: 'Pick up Reservations', url: '/#!/pickup_reservation'},
+                {name: 'Drop off Reservations', url: '/#!/dropoff_reservation'},
                 {name: 'Add new tool', url: '/#!/newtool'},
                 {name: 'Generate Reports', url: '/#!/reports'},
-                {name: 'Logout', url: '/#!/logout'},
+                {name: 'Logout', url: '/#!/logout'}
             ]
             }
 

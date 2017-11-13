@@ -1,0 +1,64 @@
+<!-- Title -->
+<h1>Pickup Reservation</h1>
+<!-- Display Current Reservations -->
+<div ng-if="!reservations.length" class="alert alert-warning" role="alert">
+    There are no reservations at this time.
+</div>
+<div ng-if="reservations.length">
+  <table class="table table-stripped">
+    <thead>
+    <th scope="col">Reservation ID</th>
+    <th scope="col">Customer</th>
+    <th scope="col">CustomerID</th>
+    <th scope="col">Start Date</th>
+    <th scope="col">End Date</th>
+    </thead>
+    <tbody>
+    <tr ng-repeat="reservation in reservations">
+      <th scope="row">
+        <button
+            popover-animation="false"
+            popover-placement="right-top"
+            uib-popover-html="htmlPopover($index)" class="btn btn-light">
+         {{reservation.id}}
+        </button>
+      </th>
+      <td>{{reservation.customer_name}}</td>
+      <td>{{reservation.customer_id}}</td>
+      <td>{{reservation.start_date}}</td>
+      <td>{{reservation.end_date}}</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+<form name="pickup">
+  <div class="row">
+    <div class="col">
+      <div class="input-group input-group-lg">
+        <span class="input-group-addon" id="basic-addon1">#</span>
+        <input
+            name="reservation_id"
+            type="number"
+            ng-model="reservation_id"
+            class="form-control"
+            aria-describedby="basic-addon1"
+            placeholder="Enter Reservation ID"
+            required
+        />
+      </div>
+    </div>
+    <div class="col col-lg-2">
+      <button
+          class="btn btn-primary"
+          ng-click="open('lg')"
+          ng-disabled="disable_pickup_button()"
+      >
+        Pick up
+      </button>
+    </div>
+  </div>
+  <div ng-messages="pickup.reservation_id.$dirty && pickup.reservation_id.$error" style="color:maroon"
+       role="alert">
+    <div ng-message="required">This field must include a number from the reservation id list</div>
+  </div>
+</form>

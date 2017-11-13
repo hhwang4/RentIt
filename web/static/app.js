@@ -3,6 +3,7 @@
 // Declare app level module which depends on views, and components
 angular.module('myApp', [
   'ngRoute',
+  'ngSanitize',
   'LocalStorageModule',
   'ngMessages',
   'ngPassword',
@@ -17,7 +18,9 @@ angular.module('myApp', [
   'myApp.clerkReport',
   'myApp.customerReport',
   'myApp.toolReport',
-  'myApp.make_reservation',
+  'myApp.makeReservation',
+  'myApp.pickupReservation',
+  'myApp.dropoffReservation',
   'myApp.register',
   'myApp.dashboard',
   'myApp.version'
