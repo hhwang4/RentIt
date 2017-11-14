@@ -1,97 +1,165 @@
-<!-- Title -->
-<h2>Add Tool</h2>
-<!-- Search feature -->
-<form>
+<div class="container" data-ng-controller="AddToolCtrl as vm">
+  <div class="alert alert-danger" role="alert" ng-hide="!vm.hasError()">
+    {{ vm.error }}
+  </div>
+
+<h1>Add Tool</h1>
+<form name="addtool">
+
   <div class="form-inline">
     <div class="form-check form-check-inline">
       <label class="form-check-label">
-        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="type-all-tool" value="option1"> All Tools
+        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="type-all-tool"
+                value="handTool" ng-model="category" required> Hand Tools
       </label>
     </div>
     <div class="form-check form-check-inline">
       <label class="form-check-label">
-        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="type-hand-tool" value="option2"> Hand Tool
+        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="type-all-tool"
+                value="gardenTool" ng-model="category" required> Garden Tools
       </label>
     </div>
     <div class="form-check form-check-inline">
       <label class="form-check-label">
-        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="type-garden-tool" value="option3" > Garden Tool
+        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="type-all-tool"
+                value="ladderTool" ng-model="category" required> Ladder
       </label>
     </div>
-    <div class="form-check form-check-inline ">
+    <div class="form-check form-check-inline">
       <label class="form-check-label">
-        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="type-ladder" value="option4" > Ladder
+        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="type-all-tool"
+                value="powerTool" ng-model="category" required> Power Tools
       </label>
     </div>
-    <div class="form-check form-check-inline ">
-      <label class="form-check-label">
-        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="type-power-tool" value="option5" > Power Tool
-      </label>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <label for="state">Sub-Type</label>
+        <select type="text" class="form-control" id="subtypes" data-ng-model="subtype"
+        data-ng-options="st for st in subtypes(category) " required>
+        </select>
     </div>
-    <!-- Select Power Source and Sub-Type -->
-    <label for="power-source">Power Source:</label>
-    <select class="form-control" id="power-source">
-      <option>Drill</option>
-    </select>
-    <label for="sub-type">Sub-Type:</label>
-    <select class="form-control" id="sub-type">
-      <option>Type</option>
-    </select>
+
+    <div class="form-group col-md-6">
+      <label for="state">Sub-Option</label>
+        <select type="text" class="form-control" id="suboption" data-ng-model="suboption"
+        data-ng-options="so for so in suboptions(subtype)" required>
+        </select>
+    </div>
+
+    <div class="form-group col-md-6">
+      <label for="purchaseprice">Purchase Price ($)</label>
+        <input type="text" class="form-control" id="purchsePrice" placeholder="Purchase Price"
+             ng-minlength="3"
+             ng-maxlength="50"
+             name="purchasePrice"
+             ng-model="$scope.purchasePrice" required>
+
+      <div ng-messages="user.firstName.$dirty && user.firstName.$error" style="color:maroon"
+           role="alert">
+        <div ng-message="required">This field must not be empty</div>
+        <div ng-message="minlength">Must have at least 3 characters</div>
+        <div ng-message="maxlength">Cannot have more than 50 characters</div>
+      </div>
+    </div>
+
+    <div class="form-group col-md-6">
+      <label for="purchaseprice">Manufacturer</label>
+        <input type="text" class="form-control" id="purchsePrice" placeholder="Purchase Price"
+             ng-minlength="3"
+             ng-maxlength="50"
+             name="manufacturer"
+             ng-model="$scope.manufacturer" required>
+
+      <div ng-messages="user.firstName.$dirty && user.firstName.$error" style="color:maroon"
+           role="alert">
+        <div ng-message="required">This field must not be empty</div>
+        <div ng-message="minlength">Must have at least 3 characters</div>
+        <div ng-message="maxlength">Cannot have more than 50 characters</div>
+      </div>
+    </div>
+
+    <div class="form-group col-md-6">
+        <label for="state">Power Source</label>
+          <select type="text" class="form-control" id="power-source" ng-model="$scope.powerSource" required>
+            <option value="1">Manual</option>
+            <option value="2">A/C</option>
+            <option value="3">Ladder</option>
+            <option value="3">Power</option>
+          </select>
+    </div>
+
+    <div class="form-group col-md-6">
+      <label for="material">Material</label>
+        <input type="text" class="form-control" id="material" placeholder="Material"
+             ng-minlength="3"
+             ng-maxlength="10"
+             name="material"
+             ng-model="$scope.material" required>
+
+      <div ng-messages="user.material.$dirty && user.material.$error" style="color:maroon"
+           role="alert">
+        <div ng-message="required">This field must not be empty</div>
+        <div ng-message="minlength">Must have at least 3 characters</div>
+        <div ng-message="maxlength">Cannot have more than 10 characters</div>
+      </div>
+    </div>
+
+    <div class="form-group col-md-4">
+      <label for="width">Width (inches)</label>
+        <input type="text" class="form-control" id="purchsePrice" placeholder="Width"
+             ng-minlength="3"
+             ng-maxlength="10"
+             name="manufacturer"
+             ng-model="$scope.width" required>
+
+      <div ng-messages="user.firstName.$dirty && user.width.$error" style="color:maroon"
+           role="alert">
+        <div ng-message="required">This field must not be empty</div>
+        <div ng-message="minlength">Must have at least 3 characters</div>
+        <div ng-message="maxlength">Cannot have more than 10 characters</div>
+      </div>
+    </div>
+
+    <div class="form-group col-md-4">
+      <label for="length">Length (inches)</label>
+        <input type="text" class="form-control" id="length" placeholder="Length"
+             ng-minlength="3"
+             ng-maxlength="10"
+             name="length"
+             ng-model="$scope.length" required>
+
+      <div ng-messages="user.length.$dirty && user.length.$error" style="color:maroon"
+           role="alert">
+        <div ng-message="required">This field must not be empty</div>
+        <div ng-message="minlength">Must have at least 3 characters</div>
+        <div ng-message="maxlength">Cannot have more than 10 characters</div>
+      </div>
+    </div>
+
+    <div class="form-group col-md-4">
+      <label for="Weight">Weight (lbs)</label>
+        <input type="text" class="form-control" id="weight" placeholder="Weight"
+             ng-minlength="3"
+             ng-maxlength="10"
+             name="weight"
+             ng-model="$scope.weight" required>
+
+      <div ng-messages="user.weight.$dirty && user.weight.$error" style="color:maroon"
+           role="alert">
+        <div ng-message="required">This field must not be empty</div>
+        <div ng-message="minlength">Must have at least 3 characters</div>
+        <div ng-message="maxlength">Cannot have more than 10 characters</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <button type="submit" ng-disabled="!(user.$valid && credit.$valid)" class="btn btn-primary"
+              ng-click="$scope.addtool()">
+          Confirm
+      </button>
+    </div>
   </div>
 </form>
-<!-- Display Available Tools For Rent-->
-<h2>Available Tools For Rent</h2>
-<div ng-if="!hasSearched">
-  <div class="alert alert-info" role="alert">
-    Click search to see results for tools available.
-  </div>
 </div>
-
-<div ng-if="hasSearched">
-  <div ng-if="!tools.length" class="alert alert-warning" role="alert">
-    No tools match your search criteria.
-  </div>
-  <div ng-if="tools.length">
-    <table class="table table-stripped">
-      <thead>
-        <th scope="col">Tool ID</th>
-        <th scope="col">Description</th>
-        <th scope="col">Rental Price</th>
-        <th scope="col">Deposit Price</th>
-        <th scope="col">Add</th>
-      </thead>
-      <tbody>
-        <tr ng-repeat="tool in tools">
-          <th scope"row">{{tool.id}}</th>
-          <td>{{tool.description}}</td>
-          <td>{{tool.rental_price}}</td>
-          <td>{{tool.deposit_price}}</td>
-          <td ng-click="addTool($index)"><input type="checkbox" aria-label="Add" ng-model="tool.added"></td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-<hr />
-<h2>Tools Added to Reservation</h2>
-<div>
-  <table class="table table-stripped">
-    <thead>
-      <th scope="col">Tool ID</th>
-      <th scope="col">Description</th>
-      <th scope="col">Rental Price</th>
-      <th scope="col">Deposit Price</th>
-      <th scope="col">Remove</th>
-    </thead>
-    <tbody>
-      <tr ng-repeat="tool in toolsAdded">
-        <th scope"row">{{tool.id}}</th>
-        <td>{{tool.description}}</td>
-        <td>{{tool.rental_price}}</td>
-        <td>{{tool.deposit_price}}</td>
-        <td ng-click="removeTool($index)"><input type="checkbox" aria-label="Remove"></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-<button class="btn btn-primary" ng-click="open('lg')">Calculate Total</button>

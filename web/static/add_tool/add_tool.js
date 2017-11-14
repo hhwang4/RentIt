@@ -1,58 +1,76 @@
 'use strict';
 
-angular.module('myApp.login', ['ngRoute'])
+angular.module('myApp.addtool', ['ngRoute'])
 
     .config(['$routeProvider', function ($routeProvider) {
-        $routeProvider.when('/login', {
-            templateUrl: 'static/login/login.html',
-            controller: 'LoginCtrl'
+        $routeProvider.when('/add_tool', {
+            templateUrl: 'static/add_tool/add_tool.html',
+            controller: 'AddToolCtrl'
         });
     }])
 
-    .controller('LoginCtrl', ['$scope', '$http', 'localStorageService', '$location',
-        function ($scope, $http, localStorageService, $location) {
-        $scope.view = 'This is a scope variable1';
+    .controller('AddToolCtrl', ['$scope', '$http', 'localStorageService', '$uibModal',
+    function($scope, $http, localStorageService, $uibModal) {
 
-        var vm = this;
-        vm.username = null;
-        vm.password = null;
-        vm.loginType = 'customer';
-        vm.error = null;
-
-        vm.hasError = function () {
-            return vm.error != null;
+      $scope.category = '';
+      $scope.subtypes = function(category) {
+        if ($scope.category == 'handTool') {
+          return ['Screwdriver', 'Socket', 'Ratchet', 'Wrench', 'Pliers', 'Gun', 'Hammer']
+        } else if ($scope.category == 'gardenTool') {
+          return ['Digger','Pruner','Rakes', 'Wheelbarrows', 'Striking']
+        } else if ($scope.category == 'ladderTool') {
+          return ['Straight', 'Step']
+        } else {
+          return ['Drill', 'Saw', 'Sander','AirCompressor', 'Mixer', 'Generator']
         }
+      };
 
-        vm.canLogin = function () {
-            return vm.username != null && vm.password != null;
-        };
-
-        vm.login = function () {
-            vm.error = null;
-            vm.logout();
-            $http.post('/login', {
-                "username": vm.username,
-                "password": vm.password,
-                "type": vm.loginType
-            }, {headers: {'Content-Type': 'application/json'}})
-                .success(function (response) {
-                    localStorageService.set('authorizationData', response);
-                    $location.path('/dashboard');
-                })
-                .error(function (err, status) {
-                    console.log('Error', err, status);
-                    if(status == 404 && err.type == 'customer') {
-                        console.log('FOUND 404');
-                        alert(err.message + '. ' + 'Please register as a new customer!');
-                        $location.path('/register')
-                    }
-                    vm.error = err.message
-                });
-        };
-
-        vm.logout = function () {
-            localStorageService.remove('authorizationData');
-        };
+      $scope.subtype = '';
+      $scope.suboptions = function (subtype) {
+        if ($scope.subtype == 'Screwdriver') {
+          return ['philips(cross)', 'hex', 'torx', 'slotted(flat)']
+        } else if ($scope.subtype == 'Socket') {
+          return ['deep','standard']
+        }else if ($scope.subtype == 'Ratchet') {
+          return ['adjustable','fixed']
+        } else if ($scope.subtype == 'Wrench') {
+          return ['crescent','torque', 'pipe']
+        }else if ($scope.subtype == 'Pliers') {
+          return ['needle nose','cutting', 'crimper']
+        }else if ($scope.subtype == 'Socket') {
+          return ['nail','staple']
+        }else if ($scope.subtype == 'Gun') {
+          return ['nail','staple']
+        }else if ($scope.subtype == 'Hammer') {
+          return ['claw','sledge', 'framing']
+        }else if ($scope.subtype == 'Digger') {
+          return ['pointed shovel','flat shovel', 'scoop shovel', 'edger']
+        }else if ($scope.subtype == 'Pruner') {
+          return ['sheer','loppers', 'hedge']
+        }else if ($scope.subtype == 'Rakes') {
+          return ['leaf','landscaping', 'rock']
+        }else if ($scope.subtype == 'Wheelbarrows') {
+          return ['1-wheel','2-wheel']
+        }else if ($scope.subtype == 'Striking') {
+          return ['bar pry','rubber mallet', 'tamper', 'pick axe', 'single bit axe']
+        }else if ($scope.subtype == 'Straight') {
+          return ['rigid','telescoping']
+        }else if ($scope.subtype == 'Step') {
+          return ['folding','multi-position']
+        }else if ($scope.subtype == 'Drill') {
+          return ['driver','hammer']
+        }else if ($scope.subtype == 'Saw') {
+          return ['circular','reciprocating', 'jig']
+        }else if ($scope.subtype == 'Sander') {
+          return ['finish','sheet', 'belt', 'random orbital']
+        }else if ($scope.subtype == 'AirCompressor') {
+          return ['reciprocating']
+        }else if ($scope.subtype == 'Mixer') {
+          return ['concrete']
+        }else {
+          return ['electric']
+        }
+      };
 
 
     }]);
