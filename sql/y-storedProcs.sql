@@ -84,30 +84,28 @@ BEGIN
 select t.id as toolId, 
 concat_ws(' ',so.name, st.name) as description,
 EXISTS(select id from Tool t2 where t.id = t2.id 
-and t2.id not in (select Tool_Id from ToolReservations as tr where tr.Tool_Id = t2.id)
+and t2.id not in (select Tool_Id from Rentals as r where r.Tool_Id = t.id and r.end_date is NULL)
 and t2.id not in (select id from ServiceOrder as so where so.Tool_Id = t2.id and so.end_date > var_date )
 and t2.id not in (select id from SaleOrder as so where so.sold_date is NULL and so.Tool_Id = t2.id)
-and t2.id not in (select id from SaleOrder as so where so.sold_date is not NULL and so.Tool_Id = t2.id)
 ) as available,
-EXISTS(select Tool_Id from ToolReservations as tr where tr.Tool_Id = t.id) as rented,
+EXISTS(select Tool_Id from Rentals as r where r.Tool_Id = t.id and r.end_date is NULL) as rented,
 EXISTS(select id from ServiceOrder as so where so.Tool_Id = t.id and so.end_date > var_date ) as inrepair,
 EXISTS(select id from SaleOrder as so where so.sold_date is NULL and so.Tool_Id = t.id) as forsale,
 EXISTS(select id from SaleOrder as so where so.sold_date is not NULL and so.Tool_Id = t.id) as sold,
 (select sold_date from SaleOrder as so where so.sold_date is not NULL and so.Tool_Id = t.id) as soldDate,
 (select sold_date from SaleOrder as so where so.sold_date is NULL and so.Tool_Id = t.id) as forsaleDate,
 (select start_date from ServiceOrder as so where so.Tool_Id = t.id and so.end_date > var_date ) as inrepairDate,
-(select booking_date from ToolReservations as tr join Reservation as r on r.id =tr.Reservations_Id where tr.Tool_Id = t.id) as rented,
+(select res.end_date from Rentals as r join ToolReservations as tr on r.Tool_id = tr.Tool_id join Reservation as res on tr.Reservations_Id = res.id where tr.Tool_id = t.id and tr.Tool_id in (select tool_id from Rentals where end_date is null) and r.end_date is NULL) as rentedDate,
 (IFNULL((select sum(DATEDIFF(end_date, start_date)) from Reservation as r join ToolReservations as tr on tr.Reservations_Id = r.id where t.id = tr.Tool_Id),0) * rental_price) as RentalProfit,
 (t.original_price + IFNULL((select sum(service_cost) from ServiceOrder as so where so.Tool_Id = t.id),0)) as TotalCost,
 ((IFNULL((select sum(DATEDIFF(end_date, start_date)) from Reservation as r join ToolReservations as tr on tr.Reservations_Id = r.id where t.id = tr.Tool_Id),0) * rental_price)
--
-(t.original_price + IFNULL((select sum(service_cost) from ServiceOrder as so where so.Tool_Id = t.id),0))) as TotalProfit,
+- (t.original_price + IFNULL((select sum(service_cost) from ServiceOrder as so where so.Tool_Id = t.id),0))
+) as TotalProfit,
 c.name
 from Tool as t
 join SubOption as so on so.id = t.SubOption_Id
 join SubType as st on st.id = t.SubType_Id
 join Category as c on c.id = t.Category_Id
--- where t.Category_Id = var_catId
 order by TotalProfit DESC
 LIMIT var_pagenum,var_ipp;
 END$$
