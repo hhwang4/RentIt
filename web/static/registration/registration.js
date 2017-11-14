@@ -9,8 +9,8 @@ angular.module('myApp.register', ['ngRoute'])
         });
     }])
 
-    .controller('RegisterCtrl', ['$scope', '$http', 'localStorageService',
-        function ($scope, $http, localStorageService) {
+    .controller('RegisterCtrl', ['$scope', '$http', 'localStorageService','$location',
+        function ($scope, $http, localStorageService, $location) {
             $scope.view = 'This is a scope variable1';
 
             var vm = this;
