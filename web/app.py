@@ -6,6 +6,8 @@ import json
 import datetime
 from static.reservation.reservation import Reservation
 from static.registration.registration import Customer
+from static.tool.search import Search
+from static.tool.tool import Tool
 
 
 class MyJSONEncoder(flask.json.JSONEncoder):
@@ -449,22 +451,35 @@ def post_dropoff_reservation(reservation_id):
 
 @app.route("/tools")
 def tools():
-    result = []
+    db = mysql.connect()
+    cursor = db.cursor()
 
-    data = request.json
-    cursor = mysql.connect().cursor()
-    cursor.execute("SELECT id, manufacturer, rental_price, deposit_price FROM Tool")
+    search_type = request.args.get('search_type')
+    tool_query = None
+    start_date = request.args.get('start_date')
+    end_date = request.args.get('end_date')
+    keyword = request.args.get('keyword')
+    type = request.args.get('type')
+    power_source = request.args.get('power_source')
+    sub_type = request.args.get('sub_type')
+    search = Search()
 
-    data = cursor.fetchall()
-    for tool_id, man, rent, deposit in data:
-        result.append({
-            'id': tool_id,
-            'description': man,
-            'rental_price': rent,
-            'deposit_price': deposit
-        })
-    return jsonify(result)
+    if search_type == 'reservation':
+        tool_query = search.reservation(start_date, end_date)
+    elif search_type == 'tool_availability':
+        tool_query = search.tool_availability(start_date, end_date)
 
+    try:
+        tool = Tool(db, cursor)
+        result = tool.search(start_date, end_date, keyword, type, sub_type, power_source, tool_query)
+
+    except Exception as e:
+        result = {'success': False, 'status_code': 404, 'message': "Tool search failed"}
+    finally:
+        cursor.close()
+        db.close()
+
+    return create_response(result)
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=8080)
