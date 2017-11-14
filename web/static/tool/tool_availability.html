@@ -1,5 +1,5 @@
 <!-- Title -->
-<h2>Make Reservation</h2>
+<h2>Check Tool Availability</h2>
 <!-- Search feature -->
 <form name="search">
   <div class="form-row">
@@ -69,7 +69,6 @@
   </div>
 </form>
 <!-- Display Available Tools For Rent-->
-<h2>Available Tools For Rent</h2>
 <div ng-if="!hasSearched">
   <div class="alert alert-info" role="alert">
     Click search to see results for tools available.
@@ -87,7 +86,6 @@
       <th scope="col">Description</th>
       <th scope="col">Rental Price</th>
       <th scope="col">Deposit Price</th>
-      <th scope="col">Add</th>
       </thead>
       <tbody>
       <tr ng-repeat="tool in tools">
@@ -95,32 +93,8 @@
         <td>{{tool.description}}</td>
         <td>{{tool.rental_price}}</td>
         <td>{{tool.deposit_price}}</td>
-        <td ng-click="addTool($index)"><input type="checkbox" aria-label="Add" ng-model="tool.added"></td>
       </tr>
       </tbody>
     </table>
   </div>
 </div>
-<hr />
-<h2>Tools Added to Reservation</h2>
-<div>
-  <table class="table table-stripped">
-    <thead>
-    <th scope="col">Tool ID</th>
-    <th scope="col">Description</th>
-    <th scope="col">Rental Price</th>
-    <th scope="col">Deposit Price</th>
-    <th scope="col">Remove</th>
-    </thead>
-    <tbody>
-    <tr ng-repeat="tool in toolsAdded">
-      <th scope="row">{{tool.id}}</th>
-      <td>{{tool.description}}</td>
-      <td>{{tool.rental_price}}</td>
-      <td>{{tool.deposit_price}}</td>
-      <td ng-click="removeTool($index)"><input type="checkbox" aria-label="Remove"></td>
-    </tr>
-    </tbody>
-  </table>
-</div>
-<button ng-disabled="toolsAdded.length === 0" class="btn btn-primary" ng-click="open('lg')">Calculate Total</button>

@@ -19,6 +19,7 @@ angular.module('myApp', [
   'myApp.customerReport',
   'myApp.toolReport',
   'myApp.makeReservation',
+  'myApp.toolAvailability',
   'myApp.pickupReservation',
   'myApp.dropoffReservation',
   'myApp.register',
