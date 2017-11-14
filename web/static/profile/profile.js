@@ -1,6 +1,6 @@
 'use strict';
 
-function Tool(t) {
+function ProfileTool(t) {
     this.category = t[0];
     this.powerSource = t[1];
     this.subType = t[2];
@@ -17,7 +17,7 @@ function Reservation(d) {
     this.totalDepositPrice = d[6];
     this.totalRentalPrice = d[7];
     this.tools = d[8].map(function (f) {
-        return new Tool(f);
+        return new ProfileTool(f);
     });
 };
 
@@ -95,6 +95,7 @@ angular.module('myApp.profile', ['ngRoute'])
                     vm.reservations = response.data.data.map(function (f) {
                         return new Reservation(f);
                     });
+                    console.log(vm.reservations);
 
                 }, function errorCallback(response) {
                     vm.error = response.message;
