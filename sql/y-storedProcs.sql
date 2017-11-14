@@ -28,6 +28,7 @@ join
 where tr.Reservations_Id in (select id from Reservation as r where r.Customer_UserName = var_username)) as rid
 on rid.Tool_id = id
 join Reservation as r on r.id = Reservations_Id
+group by Reservations_Id
 order by booking_date;
 END$$
 DELIMITER ;
