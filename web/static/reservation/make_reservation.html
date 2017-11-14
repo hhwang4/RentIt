@@ -90,11 +90,11 @@
       <th scope="col">Add</th>
       </thead>
       <tbody>
-      <tr ng-repeat="tool in tools">
+      <tr ng-repeat="tool in tools | filter: keyword">
         <th scope="row">{{tool.id}}</th>
         <td>{{tool.description}}</td>
-        <td>{{tool.rental_price}}</td>
-        <td>{{tool.deposit_price}}</td>
+        <td>{{tool.rental_price | currency}}</td>
+        <td>{{tool.deposit_price | currency}}</td>
         <td ng-click="addTool($index)"><input type="checkbox" aria-label="Add" ng-model="tool.added"></td>
       </tr>
       </tbody>
@@ -116,8 +116,8 @@
     <tr ng-repeat="tool in toolsAdded">
       <th scope="row">{{tool.id}}</th>
       <td>{{tool.description}}</td>
-      <td>{{tool.rental_price}}</td>
-      <td>{{tool.deposit_price}}</td>
+      <td>{{tool.rental_price | currency}}</td>
+      <td>{{tool.deposit_price | currency}}</td>
       <td ng-click="removeTool($index)"><input type="checkbox" aria-label="Remove"></td>
     </tr>
     </tbody>

@@ -16,8 +16,8 @@
             <p><strong>Reservation ID: #{{reservation_id}}</strong></p>
             <br />
             <p><strong>Customer Name: </strong>{{customer_full_name}}</p>
-            <p>Total Deposit Price: {{total_deposit_price}}</p>
-            <p>Total Rental Price: {{total_rental_price}}</p>
+            <p>Total Deposit Price: {{total_deposit_price | currency}}</p>
+            <p>Total Rental Price: {{total_rental_price | currency}}</p>
             <div class="credit-card">
               <h5>Credit Card</h5>
               <div class="col-lg-6">
@@ -134,14 +134,14 @@
               <tr ng-repeat="tool in tools">
                 <th scope="row">{{tool.id}}</th>
                 <td>{{tool.description}}</td>
-                <td>{{tool.rental_price}}</td>
-                <td>{{tool.deposit_price}}</td>
+                <td>{{tool.rental_price | currency}}</td>
+                <td>{{tool.deposit_price | currency}}</td>
               </tr>
               <tr>
                 <td><strong>Totals</strong></td>
                 <td />
-                <td>{{total_rental_price}}</td>
-                <td>{{total_deposit_price}}</td>
+                <td>{{total_rental_price | currency}}</td>
+                <td>{{total_deposit_price | currency}}</td>
               </tr>
               </tbody>
             </table>

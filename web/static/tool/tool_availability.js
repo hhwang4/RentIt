@@ -51,7 +51,7 @@ angular.module('myApp.toolAvailability', ['ngRoute', 'ngAnimate'])
     $scope.end_date = null;
     $scope.start_date = null;
     $scope.type = null;
-    $scope.keyword = null;
+    $scope.keyword = '';
     $scope.power_source = null;
     $scope.sub_type = null;
     $scope.tool_search = function() {

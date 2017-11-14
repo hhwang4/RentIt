@@ -16,8 +16,8 @@
           <div id="reservation-summary">
             <p>Reservation Dates: {{start_date}} - {{end_date}}</p>
             <p>Number of Days Rented: {{number_of_days_rented}}</p>
-            <p>Total Deposit Price: {{total_deposit_price}}</p>
-            <p>Total Rental Price: {{total_rental_price}}</p>
+            <p>Total Deposit Price: {{total_deposit_price | currency}}</p>
+            <p>Total Rental Price: {{total_rental_price | currency}}</p>
           </div>
           <hr />
           <h4>Tools</h4>
@@ -32,14 +32,14 @@
               <tr ng-repeat="tool in toolsAdded">
                 <th scope"row">{{tool.id}}</th>
                 <td>{{tool.description}}</td>
-                <td>{{tool.rental_price}}</td>
-                <td>{{tool.deposit_price}}</td>
+                <td>{{tool.rental_price | currency}}</td>
+                <td>{{tool.deposit_price | currency}}</td>
               </tr>
               <tr>
                 <td><strong>Totals</strong></td>
                 <td />
-                <td>{{total_rental_price}}</td>
-                <td>{{total_deposit_price}}</td>
+                <td>{{total_rental_price | currency}}</td>
+                <td>{{total_deposit_price | currency}}</td>
               </tr>	
             </tbody>
           </table>

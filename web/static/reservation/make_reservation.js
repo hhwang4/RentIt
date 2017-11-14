@@ -52,7 +52,7 @@ angular.module('myApp.makeReservation', ['ngRoute', 'ngAnimate'])
     $scope.end_date = null;
     $scope.start_date = null;
     $scope.type = null;
-    $scope.keyword = null;
+    $scope.keyword = '';
     $scope.power_source = null;
     $scope.sub_type = null;
     $scope.tool_search = function() {
@@ -174,7 +174,7 @@ angular.module('myApp.makeReservation', ['ngRoute', 'ngAnimate'])
           });
           $scope.toolsAdded = [];
         } else if (response['status'] === "fail") {
-          var tool_ids = response['tool_ids'];
+          var tool_ids = response['tool_ids'] || [];
           $scope.toolsAdded = $scope.toolsAdded.filter(function(tool) {
             // Remove tools that cannot be reserved from tool list
             // TODO: Display message indicating tools are removed

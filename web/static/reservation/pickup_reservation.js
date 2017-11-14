@@ -27,8 +27,8 @@ angular.module('myApp.pickupReservation', ['ngRoute', 'ngAnimate'])
       var reservation = $scope.reservations[index];
       return ('<div class="container reservation-details"><h6><b>Reservation ID: #</b>' + reservation.id +'</h6>'
         + '<br /><b>Customer Name: </b>' + reservation.customer_name
-        + '<br /><b>Total Deposit: </b>' + reservation.total_deposit_price
-        + '<br /><b>Total Rental Price: </b>' + reservation.total_rental_price
+        + '<br /><b>Total Deposit: $</b>' + reservation.total_deposit_price
+        + '<br /><b>Total Rental Price: $</b>' + reservation.total_rental_price
         + '</div>')
     };
     $scope.disable_pickup_button = function() {
