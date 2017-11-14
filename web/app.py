@@ -476,6 +476,23 @@ def post_dropoff_reservation(reservation_id):
     return create_response(result)
 
 
+@app.route("/tools/<tool_id>", methods=['GET'])
+def tools_id(tool_id):
+    db = mysql.connect()
+    cursor = db.cursor()
+
+    try:
+        tool = Tool(db, cursor)
+        result = tool.specific_tool(tool_id)
+    except Exception as e:
+        result = {'success': False, 'status_code': 404, 'message': "Tool search failed"}
+    finally:
+        cursor.close()
+        db.close()
+
+    return create_response(result)
+
+
 @app.route("/tools")
 def tools():
     db = mysql.connect()
