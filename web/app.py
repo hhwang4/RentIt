@@ -87,12 +87,14 @@ def add_tool_get():
 
 @app.route("/addtool", methods=['POST'])
 def add_tool_post():
-    params = request.get_json()
-
-    tool = find_tool(params)
 
     db = mysql.connect()
     cursor = db.cursor()
+
+
+    params = request.get_json()
+
+    tool = find_tool(params)
 
     tool.create(cursor)
 

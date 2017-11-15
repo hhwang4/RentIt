@@ -92,7 +92,7 @@ angular.module('myApp.addtool', ['ngRoute'])
 
 
 
-      $scope.addtool = function() {
+      $scope.addtools = function() {
         $scope.error = null;
         var data = {
             "category": $scope.category,
@@ -105,8 +105,8 @@ angular.module('myApp.addtool', ['ngRoute'])
             "power_source": $scope.powersource,
             "material": $scope.material,
             "weight": $scope.weight,
-            "width": ($scope.width + $scope.widthfraction) * 12 ,
-            "length": ($scope.length + $scope.lengthfraction) * 12,
+            "width": $scope.width,
+            "length": $scope.length,
             "handle_material": $scope.garden_handlematerial,
             "amp_rating": $scope.power_amprating,
             "min_rpm_rating": $scope.power_minrpm,
