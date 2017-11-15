@@ -1,3 +1,6 @@
+import json
+json_content = {'ContentType': 'application/json'}
+
 class Tool:
     def __init__(self, con, cursor):
         self.con = con
@@ -42,7 +45,22 @@ class Tool:
                     ]
                 }
         """
-        details = None
+        details = []
+        cursor = self.cursor
+        cursor.callproc("ToolDetails", [tool_id])
+        data = cursor.fetchone()
+        #col_names = ['toolId', 'category', 'short_desc', 'full_desc', 'powersource', 'subtype', 'suboption', 'rental_price',
+        #            'deposit_price', 'material', 'width', 'weight', 'length', 'manufacturer', 'acc_description']
+
+        details.append({
+            'id': data[0],
+            'tool_type': data[1],
+            'short_description': data[2],
+            'full_description': data[3],
+            'deposit_price': str(data[8]),
+            'rental_price': str(data[7]),
+            'accessories': data[14]
+        })
 
         response = {'success': True, 'status_code': 200, 'details': details}
         return response
