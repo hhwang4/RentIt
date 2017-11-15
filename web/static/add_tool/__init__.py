@@ -73,13 +73,12 @@ class Screwdriver(Hand):
 class Socket(Hand):
     def __init__(self, params):
         super(Socket, self).__init__(params)
-        self.drive_size = params['drive_size']
-        self.sae_size = params['sae_size']
-        self.deep_socket = params['deep_socket']
+        self.drive_size = params['socket_drive_size']
+        self.sae_size = params['socket_sae_size']
 
     def create(self, cursor):
         super(Hand, self).create(cursor)
-        cursor.execute("INSERT INTO HandSocket VALUES (%s, %s, %s, %s)", [self.tool_id, self.drive_size, self.sae_size, self.deep_socket])
+        cursor.execute("INSERT INTO HandSocket VALUES (%s, %s, %s, %s)", [self.tool_id, self.drive_size, self.sae_size])
         return self
 
 class Ratchet(Hand):
