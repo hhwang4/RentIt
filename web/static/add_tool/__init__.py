@@ -143,7 +143,7 @@ class Garden(Tool):
 
     def create(self, cursor):
         super(Garden, self).create(cursor)
-        cursor.execute("INSERT INTO Garden VALUES (%s, %s)", [self.tool_id, self.handle_material])
+        cursor.execute("INSERT INTO GardenTool VALUES (%s, %s)", [self.tool_id, self.handle_material])
         return self
 
 class Pruner(Garden):
@@ -205,9 +205,9 @@ class Power(Tool):
     def __init__(self, params):
         super(Power, self).__init__(params)
         self.volt_rating = int(params['power_volt_rating'])
-        self.amp_rating = params['power_amp_rating']
-        self.min_rpm_rating = params['power_min_rpm_rating']
-        self.max_rpm_rating = params['power_max_rpm_rating']
+        self.amp_rating = int(params['power_amp_rating'])
+        self.min_rpm_rating = int(params['power_min_rpm_rating'])
+        self.max_rpm_rating = int(params['power_max_rpm_rating'])
         self.power_accessories = params['power_accessories']
         self.accessory_description = params['accessory_description']
 
@@ -222,9 +222,9 @@ class Power(Tool):
 class Drill(Power):
     def __init__(self, params):
         super(Drill, self).__init__(params)
-        self.adjustable_clutch = params['drill_adjustable_clutch']
-        self.min_torque_rating = params['drill_min_torque_rating']
-        self.max_torque_rating = params['drill_max_torque_rating']
+        self.adjustable_clutch = int(params['drill_adjustable_clutch'])
+        self.min_torque_rating = int(params['drill_min_torque_rating'])
+        self.max_torque_rating = int(params['drill_max_torque_rating'])
 
     def create(self, cursor):
         super(Drill, self).create(cursor)
@@ -303,7 +303,7 @@ class Ladder(Tool):
 
     def create(self, cursor):
         super(Ladder, self).create(cursor)
-        cursor.execute("INSERT INTO Ladder VALUES (%s, %s, %s)",
+        cursor.execute("INSERT INTO LadderTool VALUES (%s, %s, %s)",
                        [self.tool_id, self.step_count, self.weight_capacity])
         return self
 

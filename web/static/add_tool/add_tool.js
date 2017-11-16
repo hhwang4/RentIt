@@ -74,14 +74,14 @@ angular.module('myApp.addtool', ['ngRoute'])
         {
           power_accessories: '',
           accessory_description: ''
-        }
+        },
       ]
 
       $scope.addAccessory = function() {
         $scope.accessories.push(
         {
           power_accessories: '',
-        accessory_description:''
+          accessory_description:''
         }
       )
     };
@@ -167,8 +167,8 @@ angular.module('myApp.addtool', ['ngRoute'])
         $scope.error = null;
         var data = {
             "category": $scope.category,
-            "power_accessories": $scope.accessories['power_accessories'],
-            "accessory_description": $scope.accessories['accessory_description'],
+            "power_accessories": $scope.accessories[power_accessories],
+            "accessory_description": $scope.accessories[accessory_description],
             "sub_type": $scope.subtype,
             "sub_option": $scope.suboption,
             "original_price": $scope.purchaseprice,

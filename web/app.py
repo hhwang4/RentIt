@@ -33,8 +33,8 @@ app.json_encoder = MyJSONEncoder
 app.config['MYSQL_DATABASE_USER'] = 'root'
 app.config['MYSQL_DATABASE_PASSWORD'] = 'mypassword'
 app.config['MYSQL_DATABASE_DB'] = 'cs6400_sfa17_team033'
-app.config['MYSQL_DATABASE_HOST'] = 'localhost'
-#app.config['MYSQL_DATABASE_HOST'] = 'mysql'  # mysql is the name of the docker container
+#app.config['MYSQL_DATABASE_HOST'] = 'localhost'
+app.config['MYSQL_DATABASE_HOST'] = 'mysql'  # mysql is the name of the docker container
 mysql.init_app(app)
 
 json_content = {'ContentType': 'application/json'}
@@ -90,15 +90,11 @@ def add_tool_get():
 
 @app.route("/addtool", methods=['POST'])
 def add_tool_post():
-
     db = mysql.connect()
     cursor = db.cursor()
-
-
     params = request.get_json()
 
     tool = find_tool(params)
-
     tool.create(cursor)
 
     db.commit()
