@@ -25,7 +25,7 @@ def find_tool(params):
         'Mixer': Mixer,
         'Generator': Generator
     }
-    sub_type = params['sub_type']
+    sub_type = params['sub_type']['name']
     return mapping[sub_type](params)
 
 class Tool(object):
@@ -44,12 +44,10 @@ class Tool(object):
     def create(self, cursor):
         result = cursor.execute("INSERT INTO Tool (width, weight, length, manufacturer, material, deposit_price, rental_price,\
             original_price, Category_Id, PowerSource_Id, SubOption_Id, SubType_Id) \
-            SELECT %s, %s, %s, %s, %s, %s, %s, %s, Category.id, PowerSource.id, SubOption.id, SubType.id \
-            FROM Category, PowerSource, SubOption, SubType \
-            where Category.Name = %s AND PowerSource.Name = %s AND SubOption.Name = %s AND SubType.Name = %s",
+            VALUES (%s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s)",
             [self.width, self.weight, self.length, self.manufacturer, self.material,
              self.original_price * .4, self.original_price * .15, self.original_price,
-             self.category, self.power_source, self.sub_option, self.sub_type])
+             self.category['id'], self.power_source['id'], self.sub_option['id'], self.sub_type['id']])
         assert cursor.rowcount == 1, 'Failed INSERT, Affected row: %d' % cursor.rowcount
         cursor.execute("SELECT last_insert_id()")
         self.tool_id = cursor.fetchone()[0]
