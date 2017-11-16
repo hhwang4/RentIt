@@ -1,741 +1,503 @@
 <div class="container">
-    <div class="alert alert-danger" role="alert" ng-hide="!hasError()">
-        {{ error }}
+  <div class="alert alert-danger" role="alert" ng-hide="!hasError()">
+    {{ error }}
+  </div>
+
+  <h1>Add Tool</h1>
+  <form name="addtool">
+
+    <!--<div class="form-inline">-->
+    <!--<div class="form-check form-check-inline">-->
+    <!--<label class="form-check-label">-->
+    <!--<input class="form-check-input" type="radio" name="inlineRadioOptions" id="type-all-tool"-->
+    <!--value="handTool" ng-model="category" required> Hand Tools-->
+    <!--</label>-->
+    <!--</div>-->
+    <!--<div class="form-check form-check-inline">-->
+    <!--<label class="form-check-label">-->
+    <!--<input class="form-check-input" type="radio" name="inlineRadioOptions" id="type-all-tool"-->
+    <!--value="gardenTool" ng-model="category" required> Garden Tools-->
+    <!--</label>-->
+    <!--</div>-->
+    <!--<div class="form-check form-check-inline">-->
+    <!--<label class="form-check-label">-->
+    <!--<input class="form-check-input" type="radio" name="inlineRadioOptions" id="type-all-tool"-->
+    <!--value="ladderTool" ng-model="category" required> Ladder-->
+    <!--</label>-->
+    <!--</div>-->
+    <!--<div class="form-check form-check-inline">-->
+    <!--<label class="form-check-label">-->
+    <!--<input class="form-check-input" type="radio" name="inlineRadioOptions" id="type-all-tool"-->
+    <!--value="powerTool" ng-model="category" required> Power Tools-->
+    <!--</label>-->
+    <!--</div>-->
+    <!--</div>-->
+<div class="form-row">
+    <div class="form-group col-md-6">
+      <label for="category">Category</label>
+      <select type="text" class="form-control" id="category" placeholder="Category" ng-change="getPowerSources()" ng-options="m as m.name for m in categories track by m.id" ng-model="category" required>
+                        </select>
     </div>
 
-    <h1>Add Tool</h1>
-    <form name="addtool">
-
-        <!--<div class="form-inline">-->
-            <!--<div class="form-check form-check-inline">-->
-                <!--<label class="form-check-label">-->
-                    <!--<input class="form-check-input" type="radio" name="inlineRadioOptions" id="type-all-tool"-->
-                           <!--value="handTool" ng-model="category" required> Hand Tools-->
-                <!--</label>-->
-            <!--</div>-->
-            <!--<div class="form-check form-check-inline">-->
-                <!--<label class="form-check-label">-->
-                    <!--<input class="form-check-input" type="radio" name="inlineRadioOptions" id="type-all-tool"-->
-                           <!--value="gardenTool" ng-model="category" required> Garden Tools-->
-                <!--</label>-->
-            <!--</div>-->
-            <!--<div class="form-check form-check-inline">-->
-                <!--<label class="form-check-label">-->
-                    <!--<input class="form-check-input" type="radio" name="inlineRadioOptions" id="type-all-tool"-->
-                           <!--value="ladderTool" ng-model="category" required> Ladder-->
-                <!--</label>-->
-            <!--</div>-->
-            <!--<div class="form-check form-check-inline">-->
-                <!--<label class="form-check-label">-->
-                    <!--<input class="form-check-input" type="radio" name="inlineRadioOptions" id="type-all-tool"-->
-                           <!--value="powerTool" ng-model="category" required> Power Tools-->
-                <!--</label>-->
-            <!--</div>-->
-        <!--</div>-->
-
-        <div class="form-group col-md-4">
-                        <label for="category">Category</label>
-                        <select type="text" class="form-control" id="category" placeholder="Category"
-                                ng-change="getPowerSources()"
-                                ng-options="m as m.name for m in categories track by m.id"
-                                ng-model="category" required>
-                        </select>
-                    </div>
-
-        <div class="form-group col-md-4">
-            <label for="powersource">Power Source</label>
-            <select type="text" class="form-control" id="powersource" data-ng-model="powersource"
-                    ng-change="getSubtypes()"
-                    data-ng-options="m as m.name for m in powersources track by m.id" required>
+    <div class="form-group col-md-6">
+      <label for="powersource">Power Source</label>
+      <select type="text" class="form-control" id="powersource" data-ng-model="powersource" ng-change="getSubtypes()" data-ng-options="m as m.name for m in powersources track by m.id" required>
             </select>
-        </div>
+    </div>
 
-        <div class="form-group col-md-6">
-            <label for="subtypes">Sub-Type</label>
-            <select type="text" class="form-control" id="subtypes" data-ng-model="subtype"
-                    ng-change="getSuboptions()"
-                    data-ng-options="m as m.name for m in subtypes track by m.id" required>
+    <div class="form-group col-md-6">
+      <label for="subtypes">Sub-Type</label>
+      <select type="text" class="form-control" id="subtypes" data-ng-model="subtype" ng-change="getSuboptions()" data-ng-options="m as m.name for m in subtypes track by m.id" required>
             </select>
-        </div>
+    </div>
 
-        <div class="form-group col-md-6">
-            <label for="suboption">Sub-Option</label>
-            <select type="text" class="form-control" id="suboption" data-ng-model="suboption"
-                    data-ng-options="m as m.name for m in suboptions track by m.id" required>
+    <div class="form-group col-md-6">
+      <label for="suboption">Sub-Option</label>
+      <select type="text" class="form-control" id="suboption" data-ng-model="suboption" data-ng-options="m as m.name for m in suboptions track by m.id" required>
             </select>
-        </div>
+    </div>
 
-        <div class="form-row">
-            <div class="form-group col-md-6" ng-if="category.name == 'Power'">
-                <label for="state">Power Tool Accessories</label>
-                <select type="text" class="form-control" id="power_accessories" ng-model="poweraccessories"
-                        data-ng-options="pa for pa in powertoolassessories()" required>
-                </select>
-                <label for="accessory_description">Accessory Description</label>
-                <input type="text" class="form-control" id="accessory_description" placeholder="16V battery"
-                       ng-minlength="3"
-                       ng-maxlength="50"
-                       name="accessory_description"
-                       ng-model="accessory_description" required>
-            </div>
-
-            <div class="form-group col-md-6">
-                <label for="purchaseprice">Purchase Price ($)</label>
-                <input type="text" class="form-control" id="purchsePrice" placeholder="Purchase Price"
-             ng-minlength="1"
-                       ng-maxlength="50"
-                       name="purchasePrice"
-                       ng-model="purchaseprice" required>
-            </div>
-
-            <div class="form-group col-md-6">
-                <label for="manufacturer">Manufacturer</label>
-                <input type="text" class="form-control" id="purchsePrice" placeholder="Purchase Price"
-                       ng-minlength="3"
-                       ng-maxlength="50"
-                       name="manufacturer"
-                       ng-model="manufacturer" required>
-            </div>
-
-
-            <div class="form-group col-md-4">
-                <label for="material">Material</label>
-                <input type="text" class="form-control" id="material" placeholder="Material"
-                       ng-minlength="3"
-                       ng-maxlength="10"
-                       name="material"
-                       ng-model="material" required>
-            </div>
-
-            <div class="form-group col-md-4">
-                <label for="weight">Weight (lbs)</label>
-                <input type="text" class="form-control" id="weight" placeholder="Weight"
-             ng-minlength="1"
-                       ng-maxlength="10"
-                       name="weight"
-                       ng-model="weight" required>
-            </div>
-
-            <div class="form-group col-md-4">
-                <label for="width">Width</label>
-                <input type="text" class="form-control" id="purchsePrice" placeholder="Width"
-             ng-minlength="1"
-                       ng-maxlength="10"
-             name="width"
-                       ng-model="width" required>
-            </div>
-
-
-            <div class="form-group col-md-4">
-    <label for="widthfraction">Width Fraction</label>
-                <select type="text" class="form-control" id="subtypes" data-ng-model="widthfraction" required>
-                    <option value="0">0</option>
-                    <option value="1/8">1/8</option>
-                    <option value="1/4">1/4</option>
-                    <option value="3/8">3/8</option>
-                    <option value="1/2">1/2</option>
-                    <option value="5/8">5/8</option>
-                    <option value="3/4">3/4</option>
-                </select>
-            </div>
-
-
-            <div class="form-group col-md-4">
-    <label for="widthunit">Unit</label>
-                <select type="text" class="form-control" id="widthunit" data-ng-model="widthunit" required>
-                    <option value="in">Inches</option>
-                    <option value="ft">Feet</option>
-                </select>
-            </div>
-
-
-            <div class="form-group col-md-4">
-                <label for="length">Length</label>
-                <input type="text" class="form-control" id="length" placeholder="Length"
-             ng-minlength="1"
-                       ng-maxlength="10"
-                       name="length"
-                       ng-model="length" required>
-            </div>
-
-
-            <div class="form-group col-md-4">
-      <label for="lengthfraction">Length Fraction</label>
-                <select type="text" class="form-control" id="lengthfraction" data-ng-model="lengthfraction" required>
-                    <option value="0">0</option>
-                    <option value="1/8">1/8</option>
-                    <option value="1/4">1/4</option>
-                    <option value="3/8">3/8</option>
-                    <option value="1/2">1/2</option>
-                    <option value="5/8">5/8</option>
-                    <option value="3/4">3/4</option>
-                </select>
-            </div>
-
-            <div class="form-group col-md-4">
-      <label for="lengthunit">Unit</label>
-                <select type="text" class="form-control" id="lengthunit" data-ng-model="lengthunit" required>
-                    <option value="in">Inches</option>
-                    <option value="ft">Feet</option>
-                </select>
-            </div>
-
-            <div class="form-group col-md-6" ng-if="category.name =='Garden'">
-                <label for="garden_handlematerial">Handle Material</label>
-                <input type="text" class="form-control" id="garden_handlematerial" placeholder="wood"
-                       ng-minlength="3"
-                       ng-maxlength="10"
-             name="toolobject.garden_handlematerial"
-             ng-model="toolobject.garden_handlematerial" required>
-
-                <div ng-messages="user.garden_handlematerial.$dirty && user.garden_handlematerial.$error"
-                     style="color:maroon"
-                     role="alert">
-                    <div ng-message="required">This field must not be empty</div>
-                    <div ng-message="minlength">Must have at least 3 characters</div>
-                    <div ng-message="maxlength">Cannot have more than 10 characters</div>
-                </div>
-            </div>
-
-    <div class="form-group col-md-6" ng-if = "category =='Power'">
-      <label for="powertool">Power Tool Volt Rating (V)</label>
-        <select type="text" class="form-control" id="power_voltrating" data-ng-model="toolobject.power_voltrating"
-        data-ng-options="vr for vr in get_voltrating()" required>
-                </select>
-
-                <label for="power_amprating">Power Tool Amp Rating (A)</label>
-                <input type="text" class="form-control" id="power_amprating" placeholder="30"
-                       ng-minlength="1"
-                       ng-maxlength="10"
-                       name="power_amprating"
-             ng-model="toolobject.power_amprating" required>
-
-                <div ng-messages="user.power_amprating.$dirty && user.power_amprating.$error" style="color:maroon"
-                     role="alert">
-                    <div ng-message="required">This field must not be empty</div>
-                    <div ng-message="minlength">Must have at least 1 characters</div>
-                    <div ng-message="maxlength">Cannot have more than 10 characters</div>
-                </div>
-
-                <label for="power_minrpm">Power Tool Min RPM Rating (RPM)</label>
-                <input type="text" class="form-control" id="power_minrpm" placeholder="3000"
-                       ng-minlength="2"
-                       ng-maxlength="10"
-                       name="power_minrpm"
-             ng-model="toolobject.power_minrpm" required>
-
-                <div ng-messages="user.power_minrpm.$dirty && user.power_minrpm.$error" style="color:maroon"
-                     role="alert">
-                    <div ng-message="required">This field must not be empty</div>
-                    <div ng-message="minlength">Must have at least 2 characters</div>
-                    <div ng-message="maxlength">Cannot have more than 10 characters</div>
-                </div>
-
-                <label for="power_maxrpm">Power Tool Max RPM Rating (RPM)</label>
-                <input type="text" class="form-control" id="power_maxrpm" placeholder="6000"
-                       ng-minlength="2"
-                       ng-maxlength="10"
-                       name="power_maxrpm"
-               ng-model="toolobject.power_maxrpm">
-
-                <div ng-messages="user.power_maxrpm.$dirty && user.power_maxrpm.$error" style="color:maroon"
-                     role="alert">
-                    <div ng-message="required">This field must not be empty</div>
-                    <div ng-message="minlength">Must have at least 2 characters</div>
-                    <div ng-message="maxlength">Cannot have more than 10 characters</div>
-                </div>
-            </div>
-
-            <div class="form-group col-md-6" ng-if="category.name =='Ladder'">
-                <label for="ladder_stepcount">Ladder Step Count (step)</label>
-                <input type="number" class="form-control" id="ladder_stepcount" placeholder="20"
-                       ng-minlength="1"
-                       ng-maxlength="10"
-                       name="ladder_stepcount"
-             ng-model="toolobject.ladder_stepcount" required>
-
-                <div ng-messages="user.ladder_stepcount.$dirty && user.ladder_stepcount.$error" style="color:maroon"
-                     role="alert">
-                    <div ng-message="required">This field must not be empty</div>
-                    <div ng-message="minlength">Must have at least 1 characters</div>
-                    <div ng-message="maxlength">Cannot have more than 10 characters</div>
-                </div>
-
-                <label for="ladder_weightcapacity">Ladder Weight Capacity (lb)</label>
-                <input type="text" class="form-control" id="ladder_weightcapacity" placeholder="250"
-                       ng-minlength="1"
-                       ng-maxlength="10"
-                       name="ladder_weightcapacity"
-             ng-model="toolobject.ladder_weightcapacity" required>
-
-                <div ng-messages="user.ladder_weightcapacity.$dirty && user.ladder_weightcapacity.$error"
-                     style="color:maroon"
-                     role="alert">
-                    <div ng-message="required">This field must not be empty</div>
-                    <div ng-message="minlength">Must have at least 1 characters</div>
-                    <div ng-message="maxlength">Cannot have more than 10 characters</div>
-                </div>
-            </div>
-
-
-            <div class="form-group col-md-6" ng-if="subtype.name =='Screwdriver'">
-                <label for="screwdriver_drivesize">Screw Driver Drive Size (#)</label>
-        <input type="number" class="form-control" id="screwdriver_drivesize" placeholder="2"
-             ng-minlength="1"
-                       ng-maxlength="10"
-                       name="screwdriver_drivesize"
-             ng-model="toolobject.screwdriver_drivesize" required>
-
-                <div ng-messages="user.screwdriver_drivesize.$dirty && user.screwdriver_drivesize.$error"
-                     style="color:maroon"
-                     role="alert">
-                    <div ng-message="required">This field must not be empty</div>
-        <div ng-message="minlength">Must have at least 1 characters</div>
-                    <div ng-message="maxlength">Cannot have more than 10 characters</div>
-                </div>
-            </div>
-
-        <div class="form-group col-md-6" ng-if = "subtype =='Socket'">
-          <label for="socket_drivesize">Socket Drive Size (inch)</label>
-            <input type="number" class="form-control" id="socket_drivesize" placeholder="1/2"
-             ng-minlength="1"
-                       ng-maxlength="10"
-                       name="socket_drivesize"
-             ng-model="toolobject.socket_drivesize" required>
-
-                <div ng-messages="user.screwdriver_drivesize.$dirty && user.screwdriver_drivesize.$error"
-                     style="color:maroon"
-                     role="alert">
-                    <div ng-message="required">This field must not be empty</div>
-        <div ng-message="minlength">Must have at least 1 characters</div>
-        <div ng-message="maxlength">Cannot have more than 10 characters</div>
+      <div class="form-group col-md-6">
+        <label for="purchaseprice">Purchase Price ($)</label>
+        <input type="text" class="form-control" id="purchsePrice" placeholder="Purchase Price" ng-minlength="1" ng-maxlength="50" name="purchasePrice" ng-model="purchaseprice" required>
       </div>
 
-        <label for="socket_saesize">Socket Sae Size (inch)</label>
-          <input type="number" class="form-control" id="socket_saesize" placeholder="1/2"
-               ng-minlength="1"
-               ng-maxlength="10"
-               name="socket_saesize"
-               ng-model="toolobject.socket_saesize" required>
+      <div class="form-group col-md-6">
+        <label for="manufacturer">Manufacturer</label>
+        <input type="text" class="form-control" id="purchsePrice" placeholder="Purchase Price" ng-minlength="3" ng-maxlength="50" name="manufacturer" ng-model="manufacturer" required>
+      </div>
 
-          <div ng-messages="user.socket_saesize.$dirty && user.socket_saesize.$error" style="color:maroon"
-               role="alert">
+
+      <div class="form-group col-md-4">
+        <label for="material">Material</label>
+        <input type="text" class="form-control" id="material" placeholder="Material" ng-minlength="3" ng-maxlength="10" name="material" ng-model="material" required>
+      </div>
+
+      <div class="form-group col-md-4">
+        <label for="weight">Weight (lbs)</label>
+        <input type="text" class="form-control" id="weight" placeholder="Weight" ng-minlength="1" ng-maxlength="10" name="weight" ng-model="weight" required>
+      </div>
+
+      <div class="form-group col-md-4">
+        <label for="width">Width</label>
+        <input type="text" class="form-control" id="purchsePrice" placeholder="0" ng-minlength="1" ng-maxlength="10" name="width" ng-model="width" required>
+      </div>
+
+
+      <div class="form-group col-md-4">
+        <label for="widthfraction">Width Fraction</label>
+        <select type="text" class="form-control" id="widthfraction" placeholder="0" ng-model="widthfraction" ng-options="f.value as f.name for f in fractions" required>
+        </select>
+      </div>
+
+
+      <div class="form-group col-md-4">
+        <label for="widthunit">Unit</label>
+        <select type="text" class="form-control" id="widthunit" data-ng-model="widthunit" required>
+          <option value="in">Inches</option>
+          <option value="ft">Feet</option>
+        </select>
+      </div>
+
+
+      <div class="form-group col-md-4">
+        <label for="length">Length</label>
+        <input type="text" class="form-control" id="length" placeholder="0" ng-minlength="1" ng-maxlength="10" name="length" ng-model="length" required>
+      </div>
+
+
+      <div class="form-group col-md-4">
+        <label for="lengthfraction">Length Fraction</label>
+        <select type="text" class="form-control" id="lengthfraction" placeholder="0" ng-model="lengthfraction" ng-options="f.value as f.name for f in fractions" required>
+        </select>
+      </div>
+
+      <div class="form-group col-md-4">
+        <label for="lengthunit">Unit</label>
+        <select type="text" class="form-control" id="lengthunit" data-ng-model="lengthunit" required>
+          <option value="in">Inches</option>
+          <option value="ft">Feet</option>
+        </select>
+      </div>
+
+      <div class="form-group col-md-6" ng-if="category.name =='Garden'">
+        <label for="garden_handlematerial">Handle Material</label>
+        <input type="text" class="form-control" id="garden_handlematerial" placeholder="wood" ng-minlength="3" ng-maxlength="10" name="toolobject.garden_handlematerial" ng-model="toolobject.garden_handlematerial" required>
+
+        <div ng-messages="user.garden_handlematerial.$dirty && user.garden_handlematerial.$error" style="color:maroon" role="alert">
+          <div ng-message="required">This field must not be empty</div>
+          <div ng-message="minlength">Must have at least 3 characters</div>
+          <div ng-message="maxlength">Cannot have more than 10 characters</div>
+        </div>
+      </div>
+
+      <div class="form-group col-md-6" ng-if="category.name == 'Power'">
+        <label for="powertool">Power Tool Volt Rating (V)</label>
+        <select type="text" class="form-control" id="power_voltrating" data-ng-model="toolobject.power_voltrating" data-ng-options="vr for vr in get_voltrating()" required>
+                </select>
+
+        <label for="power_amprating">Power Tool Amp Rating (A)</label>
+        <input type="text" class="form-control" id="power_amprating" placeholder="30" ng-minlength="1" ng-maxlength="10" name="power_amprating" ng-model="toolobject.power_amprating" required>
+
+        <div ng-messages="user.power_amprating.$dirty && user.power_amprating.$error" style="color:maroon" role="alert">
+          <div ng-message="required">This field must not be empty</div>
+          <div ng-message="minlength">Must have at least 1 characters</div>
+          <div ng-message="maxlength">Cannot have more than 10 characters</div>
+        </div>
+
+        <label for="power_minrpm">Power Tool Min RPM Rating (RPM)</label>
+        <input type="text" class="form-control" id="power_minrpm" placeholder="3000" ng-minlength="2" ng-maxlength="10" name="power_minrpm" ng-model="toolobject.power_minrpm" required>
+
+        <div ng-messages="user.power_minrpm.$dirty && user.power_minrpm.$error" style="color:maroon" role="alert">
+          <div ng-message="required">This field must not be empty</div>
+          <div ng-message="minlength">Must have at least 2 characters</div>
+          <div ng-message="maxlength">Cannot have more than 10 characters</div>
+        </div>
+
+        <label for="power_maxrpm">Power Tool Max RPM Rating (RPM)</label>
+        <input type="text" class="form-control" id="power_maxrpm" placeholder="6000" ng-minlength="2" ng-maxlength="10" name="power_maxrpm" ng-model="toolobject.power_maxrpm">
+
+        <div ng-messages="user.power_maxrpm.$dirty && user.power_maxrpm.$error" style="color:maroon" role="alert">
+          <div ng-message="required">This field must not be empty</div>
+          <div ng-message="minlength">Must have at least 2 characters</div>
+          <div ng-message="maxlength">Cannot have more than 10 characters</div>
+        </div>
+      </div>
+
+      <div class="form-group col-md-6" ng-if="category.name =='Ladder'">
+        <label for="ladder_stepcount">Ladder Step Count (step)</label>
+        <input type="number" class="form-control" id="ladder_stepcount" placeholder="20" ng-minlength="1" ng-maxlength="10" name="ladder_stepcount" ng-model="toolobject.ladder_stepcount" required>
+
+        <div ng-messages="user.ladder_stepcount.$dirty && user.ladder_stepcount.$error" style="color:maroon" role="alert">
+          <div ng-message="required">This field must not be empty</div>
+          <div ng-message="minlength">Must have at least 1 characters</div>
+          <div ng-message="maxlength">Cannot have more than 10 characters</div>
+        </div>
+
+        <label for="ladder_weightcapacity">Ladder Weight Capacity (lb)</label>
+        <input type="text" class="form-control" id="ladder_weightcapacity" placeholder="250" ng-minlength="1" ng-maxlength="10" name="ladder_weightcapacity" ng-model="toolobject.ladder_weightcapacity" required>
+
+        <div ng-messages="user.ladder_weightcapacity.$dirty && user.ladder_weightcapacity.$error" style="color:maroon" role="alert">
+          <div ng-message="required">This field must not be empty</div>
+          <div ng-message="minlength">Must have at least 1 characters</div>
+          <div ng-message="maxlength">Cannot have more than 10 characters</div>
+        </div>
+      </div>
+
+
+      <div class="form-group col-md-6" ng-if="subtype.name == 'Screwdriver'">
+        <label for="screwdriver_drivesize">Screw Driver Drive Size (#)</label>
+        <input type="number" class="form-control" id="screwdriver_drivesize" placeholder="2" ng-minlength="1" ng-maxlength="10" name="screwdriver_drivesize" ng-model="toolobject.screwdriver_drivesize" required>
+
+        <div ng-messages="user.screwdriver_drivesize.$dirty && user.screwdriver_drivesize.$error" style="color:maroon" role="alert">
+          <div ng-message="required">This field must not be empty</div>
+          <div ng-message="minlength">Must have at least 1 characters</div>
+          <div ng-message="maxlength">Cannot have more than 10 characters</div>
+        </div>
+      </div>
+
+      <div class="form-group col-md-6" ng-if="subtype.name == 'Socket'">
+        <label for="socket_drivesize">Socket Drive Size (inch)</label>
+        <input type="number" class="form-control" id="socket_drivesize" placeholder="1" ng-minlength="1" ng-maxlength="10" name="socket_drivesize" ng-model="toolobject.socket_drivesize" required>
+
+        <div ng-messages="user.screwdriver_drivesize.$dirty && user.screwdriver_drivesize.$error" style="color:maroon" role="alert">
+          <div ng-message="required">This field must not be empty</div>
+          <div ng-message="minlength">Must have at least 1 characters</div>
+          <div ng-message="maxlength">Cannot have more than 10 characters</div>
+        </div>
+
+        <label for="socket_saesize">Socket Sae Size (inch)</label>
+        <input type="number" class="form-control" id="socket_saesize" placeholder="1" ng-minlength="1" ng-maxlength="10" name="socket_saesize" ng-model="toolobject.socket_saesize" required>
+
+        <div ng-messages="user.socket_saesize.$dirty && user.socket_saesize.$error" style="color:maroon" role="alert">
+          <div ng-message="required">This field must not be empty</div>
+          <div ng-message="minlength">Must have at least 1 characters</div>
+          <div ng-message="maxlength">Cannot have more than 10 characters</div>
+        </div>
+      </div>
+
+      <div class="form-group col-md-6" ng-if="subtype.name =='Ratchet'">
+        <label for="rachet_drivesize">Rachet Drive Size (inch)</label>
+        <input type="text" class="form-control" id="rachet_drivesize" placeholder="1" ng-minlength="1" ng-maxlength="10" name="rachet_drivesize" ng-model="toolobject.rachet_drivesize" required>
+
+        <div ng-messages="user.rachet_drivesize.$dirty && user.rachet_drivesize.$error" style="color:maroon" role="alert">
+          <div ng-message="required">This field must not be empty</div>
+          <div ng-message="minlength">Must have at least 1 characters</div>
+          <div ng-message="maxlength">Cannot have more than 10 characters</div>
+        </div>
+      </div>
+
+      <div class="form-group col-md-6" ng-if="subtype.name =='Wrench'">
+        <label for="wrench_drivesize">Wrench Drive Size (inch)</label>
+        <input type="text" class="form-control" id="wrench_drivesize" placeholder="1" ng-minlength="3" ng-maxlength="10" name="wrench_drivesize" ng-model="toolobject.wrench_drivesize" required>
+
+        <div ng-messages="user.wrench_drivesize.$dirty && user.wrench_drivesize.$error" style="color:maroon" role="alert">
+          <div ng-message="required">This field must not be empty</div>
+          <div ng-message="minlength">Must have at least 3 characters</div>
+          <div ng-message="maxlength">Cannot have more than 10 characters</div>
+        </div>
+      </div>
+
+      <div class="form-group col-md-6" ng-if="subtype.name == 'Pliers'">
+        <label for="state">Adjustable</label>
+        <select type="text" class="form-control" id="pliers_adjustable" data-ng-model="pliers_adjustable" required>
+          <option value="1">Yes</option>
+          <option value="0">No</option>
+        </select>
+      </div>
+
+      <div class="form-group col-md-6" ng-if="subtype.name =='Gun'">
+        <label for="handgun_gaugerating">Hand Gun Gauge Rating (G)</label>
+        <input type="text" class="form-control" id="handgun_gaugerating" placeholder="18" ng-minlength="2" ng-maxlength="10" name="handgun_gaugerating" ng-model="toolobject.handgun_gaugerating" required>
+
+        <div ng-messages="user.handgun_gaugerating.$dirty && user.handgun_gaugerating.$error" style="color:maroon" role="alert">
+          <div ng-message="required">This field must not be empty</div>
+          <div ng-message="minlength">Must have at least 2 characters</div>
+          <div ng-message="maxlength">Cannot have more than 10 characters</div>
+        </div>
+
+        <label for="handgun_capacity">Hand Gun Capacity</label>
+        <input type="text" class="form-control" id="handgun_capacity" placeholder="100" ng-minlength="2" ng-maxlength="10" name="handgun_capacity" ng-model="toolobject.handgun_capacity" required>
+
+        <div ng-messages="user.handgun_capacity.$dirty && user.handgun_capacity.$error" style="color:maroon" role="alert">
+          <div ng-message="required">This field must not be empty</div>
+          <div ng-message="minlength">Must have at least 2 characters</div>
+          <div ng-message="maxlength">Cannot have more than 10 characters</div>
+        </div>
+      </div>
+
+      <div class="form-group col-md-6" ng-if="subtype.name =='Hammer'">
+        <label for="state">Anti-vibration</label>
+        <select type="text" class="form-control" id="hammer_antivibration" data-ng-model="hammer_antivibration" required>
+          <option value="1">Yes</option>
+          <option value="0">No</option>
+        </select>
+      </div>
+
+      <div class="form-group col-md-6" ng-if="subtype.name =='Pruner'">
+        <label for="pruner_bladematerial">Pruning Tool Blade Material</label>
+        <input type="text" class="form-control" id="pruner_bladematerial" placeholder="steel" ng-minlength="3" ng-maxlength="50" name="pruner_bladematerial" ng-model="toolobject.pruner_bladematerial" required>
+
+        <div ng-messages="user.pruner_bladematerial.$dirty && user.pruner_bladematerial.$error" style="color:maroon" role="alert">
+          <div ng-message="required">This field must not be empty</div>
+          <div ng-message="minlength">Must have at least 3 characters</div>
+          <div ng-message="maxlength">Cannot have more than 50 characters</div>
+        </div>
+
+        <label for="pruner_bladelength">Pruning Tool Blade Length (inch)</label>
+        <input type="text" class="form-control" id="pruner_bladelength" placeholder="5-1/8" ng-minlength="1" ng-maxlength="10" name="pruner_bladelength" ng-model="toolobject.pruner_bladelength" required>
+
+        <div ng-messages="user.pruner_bladelength.$dirty && user.pruner_bladelength.$error" style="color:maroon" role="alert">
+          <div ng-message="required">This field must not be empty</div>
+          <div ng-message="minlength">Must have at least 2 characters</div>
+          <div ng-message="maxlength">Cannot have more than 10 characters</div>
+        </div>
+      </div>
+
+      <div class="form-group col-md-6" ng-if="subtype.name =='Striking'">
+        <label for="striking_headweight">Sriking Tool Head Weight (lb)</label>
+        <input type="text" class="form-control" id="striking_headweight" placeholder="3.5" ng-minlength="1" ng-maxlength="10" name="striking_headweight" ng-model="toolobject.striking_headweight" required>
+
+        <div ng-messages="user.striking_headweight.$dirty && user.striking_headweight.$error" style="color:maroon" role="alert">
+          <div ng-message="required">This field must not be empty</div>
+          <div ng-message="minlength">Must have at least 1 characters</div>
+          <div ng-message="maxlength">Cannot have more than 10 characters</div>
+        </div>
+      </div>
+
+      <div class="form-group col-md-6" ng-if="subtype.name =='Digger'">
+        <label for="digger_bladewidth">Digging Tool Blade Width (in)</label>
+        <input type="text" class="form-control" id="digger_bladewidth" placeholder="9-3/4" ng-minlength="1" ng-maxlength="10" name="digger_bladewidth" ng-model="toolobject.digger_bladewidth" required>
+
+        <div ng-messages="user.digger_bladewidth.$dirty && user.digger_bladewidth.$error" style="color:maroon" role="alert">
+          <div ng-message="required">This field must not be empty</div>
+          <div ng-message="minlength">Must have at least 1 characters</div>
+          <div ng-message="maxlength">Cannot have more than 10 characters</div>
+        </div>
+
+        <label for="digger_bladelength">Digging Tool Blade Length (in)</label>
+        <input type="text" class="form-control" id="digger_bladelength" placeholder="9-3/4" ng-minlength="1" ng-maxlength="10" name="digger_bladelength" ng-model="toolobject.digger_bladelength" required>
+
+        <div ng-messages="user.digger_bladelength.$dirty && user.digger_bladelength.$error" style="color:maroon" role="alert">
+          <div ng-message="required">This field must not be empty</div>
+          <div ng-message="minlength">Must have at least 1 characters</div>
+          <div ng-message="maxlength">Cannot have more than 10 characters</div>
+        </div>
+      </div>
+
+      <div class="form-group col-md-6" ng-if="subtype.name =='Rakes'">
+        <label for="rakes_tinecount">Rake Tine-count</label>
+        <input type="text" class="form-control" id="rakes_tinecount" placeholder="14" ng-minlength="1" ng-maxlength="10" name="rakes_tinecount" ng-model="toolobject.rakes_tinecount" required>
+
+        <div ng-messages="user.rakes_tinecount.$dirty && user.rakes_tinecount.$error" style="color:maroon" role="alert">
+          <div ng-message="required">This field must not be empty</div>
+          <div ng-message="minlength">Must have at least 1 characters</div>
+          <div ng-message="maxlength">Cannot have more than 10 characters</div>
+        </div>
+      </div>
+
+      <div class="form-group col-md-6" ng-if="subtype.name =='Wheelbarrows'">
+        <label for="wheelbarrow_binmaterial">Wheelbarrow Bin Material</label>
+        <input type="text" class="form-control" id="wheelbarrow_binmaterial" placeholder="fiberglass" ng-minlength="3" ng-maxlength="10" name="wheelbarrow_binmaterial" ng-model="toolobject.wheelbarrow_binmaterial" required>
+
+        <div ng-messages="user.wheelbarrow_binmaterial.$dirty && user.wheelbarrow_binmaterial.$error" style="color:maroon" role="alert">
+          <div ng-message="required">This field must not be empty</div>
+          <div ng-message="minlength">Must have at least 3 characters</div>
+          <div ng-message="maxlength">Cannot have more than 10 characters</div>
+        </div>
+
+        <label for="wheelbarrow_binmvolume">Wheelbarrow Bin Volume (cf)</label>
+        <input type="text" class="form-control" id="wheelbarrow_binmvolume" placeholder="5.9" ng-minlength="3" ng-maxlength="10" name="wheelbarrow_binmvolume" ng-model="toolobject.wheelbarrow_binmvolume">
+
+        <div ng-messages="user.wheelbarrow_binmvolume.$dirty && user.wheelbarrow_binmvolume.$error" style="color:maroon" role="alert">
+          <div ng-message="required">This field must not be empty</div>
+          <div ng-message="minlength">Must have at least 3 characters</div>
+          <div ng-message="maxlength">Cannot have more than 10 characters</div>
+        </div>
+
+        <label for="wheelbarrow_wheelcount">Wheelbarrow Wheel Count</label>
+        <input type="text" class="form-control" id="wheelbarrow_wheelcount" placeholder="2" ng-minlength="1" ng-maxlength="10" name="wheelbarrow_wheelcount" ng-model="toolobject.wheelbarrow_wheelcount" required>
+
+        <div ng-messages="user.wheelbarrow_wheelcount.$dirty && user.wheelbarrow_wheelcount.$error" style="color:maroon" role="alert">
+          <div ng-message="required">This field must not be empty</div>
+          <div ng-message="minlength">Must have at least 1 characters</div>
+          <div ng-message="maxlength">Cannot have more than 10 characters</div>
+        </div>
+      </div>
+
+      <div class="form-group col-md-6" ng-if="subtype.name =='Drill'">
+        <div class="form-group col-md-6">
+          <label for="drill_adjustableclutch">Adjustable Clutch</label>
+          <select type="text" class="form-control" id="drill_adjustableclutch" data-ng-model="toolobject.drill_adjustableclutch" required>
+            <option value="1">Yes</option>
+            <option value="0">No</option>
+          </select>
+        </div>
+
+        <label for="drill_mintorque">Drill Min Torque (ft-lb)</label>
+        <input type="text" class="form-control" id="drill_mintorque" placeholder="80" ng-minlength="1" ng-maxlength="10" name="drill_mintorque" ng-model="toolobject.drill_mintorque">
+
+        <div ng-messages="user.drill_mintorque.$dirty && user.drill_mintorque.$error" style="color:maroon" role="alert">
+          <div ng-message="required">This field must not be empty</div>
+          <div ng-message="minlength">Must have at least 1 characters</div>
+          <div ng-message="maxlength">Cannot have more than 10 characters</div>
+        </div>
+
+        <label for="drill_maxtorque">Drill Max Torque (ft-lb)</label>
+        <input type="text" class="form-control" id="drill_maxtorque" placeholder="800" ng-minlength="1" ng-maxlength="10" name="drill_maxtorque" ng-model="toolobject.drill_maxtorque">
+
+        <div ng-messages="user.drill_maxtorque.$dirty && user.drill_maxtorque.$error" style="color:maroon" role="alert">
+          <div ng-message="required">This field must not be empty</div>
+          <div ng-message="minlength">Must have at least 1 characters</div>
+          <div ng-message="maxlength">Cannot have more than 10 characters</div>
+        </div>
+      </div>
+
+      <div class="form-group col-md-6" ng-if="subtype.name =='Saw'">
+        <label for="saw_bladesize">Saw Blade Size (inch)</label>
+        <input type="text" class="form-control" id="saw_bladesize" placeholder="7-3/4" ng-minlength="1" ng-maxlength="10" name="saw_bladesize" ng-model="toolobject.saw_bladesize" required>
+
+        <div ng-messages="user.saw_bladesize.$dirty && user.saw_bladesize.$error" style="color:maroon" role="alert">
+          <div ng-message="required">This field must not be empty</div>
+          <div ng-message="minlength">Must have at least 1 characters</div>
+          <div ng-message="maxlength">Cannot have more than 10 characters</div>
+        </div>
+      </div>
+
+      <div class="form-group col-md-6" ng-if="subtype.name =='Sander'">
+        <div class="form-group col-md-6">
+          <label for="sander_dustbag">Sander Dust Bag</label>
+          <select type="text" class="form-control" id="sander_dustbag" data-ng-model="sander_dustbag" required>
+            <option value="1">Yes</option>
+            <option value="0">No</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group col-md-6" ng-if="subtype.name =='AirCompressor'">
+        <label for="aircompressor_tanksize">Air Compressor Tank Size (gal)</label>
+        <input type="text" class="form-control" id="aircompressor_tanksize" placeholder="30" ng-minlength="1" ng-maxlength="10" name="aircompressor_tanksize" ng-model="toolobject.aircompressor_tanksize" required>
+
+        <div ng-messages="user.aircompressor_tanksize.$dirty && user.aircompressor_tanksize.$error" style="color:maroon" role="alert">
+          <div ng-message="required">This field must not be empty</div>
+          <div ng-message="minlength">Must have at least 1 characters</div>
+          <div ng-message="maxlength">Cannot have more than 10 characters</div>
+        </div>
+
+        <label for="aircompressor_pressurerating">Air Compressor Pressure Rating (psi)</label>
+        <input type="text" class="form-control" id="aircompressor_pressurerating" placeholder="300" ng-minlength="2" ng-maxlength="10" name="aircompressor_pressurerating" ng-model="toolobject.aircompressor_pressurerating">
+
+        <div ng-messages="user.aircompressor_pressurerating.$dirty && user.aircompressor_pressurerating.$error" style="color:maroon" role="alert">
+          <div ng-message="required">This field must not be empty</div>
+          <div ng-message="minlength">Must have at least 2 characters</div>
+          <div ng-message="maxlength">Cannot have more than 10 characters</div>
+        </div>
+      </div>
+
+      <div class="form-group col-md-6" ng-if="subtype.name =='Mixer'">
+        <label for="mixer_motorrating">Mixer Motor Rating (hp)</label>
+        <input type="text" class="form-control" id="mixer_motorrating" placeholder="1/2" ng-minlength="1" ng-maxlength="10" name="mixer_motorrating" ng-model="toolobject.mixer_motorrating" required>
+
+        <div ng-messages="user.mixer_motorrating.$dirty && user.mixer_motorrating.$error" style="color:maroon" role="alert">
+          <div ng-message="required">This field must not be empty</div>
+          <div ng-message="minlength">Must have at least 1 characters</div>
+          <div ng-message="maxlength">Cannot have more than 10 characters</div>
+        </div>
+
+        <label for="mixer_drumsize">Mixer Drum Size (cf)</label>
+        <input type="text" class="form-control" id="mixer_drumsize" placeholder="3.5" ng-minlength="1" ng-maxlength="10" name="mixer_drumsize" ng-model="toolobject.mixer_drumsize">
+
+        <div ng-messages="user.mixer_drumsize.$dirty && user.mixer_drumsize.$error" style="color:maroon" role="alert">
+          <div ng-message="required">This field must not be empty</div>
+          <div ng-message="minlength">Must have at least 1 characters</div>
+          <div ng-message="maxlength">Cannot have more than 10 characters</div>
+        </div>
+
+        <div class="form-group col-md-6" ng-if="subtype.name =='Generator'">
+          <label for="generator_powerrating">Generator Power Rating (Watt)</label>
+          <input type="text" class="form-control" id="mixer_motorrating" placeholder="30" ng-minlength="1" ng-maxlength="10" name="mixer_motorrating" ng-model="toolobject.generator_powerrating" required>
+
+          <div ng-messages="user.generator_powerrating.$dirty && user.generator_powerrating.$error" style="color:maroon" role="alert">
             <div ng-message="required">This field must not be empty</div>
             <div ng-message="minlength">Must have at least 1 characters</div>
             <div ng-message="maxlength">Cannot have more than 10 characters</div>
           </div>
         </div>
-
-    <div class="form-group col-md-6" ng-if = "subtype =='Ratchet'">
-      <label for="rachet_drivesize">Rachet Drive Size (inch)</label>
-        <input type="text" class="form-control" id="rachet_drivesize" placeholder="1/2"
-             ng-minlength="1"
-             ng-maxlength="10"
-             name="rachet_drivesize"
-             ng-model="toolobject.rachet_drivesize" required>
-
-      <div ng-messages="user.rachet_drivesize.$dirty && user.rachet_drivesize.$error" style="color:maroon"
-           role="alert">
-        <div ng-message="required">This field must not be empty</div>
-        <div ng-message="minlength">Must have at least 1 characters</div>
-        <div ng-message="maxlength">Cannot have more than 10 characters</div>
       </div>
-    </div>
 
-            <div class="form-group col-md-6" ng-if="subtype.name =='Wrench'">
-                <label for="wrench_drivesize">Wrench Drive Size (inch)</label>
-                <input type="text" class="form-control" id="wrench_drivesize" placeholder="1/2"
-                       ng-minlength="3"
-                       ng-maxlength="10"
-                       name="wrench_drivesize"
-             ng-model="toolobject.wrench_drivesize" required>
-
-                <div ng-messages="user.wrench_drivesize.$dirty && user.wrench_drivesize.$error" style="color:maroon"
-                     role="alert">
-                    <div ng-message="required">This field must not be empty</div>
-                    <div ng-message="minlength">Must have at least 3 characters</div>
-                    <div ng-message="maxlength">Cannot have more than 10 characters</div>
-                </div>
-            </div>
-
-            <div class="form-group col-md-6" ng-if="subtype.name =='Pliers'">
-                <label for="state">Adjustable</label>
-                <select type="text" class="form-control" id="pliers_adjustable" data-ng-model="pliers_adjustable"
-                        required>
-                    <option value="1">Yes</option>
-                    <option value="0">No</option>
-                </select>
-            </div>
-
-            <div class="form-group col-md-6" ng-if="subtype.name =='Gun'">
-                <label for="handgun_gaugerating">Hand Gun Gauge Rating (G)</label>
-                <input type="text" class="form-control" id="handgun_gaugerating" placeholder="18"
-                       ng-minlength="2"
-                       ng-maxlength="10"
-                       name="handgun_gaugerating"
-             ng-model="toolobject.handgun_gaugerating" required>
-
-                <div ng-messages="user.handgun_gaugerating.$dirty && user.handgun_gaugerating.$error"
-                     style="color:maroon"
-                     role="alert">
-                    <div ng-message="required">This field must not be empty</div>
-                    <div ng-message="minlength">Must have at least 2 characters</div>
-                    <div ng-message="maxlength">Cannot have more than 10 characters</div>
-                </div>
-
-                <label for="handgun_capacity">Hand Gun Capacity</label>
-                <input type="text" class="form-control" id="handgun_capacity" placeholder="100"
-                       ng-minlength="2"
-                       ng-maxlength="10"
-                       name="handgun_capacity"
-             ng-model="toolobject.handgun_capacity" required>
-
-                <div ng-messages="user.handgun_capacity.$dirty && user.handgun_capacity.$error" style="color:maroon"
-                     role="alert">
-                    <div ng-message="required">This field must not be empty</div>
-                    <div ng-message="minlength">Must have at least 2 characters</div>
-                    <div ng-message="maxlength">Cannot have more than 10 characters</div>
-                </div>
-            </div>
-
-            <div class="form-group col-md-6" ng-if="subtype.name =='Hammer'">
-                <label for="state">Anti-vibration</label>
-                <select type="text" class="form-control" id="hammer_antivibration" data-ng-model="hammer_antivibration"
-                        required>
-                    <option value="1">Yes</option>
-                    <option value="0">No</option>
-                </select>
-            </div>
-
-            <div class="form-group col-md-6" ng-if="subtype.name =='Pruner'">
-                <label for="pruner_bladematerial">Pruning Tool Blade Material</label>
-                <input type="text" class="form-control" id="pruner_bladematerial" placeholder="steel"
-                       ng-minlength="3"
-                       ng-maxlength="50"
-                       name="pruner_bladematerial"
-               ng-model="toolobject.pruner_bladematerial" required>
-
-                <div ng-messages="user.pruner_bladematerial.$dirty && user.pruner_bladematerial.$error"
-                     style="color:maroon"
-                     role="alert">
-                    <div ng-message="required">This field must not be empty</div>
-                    <div ng-message="minlength">Must have at least 3 characters</div>
-                    <div ng-message="maxlength">Cannot have more than 50 characters</div>
-                </div>
-
-                <label for="pruner_bladelength">Pruning Tool Blade Length (inch)</label>
-                <input type="text" class="form-control" id="pruner_bladelength" placeholder="5-1/8"
-                       ng-minlength="1"
-                       ng-maxlength="10"
-                       name="pruner_bladelength"
-                 ng-model="toolobject.pruner_bladelength" required>
-
-                <div ng-messages="user.pruner_bladelength.$dirty && user.pruner_bladelength.$error" style="color:maroon"
-                     role="alert">
-                    <div ng-message="required">This field must not be empty</div>
-                    <div ng-message="minlength">Must have at least 2 characters</div>
-                    <div ng-message="maxlength">Cannot have more than 10 characters</div>
-                </div>
-            </div>
-
-            <div class="form-group col-md-6" ng-if="subtype.name =='Striking'">
-                <label for="striking_headweight">Sriking Tool Head Weight (lb)</label>
-                <input type="text" class="form-control" id="striking_headweight" placeholder="3.5"
-                       ng-minlength="1"
-                       ng-maxlength="10"
-                       name="striking_headweight"
-                 ng-model="toolobject.striking_headweight" required>
-
-                <div ng-messages="user.striking_headweight.$dirty && user.striking_headweight.$error"
-                     style="color:maroon"
-                     role="alert">
-                    <div ng-message="required">This field must not be empty</div>
-                    <div ng-message="minlength">Must have at least 1 characters</div>
-                    <div ng-message="maxlength">Cannot have more than 10 characters</div>
-                </div>
-            </div>
-
-            <div class="form-group col-md-6" ng-if="subtype.name =='Digger'">
-                <label for="digger_bladewidth">Digging Tool Blade Width (in)</label>
-                <input type="text" class="form-control" id="digger_bladewidth" placeholder="9-3/4"
-                       ng-minlength="1"
-                       ng-maxlength="10"
-                       name="digger_bladewidth"
-                 ng-model="toolobject.digger_bladewidth" required>
-
-                <div ng-messages="user.digger_bladewidth.$dirty && user.digger_bladewidth.$error" style="color:maroon"
-                     role="alert">
-                    <div ng-message="required">This field must not be empty</div>
-                    <div ng-message="minlength">Must have at least 1 characters</div>
-                    <div ng-message="maxlength">Cannot have more than 10 characters</div>
-                </div>
-
-                <label for="digger_bladelength">Digging Tool Blade Length (in)</label>
-                <input type="text" class="form-control" id="digger_bladelength" placeholder="9-3/4"
-                       ng-minlength="1"
-                       ng-maxlength="10"
-                       name="digger_bladelength"
-                 ng-model="toolobject.digger_bladelength" required>
-
-                <div ng-messages="user.digger_bladelength.$dirty && user.digger_bladelength.$error" style="color:maroon"
-                     role="alert">
-                    <div ng-message="required">This field must not be empty</div>
-                    <div ng-message="minlength">Must have at least 1 characters</div>
-                    <div ng-message="maxlength">Cannot have more than 10 characters</div>
-                </div>
-            </div>
-
-            <div class="form-group col-md-6" ng-if="subtype.name =='Rakes'">
-                <label for="rakes_tinecount">Rake Tine-count</label>
-                <input type="text" class="form-control" id="rakes_tinecount" placeholder="14"
-                       ng-minlength="1"
-                       ng-maxlength="10"
-                       name="rakes_tinecount"
-                 ng-model="toolobject.rakes_tinecount" required>
-
-                <div ng-messages="user.rakes_tinecount.$dirty && user.rakes_tinecount.$error" style="color:maroon"
-                     role="alert">
-                    <div ng-message="required">This field must not be empty</div>
-                    <div ng-message="minlength">Must have at least 1 characters</div>
-                    <div ng-message="maxlength">Cannot have more than 10 characters</div>
-                </div>
-            </div>
-
-            <div class="form-group col-md-6" ng-if="subtype.name =='Wheelbarrows'">
-                <label for="wheelbarrow_binmaterial">Wheelbarrow Bin Material</label>
-                <input type="text" class="form-control" id="wheelbarrow_binmaterial" placeholder="fiberglass"
-                       ng-minlength="3"
-                       ng-maxlength="10"
-                       name="wheelbarrow_binmaterial"
-                 ng-model="toolobject.wheelbarrow_binmaterial" required>
-
-                <div ng-messages="user.wheelbarrow_binmaterial.$dirty && user.wheelbarrow_binmaterial.$error"
-                     style="color:maroon"
-                     role="alert">
-                    <div ng-message="required">This field must not be empty</div>
-                    <div ng-message="minlength">Must have at least 3 characters</div>
-                    <div ng-message="maxlength">Cannot have more than 10 characters</div>
-                </div>
-
-                <label for="wheelbarrow_binmvolume">Wheelbarrow Bin Volume (cf)</label>
-                <input type="text" class="form-control" id="wheelbarrow_binmvolume" placeholder="5.9"
-                       ng-minlength="3"
-                       ng-maxlength="10"
-                       name="wheelbarrow_binmvolume"
-                 ng-model="toolobject.wheelbarrow_binmvolume">
-
-                <div ng-messages="user.wheelbarrow_binmvolume.$dirty && user.wheelbarrow_binmvolume.$error"
-                     style="color:maroon"
-                     role="alert">
-                    <div ng-message="required">This field must not be empty</div>
-                    <div ng-message="minlength">Must have at least 3 characters</div>
-                    <div ng-message="maxlength">Cannot have more than 10 characters</div>
-                </div>
-
-                <label for="wheelbarrow_wheelcount">Wheelbarrow Wheel Count</label>
-                <input type="text" class="form-control" id="wheelbarrow_wheelcount" placeholder="2"
-                       ng-minlength="1"
-                       ng-maxlength="10"
-                       name="wheelbarrow_wheelcount"
-                 ng-model="toolobject.wheelbarrow_wheelcount" required>
-
-                <div ng-messages="user.wheelbarrow_wheelcount.$dirty && user.wheelbarrow_wheelcount.$error"
-                     style="color:maroon"
-                     role="alert">
-                    <div ng-message="required">This field must not be empty</div>
-                    <div ng-message="minlength">Must have at least 1 characters</div>
-                    <div ng-message="maxlength">Cannot have more than 10 characters</div>
-                </div>
-            </div>
-
-            <div class="form-group col-md-6" ng-if="subtype.name =='Drill'">
-                <div class="form-group col-md-6">
-                    <label for="drill_adjustableclutch">Adjustable Clutch</label>
-              <select type="text" class="form-control" id="drill_adjustableclutch" data-ng-model="toolobject.drill_adjustableclutch" required>
-                            data-ng-model="drill_adjustableclutch" required>
-                        <option value="1">Yes</option>
-                        <option value="0">No</option>
-                    </select>
-                </div>
-
-                <label for="drill_mintorque">Drill Min Torque (ft-lb)</label>
-                <input type="text" class="form-control" id="drill_mintorque" placeholder="80"
-                       ng-minlength="1"
-                       ng-maxlength="10"
-                       name="drill_mintorque"
-                 ng-model="toolobject.drill_mintorque">
-
-                <div ng-messages="user.drill_mintorque.$dirty && user.drill_mintorque.$error" style="color:maroon"
-                     role="alert">
-                    <div ng-message="required">This field must not be empty</div>
-                    <div ng-message="minlength">Must have at least 1 characters</div>
-                    <div ng-message="maxlength">Cannot have more than 10 characters</div>
-                </div>
-
-                <label for="drill_maxtorque">Drill Max Torque (ft-lb)</label>
-                <input type="text" class="form-control" id="drill_maxtorque" placeholder="800"
-                       ng-minlength="1"
-                       ng-maxlength="10"
-                       name="drill_maxtorque"
-                 ng-model="toolobject.drill_maxtorque">
-
-                <div ng-messages="user.drill_maxtorque.$dirty && user.drill_maxtorque.$error" style="color:maroon"
-                     role="alert">
-                    <div ng-message="required">This field must not be empty</div>
-                    <div ng-message="minlength">Must have at least 1 characters</div>
-                    <div ng-message="maxlength">Cannot have more than 10 characters</div>
-                </div>
-            </div>
-
-            <div class="form-group col-md-6" ng-if="subtype.name =='Saw'">
-                <label for="saw_bladesize">Saw Blade Size (inch)</label>
-                <input type="text" class="form-control" id="saw_bladesize" placeholder="7-3/4"
-                       ng-minlength="1"
-                       ng-maxlength="10"
-                       name="saw_bladesize"
-                 ng-model="toolobject.saw_bladesize" required>
-
-                <div ng-messages="user.saw_bladesize.$dirty && user.saw_bladesize.$error" style="color:maroon"
-                     role="alert">
-                    <div ng-message="required">This field must not be empty</div>
-                    <div ng-message="minlength">Must have at least 1 characters</div>
-                    <div ng-message="maxlength">Cannot have more than 10 characters</div>
-                </div>
-            </div>
-
-            <div class="form-group col-md-6" ng-if="subtype.name =='Sander'">
-                <div class="form-group col-md-6">
-                    <label for="sander_dustbag">Sander Dust Bag</label>
-                    <select type="text" class="form-control" id="sander_dustbag" data-ng-model="sander_dustbag"
-                            required>
-                        <option value="1">Yes</option>
-                        <option value="0">No</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="form-group col-md-6" ng-if="subtype.name =='AirCompressor'">
-                <label for="aircompressor_tanksize">Air Compressor Tank Size (gal)</label>
-                <input type="text" class="form-control" id="aircompressor_tanksize" placeholder="30"
-                       ng-minlength="1"
-                       ng-maxlength="10"
-                       name="aircompressor_tanksize"
-                 ng-model="toolobject.aircompressor_tanksize" required>
-
-                <div ng-messages="user.aircompressor_tanksize.$dirty && user.aircompressor_tanksize.$error"
-                     style="color:maroon"
-                     role="alert">
-                    <div ng-message="required">This field must not be empty</div>
-                    <div ng-message="minlength">Must have at least 1 characters</div>
-                    <div ng-message="maxlength">Cannot have more than 10 characters</div>
-                </div>
-
-                <label for="aircompressor_pressurerating">Air Compressor Pressure Rating (psi)</label>
-                <input type="text" class="form-control" id="aircompressor_pressurerating" placeholder="300"
-                       ng-minlength="2"
-                       ng-maxlength="10"
-                       name="aircompressor_pressurerating"
-                 ng-model="toolobject.aircompressor_pressurerating">
-
-                <div ng-messages="user.aircompressor_pressurerating.$dirty && user.aircompressor_pressurerating.$error"
-                     style="color:maroon"
-                     role="alert">
-                    <div ng-message="required">This field must not be empty</div>
-                    <div ng-message="minlength">Must have at least 2 characters</div>
-                    <div ng-message="maxlength">Cannot have more than 10 characters</div>
-                </div>
-            </div>
-
-            <div class="form-group col-md-6" ng-if="subtype.name =='Mixer'">
-                <label for="mixer_motorrating">Mixer Motor Rating (hp)</label>
-                <input type="text" class="form-control" id="mixer_motorrating" placeholder="1/2"
-                       ng-minlength="1"
-                       ng-maxlength="10"
-                       name="mixer_motorrating"
-                 ng-model="toolobject.mixer_motorrating" required>
-
-                <div ng-messages="user.mixer_motorrating.$dirty && user.mixer_motorrating.$error" style="color:maroon"
-                     role="alert">
-                    <div ng-message="required">This field must not be empty</div>
-                    <div ng-message="minlength">Must have at least 1 characters</div>
-                    <div ng-message="maxlength">Cannot have more than 10 characters</div>
-                </div>
-
-                <label for="mixer_drumsize">Mixer Drum Size (cf)</label>
-                <input type="text" class="form-control" id="mixer_drumsize" placeholder="3.5"
-                       ng-minlength="1"
-                       ng-maxlength="10"
-                       name="mixer_drumsize"
-                 ng-model="toolobject.mixer_drumsize" >
-
-                <div ng-messages="user.mixer_drumsize.$dirty && user.mixer_drumsize.$error" style="color:maroon"
-                     role="alert">
-                    <div ng-message="required">This field must not be empty</div>
-                    <div ng-message="minlength">Must have at least 1 characters</div>
-                    <div ng-message="maxlength">Cannot have more than 10 characters</div>
-                </div>
-
-                <div class="form-group col-md-6" ng-if="subtype.name =='Generator'">
-                    <label for="generator_powerrating">Generator Power Rating (Watt)</label>
-                    <input type="text" class="form-control" id="mixer_motorrating" placeholder="30"
-                           ng-minlength="1"
-                           ng-maxlength="10"
-                           name="mixer_motorrating"
-                   ng-model="toolobject.generator_powerrating" required>
-
-                    <div ng-messages="user.generator_powerrating.$dirty && user.generator_powerrating.$error"
-                         style="color:maroon"
-                         role="alert">
-                        <div ng-message="required">This field must not be empty</div>
-                        <div ng-message="minlength">Must have at least 1 characters</div>
-                        <div ng-message="maxlength">Cannot have more than 10 characters</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group col-md-6" ng-if="subtype.name =='Straight'">
-                <div class="form-group col-md-6">
-                    <label for="state">Straight Ladder Rubber Feet</label>
-                <select type="text" class="form-control" id="straight_rubberfeet" data-ng-model="toolobject.straight_rubberfeet" required>
-                            data-ng-model="straight_rubberfeet" required>
-                        <option value="1">Yes</option>
-                        <option value="0">No</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="form-group col-md-6" ng-if="subtype.name =='Step'">
-                <div class="form-group col-md-6">
-                    <label for="state">Step Ladder Pail Shelf</label>
-                <select type="text" class="form-control" id="step_pailshelf" data-ng-model="toolobject.step_pailshelf" required>
-                            required>
-                        <option value="1">Yes</option>
-                        <option value="0">No</option>
-                    </select>
-                </div>
-            </div>
-
-          <div class="form-group col-md-6" ng-if="category=='Power'">
-            <div ng-repeat="accessory in accessories">
-            <label for="state">Power Tool Accessories</label>
-              <select type="text" class="form-control" id="power_accessories" ng-model="accessories.power_accessories"
-              data-ng-options="pa for pa in powertoolassessories()" required>
-              </select>
-
-            <label for="accessory_description">Accessory Description</label>
-              <input type="text" class="form-control" id="accessory_description" placeholder="16V battery"
-                   ng-minlength="3"
-                   ng-maxlength="50"
-                   name="accessory_description"
-                   ng-model="accessories.accessory_description" required>
-          </div>
-          <button ng-click="addAccessory()"> Add Accessory</button>
+      <div class="form-group col-md-6" ng-if="subtype.name =='Straight'">
+        <div class="form-group col-md-6">
+          <label for="state">Straight Ladder Rubber Feet</label>
+          <select type="text" class="form-control" id="straight_rubberfeet" data-ng-model="toolobject.straight_rubberfeet" required>
+            <option value="1">Yes</option>
+            <option value="0">No</option>
+          </select>
         </div>
-    </form>
-</div>
-<div class="form-group">
-    <button type="submit" class="btn btn-primary"
-            ng-click="addtools()">
+      </div>
+
+      <div class="form-group col-md-6" ng-if="subtype.name =='Step'">
+        <div class="form-group col-md-6">
+          <label for="state">Step Ladder Pail Shelf</label>
+          <select type="text" class="form-control" id="step_pailshelf" data-ng-model="toolobject.step_pailshelf" required>
+            <option value="1">Yes</option>
+            <option value="0">No</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group col-md-6" ng-if="category.name == 'Power'">
+        <div ng-repeat="accessory in accessories">
+          <label for="accessory">Accessory</label>
+          <select type="text" class="form-control" id="accessory" ng-model="accessory.desc" data-ng-options="desc for desc in accessory_description()" required></select>
+          <label for="accessory_quantity">Quantity</label>
+          <input type="number" class="form-control" id="accessory_quantity" placeholder="1" name="accessory_quantity" ng-model="accessory.quantity" required>
+        </div>
+        <button ng-click="add_accessory()">Add Accessory</button>
+      </div>
+  </form>
+  </div>
+  <div class="form-group">
+    <button type="submit" class="btn btn-primary" ng-click="addtools()">
         Confirm
     </button>
-</div>
+  </div>
