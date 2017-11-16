@@ -23,14 +23,11 @@ angular.module('myApp.addtool', ['ngRoute'])
         $scope.error = null;
 
       $scope.toolobject = {};
-      $scope.category;
+
       $scope.power_accessories;
       $scope.accessory_description;
-      $scope.subtype;
-      $scope.suboption;
       $scope.purchaseprice;
       $scope.manufacturer;
-      $scope.powersource;
       $scope.material;
       $scope.weight;
       $scope.width;
