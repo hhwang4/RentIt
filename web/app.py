@@ -92,15 +92,42 @@ def add_tool_get():
 def add_tool_post():
     db = mysql.connect()
     cursor = db.cursor()
+<<<<<<< HEAD
     params = request.get_json()
 
     tool = find_tool(params)
     tool.create(cursor)
+||||||| merged common ancestors
 
-    db.commit()
-    cursor.close()
-    db.close()
-    return json.dumps({'success': True}), 200, json_content
+
+    params = request.get_json()
+
+    tool = find_tool(params)
+
+    tool.create(cursor)
+=======
+
+    try:
+        params = request.get_json()
+
+        tool = find_tool(params)
+
+        tool.create(cursor)
+>>>>>>> 37db31041f9fa6dc0958711425620a74dff23ce9
+
+        db.commit()
+        return json.dumps(
+            {'success': True,
+             }), 200, json_content
+    except Exception as e:
+        print(e)
+        return json.dumps(
+            {'success': False,
+             'message': 'Tool Failed to be Added.'
+             }), 500, json_content
+    finally:
+        cursor.close()
+        db.close()
 
 @app.route("/login", methods=['POST'])
 def login():
