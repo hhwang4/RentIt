@@ -497,7 +497,7 @@
   </form>
   </div>
   <div class="form-group">
-    <button type="submit" class="btn btn-primary" ng-click="addtools()">
+    <button type="submit" class="btn btn-primary" ng-disabled="!(addtool.$valid)" class="btn btn-primary" ng-click="addtools()">
         Confirm
     </button>
   </div>
