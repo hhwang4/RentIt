@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from flask import Flask, render_template, request, jsonify
 from flaskext.mysql import MySQL
 import decimal
@@ -30,8 +31,8 @@ app.json_encoder = MyJSONEncoder
 app.config['MYSQL_DATABASE_USER'] = 'root'
 app.config['MYSQL_DATABASE_PASSWORD'] = 'mypassword'
 app.config['MYSQL_DATABASE_DB'] = 'cs6400_sfa17_team033'
-#app.config['MYSQL_DATABASE_HOST'] = 'localhost'
-app.config['MYSQL_DATABASE_HOST'] = 'mysql'  # mysql is the name of the docker container
+app.config['MYSQL_DATABASE_HOST'] = 'localhost'
+#app.config['MYSQL_DATABASE_HOST'] = 'mysql'  # mysql is the name of the docker container
 mysql.init_app(app)
 
 json_content = {'ContentType': 'application/json'}
@@ -489,6 +490,82 @@ def tools():
             'deposit_price': deposit
         })
     return jsonify(result)
+
+@app.route('/categories')
+def get_categories():
+
+    try:
+        db = mysql.connect()
+        cursor = db.cursor()
+        cursor.execute('select id, name from Category;')
+        data = cursor.fetchall()
+        data = [{"id": r[0], "name": r[1]} for r in data]
+        result = {'success': True, 'status_code': 200, 'data': data}
+    except Exception as e:
+        result = {'success': False, 'status_code': 500,
+                  'message': "No Categories could be loaded"}
+    finally:
+        cursor.close()
+        db.close()
+
+    return create_response(result)
+
+@app.route('/powersources/<int:category_id>')
+def get_powersources(category_id):
+
+    try:
+        db = mysql.connect()
+        cursor = db.cursor()
+        cursor.execute('SELECT id, name FROM PowerSourceCategory AS psc JOIN PowerSource AS ps ON ps.id =  psc.PowerSource_Id WHERE psc.Category_Id =  %s ;', category_id)
+        data = cursor.fetchall()
+        data = [{"id": r[0], "name": r[1]} for r in data]
+        result = {'success': True, 'status_code': 200, 'data': data}
+    except Exception as e:
+        result = {'success': False, 'status_code': 500,
+                  'message': "No Power Sources could be loaded"}
+    finally:
+        cursor.close()
+        db.close()
+
+    return create_response(result)
+
+@app.route('/subtypes/<int:category_id>/<int:powersource_id>')
+def get_subtypes(category_id, powersource_id):
+
+    try:
+        db = mysql.connect()
+        cursor = db.cursor()
+        cursor.execute('select id, name FROM  SubTypePowerSource  AS  stps JOIN  SubType  AS  st  ON  st.id  =   stps.SubType_Id WHERE  stps.Category_Id  =   %s AND  stps.PowerSource_Id  = %s ;', [category_id, powersource_id])
+        data = cursor.fetchall()
+        data = [{"id": r[0], "name": r[1]} for r in data]
+        result = {'success': True, 'status_code': 200, 'data': data}
+    except Exception as e:
+        result = {'success': False, 'status_code': 500,
+                  'message': "No Subtypes could be loaded"}
+    finally:
+        cursor.close()
+        db.close()
+
+    return create_response(result)
+
+@app.route('/suboptions/<int:category_id>/<int:powersource_id>/<int:subtype_id>')
+def get_suboptions(category_id, powersource_id, subtype_id):
+
+    try:
+        db = mysql.connect()
+        cursor = db.cursor()
+        cursor.execute('SELECT so.id, so.name FROM SubOption AS so JOIN SubType AS st ON st.id =  so.SubType_Id JOIN SubTypePowerSource AS stps ON stps.SubType_Id =  st.id WHERE PowerSource_Id =  %s AND so.SubType_Id = %s AND stps.Category_Id =  %s ;', [powersource_id,subtype_id, category_id])
+        data = cursor.fetchall()
+        data = [{"id": r[0], "name": r[1]} for r in data]
+        result = {'success': True, 'status_code': 200, 'data': data}
+    except Exception as e:
+        result = {'success': False, 'status_code': 500,
+                  'message': "No Suboptions could be loaded"}
+    finally:
+        cursor.close()
+        db.close()
+
+    return create_response(result)
 
 
 if __name__ == "__main__":

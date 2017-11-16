@@ -11,63 +11,18 @@ angular.module('myApp.addtool', ['ngRoute'])
 
     .controller('AddToolCtrl', ['$scope', '$http', 'localStorageService', '$uibModal',
     function($scope, $http, localStorageService, $uibModal) {
-      $scope.subtypes = function(category) {
-        if ($scope.category == 'handTool') {
-          return ['Screwdriver', 'Socket', 'Ratchet', 'Wrench', 'Pliers', 'Gun', 'Hammer']
-        } else if ($scope.category == 'gardenTool') {
-          return ['Digger','Pruner','Rakes', 'Wheelbarrows', 'Striking']
-        } else if ($scope.category == 'ladderTool') {
-          return ['Straight', 'Step']
-        } else {
-          return ['Drill', 'Saw', 'Sander','AirCompressor', 'Mixer', 'Generator']
-        }
-      };
+        //var vm = this;
+        $scope.category = null;
+        $scope.powersource = null;
+        $scope.categories = [];
+        $scope.powersources = [];
+        $scope.subtype = null;
+        $scope.suboption = null;
+        $scope.subtypes = [];
+        $scope.suboptions = [];
+        $scope.error = null;
 
-      $scope.suboptions = function () {
-        if ($scope.subtype == 'Screwdriver') {
-          return ['philips(cross)', 'hex', 'torx', 'slotted(flat)']
-        } else if ($scope.subtype == 'Socket') {
-          return ['deep','standard']
-        }else if ($scope.subtype == 'Ratchet') {
-          return ['adjustable','fixed']
-        } else if ($scope.subtype == 'Wrench') {
-          return ['crescent','torque', 'pipe']
-        }else if ($scope.subtype == 'Pliers') {
-          return ['needle nose','cutting', 'crimper']
-        }else if ($scope.subtype == 'Socket') {
-          return ['nail','staple']
-        }else if ($scope.subtype == 'Gun') {
-          return ['nail','staple']
-        }else if ($scope.subtype == 'Hammer') {
-          return ['claw','sledge', 'framing']
-        }else if ($scope.subtype == 'Digger') {
-          return ['pointed shovel','flat shovel', 'scoop shovel', 'edger']
-        }else if ($scope.subtype == 'Pruner') {
-          return ['sheer','loppers', 'hedge']
-        }else if ($scope.subtype == 'Rakes') {
-          return ['leaf','landscaping', 'rock']
-        }else if ($scope.subtype == 'Wheelbarrows') {
-          return ['1-wheel','2-wheel']
-        }else if ($scope.subtype == 'Striking') {
-          return ['bar pry','rubber mallet', 'tamper', 'pick axe', 'single bit axe']
-        }else if ($scope.subtype == 'Straight') {
-          return ['rigid','telescoping']
-        }else if ($scope.subtype == 'Step') {
-          return ['folding','multi-position']
-        }else if ($scope.subtype == 'Drill') {
-          return ['driver','hammer']
-        }else if ($scope.subtype == 'Saw') {
-          return ['circular','reciprocating', 'jig']
-        }else if ($scope.subtype == 'Sander') {
-          return ['finish','sheet', 'belt', 'random orbital']
-        }else if ($scope.subtype == 'AirCompressor') {
-          return ['reciprocating']
-        }else if ($scope.subtype == 'Mixer') {
-          return ['concrete']
-        }else {
-          return ['electric']
-        }
-      };
+
 
       $scope.powertoolassessories = function () {
         return ['Drill Bits', 'Soft Case', 'Hard Case', 'D/C Batteries', 'D/C Battery Charge', 'Safety Hat',
@@ -75,22 +30,69 @@ angular.module('myApp.addtool', ['ngRoute'])
       };
 
 
-      $scope.powersources = function () {
-          if ($scope.category == 'handTool' || $scope.category == 'gardenTool' || $scope.category == 'ladderTool') {
-            return ['Manual'];
-          }else if (($scope.category == 'powerTool' && $scope.subtype == 'Drill')
-                    || ($scope.category == 'powerTool' && $scope.subtype == 'Saw')
-                    || ($scope.category == 'powerTool' && $scope.subtype == 'Sander')) {
-            return ['A/C', 'D/C']
-          } else if (($scope.category == 'powerTool' && $scope.subtype == 'AirCompressor')
-                    || ($scope.category == 'powerTool' && $scope.subtype == 'Mixer')) {
-            return ['A/C', 'Gas']
-          } else if ($scope.category == 'powerTool' && $scope.subtype == 'Generator') {
-            return ['Gas']
-          }
+      $scope.getCategories = function() {
+            $http({
+                    method: 'GET',
+                    url: '/categories'
+                }).then(function successCallback(response) {
+                    console.log(response.data);
+                    $scope.categories = response.data.data.data;
+                    //$scope.category = $scope.categories[0];
+                }, function errorCallback(response) {
+                    $scope.error = response.message;
+                });
       };
 
+      $scope.getPowerSources = function() {
+            $scope.powersource = null;
+            $scope.subtype = null;
+            $scope.suboption = null;
+            $http({
+                    method: 'GET',
+                    url: '/powersources/' + $scope.category.id
+                }).then(function successCallback(response) {
+                    console.log(response.data);
+                    $scope.powersources = response.data.data.data;
+                    //$scope.powersource = $scope.powersources[0];
+                }, function errorCallback(response) {
+                    $scope.error = response.message;
+                });
+      };
 
+      $scope.getSubtypes = function() {
+        $scope.subtype = null;
+        $scope.suboption = null;
+        if($scope.powersource && $scope.category){
+            $http({
+                        method: 'GET',
+                        url: '/subtypes/' + $scope.category.id + '/' + $scope.powersource.id
+                    }).then(function successCallback(response) {
+                        console.log(response.data);
+                        $scope.subtypes = response.data.data.data;
+                        //$scope.subtype = $scope.subtypes[0];
+                    }, function errorCallback(response) {
+                        $scope.error = response.message;
+                    });
+        }
+
+      };
+
+      $scope.getSuboptions = function() {
+       if($scope.powersource && $scope.category && $scope.subtype) {
+            $http({
+                    method: 'GET',
+                    url: '/suboptions/' + $scope.category.id + '/' + $scope.powersource.id + '/' + $scope.subtype.id
+                }).then(function successCallback(response) {
+                    console.log(response.data);
+                    $scope.suboptions = response.data.data.data;
+                    //$scope.suboption = $scope.suboptions[0];
+                }, function errorCallback(response) {
+                    $scope.error = response.message;
+                });
+                }
+      };
+
+      $scope.getCategories();
 
       $scope.addtools = function() {
         $scope.error = null;
@@ -146,6 +148,7 @@ angular.module('myApp.addtool', ['ngRoute'])
         };
 
         console.log("Data", data);
+
         $http.post('/addtool', data, {headers: {'Content-Type': 'application/json'}})
             .success(function (response) {
               $location.path('/addtool');
