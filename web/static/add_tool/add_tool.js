@@ -24,51 +24,51 @@ angular.module('myApp.addtool', ['ngRoute'])
 
       $scope.toolobject = {};
 
-      $scope.power_accessories;
-      $scope.accessory_description;
-      $scope.purchaseprice;
-      $scope.manufacturer;
-      $scope.material;
-      $scope.weight;
-      $scope.width;
-      $scope.length;
-      $scope.toolobject.garden_handlematerial;
-      $scope.toolobject.power_amprating;
-      $scope.toolobject.power_minrpm;
-      $scope.toolobject.power_maxrpm;
-      $scope.toolobject.ladder_stepcount;
-      $scope.toolobject.ladder_weightcapacity;
-      $scope.toolobject.screwdriver_drivesize;
-      $scope.toolobject.socket_drivesize;
-      $scope.toolobject.socket_saesize;
-      $scope.toolobject.rachet_drivesize;
-      $scope.toolobject.wrench_drivesize;
-      $scope.toolobject.pliers_adjustable;
-      $scope.toolobject.handgun_gaugerating;
-      $scope.toolobject.handgun_capacity;
-      $scope.toolobject.hammer_antivibration;
-      $scope.toolobject.pruner_bladematerial;
-      $scope.toolobject.pruner_bladelength;
-      $scope.toolobject.striking_headweight;
-      $scope.toolobject.digger_bladewidth;
-      $scope.toolobject.digger_bladelength;
-      $scope.toolobject.rakes_tinecount;
-      $scope.toolobject.wheelbarrow_binmaterial;
-      $scope.toolobject.wheelbarrow_wheelcount;
-      $scope.toolobject.wheelbarrow_binmvolume;
-      $scope.toolobject.drill_adjustableclutch;
-      $scope.toolobject.drill_mintorque;
-      $scope.toolobject.drill_maxtorque;
-      $scope.toolobject.saw_bladesize;
-      $scope.toolobject.sander_dustbag;
-      $scope.toolobject.aircompressor_tanksize;
-      $scope.toolobject.aircompressor_pressurerating;
-      $scope.toolobject.mixer_motorrating;
-      $scope.toolobject.mixer_drumsize;
-      $scope.toolobject.generator_powerrating;
-      $scope.toolobject.straight_rubberfeet;
-      $scope.toolobject.step_pailshelf;
-      $scope.toolobject.get_voltrating;
+      $scope.power_accessories = null;
+      $scope.accessory_description= null;
+      $scope.purchaseprice= null;
+      $scope.manufacturer= null;
+      $scope.material= null;
+      $scope.weight= null;
+      $scope.width= null;
+      $scope.length= null;
+      $scope.toolobject.garden_handlematerial= null;
+      $scope.toolobject.power_amprating= null;
+      $scope.toolobject.power_minrpm= null;
+      $scope.toolobject.power_maxrpm= null;
+      $scope.toolobject.ladder_stepcount= null;
+      $scope.toolobject.ladder_weightcapacity= null;
+      $scope.toolobject.screwdriver_drivesize= null;
+      $scope.toolobject.socket_drivesize= null;
+      $scope.toolobject.socket_saesize= null;
+      $scope.toolobject.rachet_drivesize= null;
+      $scope.toolobject.wrench_drivesize= null;
+      $scope.toolobject.pliers_adjustable= null;
+      $scope.toolobject.handgun_gaugerating= null;
+      $scope.toolobject.handgun_capacity= null;
+      $scope.toolobject.hammer_antivibration= null;
+      $scope.toolobject.pruner_bladematerial= null;
+      $scope.toolobject.pruner_bladelength= null;
+      $scope.toolobject.striking_headweight= null;
+      $scope.toolobject.digger_bladewidth= null;
+      $scope.toolobject.digger_bladelength= null;
+      $scope.toolobject.rakes_tinecount= null;
+      $scope.toolobject.wheelbarrow_binmaterial= null;
+      $scope.toolobject.wheelbarrow_wheelcount= null;
+      $scope.toolobject.wheelbarrow_binmvolume= null;
+      $scope.toolobject.drill_adjustableclutch= null;
+      $scope.toolobject.drill_mintorque= null;
+      $scope.toolobject.drill_maxtorque= null;
+      $scope.toolobject.saw_bladesize= null;
+      $scope.toolobject.sander_dustbag= null;
+      $scope.toolobject.aircompressor_tanksize= null;
+      $scope.toolobject.aircompressor_pressurerating= null;
+      $scope.toolobject.mixer_motorrating= null;
+      $scope.toolobject.mixer_drumsize= null;
+      $scope.toolobject.generator_powerrating= null;
+      $scope.toolobject.straight_rubberfeet= null;
+      $scope.toolobject.step_pailshelf= null;
+      $scope.toolobject.get_voltrating= null;
 
       $scope.accessories = [
         {
@@ -163,6 +163,10 @@ angular.module('myApp.addtool', ['ngRoute'])
 
       $scope.getCategories();
 
+      $scope.hasError = function () {
+                return $scope.error != null;
+            }
+
       $scope.addtools = function() {
         $scope.error = null;
         var data = {
@@ -226,9 +230,11 @@ angular.module('myApp.addtool', ['ngRoute'])
         $http.post('/addtool', data, {headers: {'Content-Type': 'application/json'}})
             .success(function (response) {
               //$location.path('/addtool');
+              alert('TODO redirect to tool details page??? You have successfully added a tool!');
             })
             .error(function (err, status) {
                 console.log('Error', err, status);
+                $scope.error = err.message;
             });
         };
 

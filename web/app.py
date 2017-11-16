@@ -90,21 +90,29 @@ def add_tool_get():
 
 @app.route("/addtool", methods=['POST'])
 def add_tool_post():
-
     db = mysql.connect()
     cursor = db.cursor()
 
+    try:
+        params = request.get_json()
 
-    params = request.get_json()
+        tool = find_tool(params)
 
-    tool = find_tool(params)
+        tool.create(cursor)
 
-    tool.create(cursor)
-
-    db.commit()
-    cursor.close()
-    db.close()
-    return json.dumps({'success': True}), 200, json_content
+        db.commit()
+        return json.dumps(
+            {'success': True,
+             }), 200, json_content
+    except Exception as e:
+        print(e)
+        return json.dumps(
+            {'success': False,
+             'message': 'Tool Failed to be Added.'
+             }), 500, json_content
+    finally:
+        cursor.close()
+        db.close()
 
 @app.route("/login", methods=['POST'])
 def login():

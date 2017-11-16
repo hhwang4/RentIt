@@ -301,7 +301,7 @@ class Ladder(Tool):
 
     def create(self, cursor):
         super(Ladder, self).create(cursor)
-        cursor.execute("INSERT INTO Ladder VALUES (%s, %s, %s)",
+        cursor.execute("INSERT INTO LadderTool VALUES (%s, %s, %s)",
                        [self.tool_id, self.step_count, self.weight_capacity])
         return self
 
