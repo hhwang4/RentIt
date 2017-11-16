@@ -33,7 +33,7 @@ angular.module('myApp.dashboard', ['ngRoute'])
             vm.links = [
                 {name: 'View Profile', url: '/#!/profile/'+vm.username},
                 {name: 'Make reservation', url: '/#!/make_reservation'},
-                {name: 'Check tool Availability', url: '/#!/toolavil'},
+                {name: 'Check tool Availability', url: '/#!/tool_availability'},
                 {name: 'Logout', url: '/#!/logout'},
             ]
 

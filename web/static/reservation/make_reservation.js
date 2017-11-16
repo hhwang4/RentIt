@@ -18,16 +18,17 @@ angular.module('myApp.makeReservation', ['ngRoute', 'ngAnimate'])
     });
   }])
   .controller('MakeReservationCtrl', ['$scope', '$http', 'localStorageService', '$uibModal', function($scope, $http, $localStorage, $uibModal) {
+    // User
     var user_info = $localStorage.get('authorizationData') || {};
-
-    $scope.tools = [];
-    $scope.toolsAdded = [];
-    $scope.hasSearched = true;
-    $scope.showModal = false;
-    $scope.end_date;
-    $scope.start_date;
     $scope.customer_full_name = user_info.full_name; // TODO: Add user full_name to cache
     $scope.customer_username = user_info.username;
+
+    // Reservation tools
+    $scope.tools = [];
+    $scope.toolsAdded = [];
+    $scope.hasSearched = false;
+
+    // Calendar popup
     $scope.dateOptions = {
       formatYear: 'yy',
       maxDate: new Date(2020, 5, 22),
@@ -47,12 +48,28 @@ angular.module('myApp.makeReservation', ['ngRoute', 'ngAnimate'])
       opened: false
     };
 
-    $http({
-      method: 'GET',
-      url: '/tools'
-    })
-      .then(function(response) {
-          $scope.tools = response.data.map(function(tool) {
+    // Search
+    $scope.end_date = null;
+    $scope.start_date = null;
+    $scope.type = null;
+    $scope.keyword = null;
+    $scope.power_source = null;
+    $scope.sub_type = null;
+    $scope.tool_search = function() {
+      $scope.hasSearched = true;
+      var params = {
+        start_date: moment($scope.start_date).format('YYYY-MM-DD'),
+        end_date: moment($scope.end_date).format('YYYY-MM-DD'),
+        keyword: $scope.keyword,
+        search_type: 'reservation',
+        type: $scope.type,
+        power_source: $scope.power_source,
+        sub_type: $scope.sub_type
+      };
+      $http({ method: 'GET', url: '/tools', params: params })
+        .success(function(response) {
+          var data = (response.data || {}).tools || [];
+          $scope.tools = data.map(function(tool) {
             return ({
               id: tool.id,
               description: tool.description,
@@ -61,25 +78,12 @@ angular.module('myApp.makeReservation', ['ngRoute', 'ngAnimate'])
               added: false
             });
           });
-        },
-        function(response) {
+        })
+        .error(function(response) {
           // If tools don't load, load default list (temporary)
-          $scope.tools =
-            [{
-              id: 1,
-              description: 'Description',
-              rental_price: 45.00,
-              deposit_price: 34.00,
-              added: false
-            },
-              {
-                id: 2,
-                description: 'Description2',
-                rental_price: 35.00,
-                deposit_price: 24.00,
-                added: false
-              }];
+          // TODO: Handle failed search
         });
+    };
 
     $scope.addTool = function(index) {
       var tool = $scope.tools[index];
