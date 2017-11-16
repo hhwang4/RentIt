@@ -71,7 +71,6 @@
                 <select type="text" class="form-control" id="power_accessories" ng-model="poweraccessories"
                         data-ng-options="pa for pa in powertoolassessories()" required>
                 </select>
-
                 <label for="accessory_description">Accessory Description</label>
                 <input type="text" class="form-control" id="accessory_description" placeholder="16V battery"
                        ng-minlength="3"
@@ -80,11 +79,10 @@
                        ng-model="accessory_description" required>
             </div>
 
-
             <div class="form-group col-md-6">
                 <label for="purchaseprice">Purchase Price ($)</label>
                 <input type="text" class="form-control" id="purchsePrice" placeholder="Purchase Price"
-                       ng-minlength="3"
+             ng-minlength="1"
                        ng-maxlength="50"
                        name="purchasePrice"
                        ng-model="purchaseprice" required>
@@ -112,7 +110,7 @@
             <div class="form-group col-md-4">
                 <label for="weight">Weight (lbs)</label>
                 <input type="text" class="form-control" id="weight" placeholder="Weight"
-                       ng-minlength="3"
+             ng-minlength="1"
                        ng-maxlength="10"
                        name="weight"
                        ng-model="weight" required>
@@ -121,15 +119,15 @@
             <div class="form-group col-md-4">
                 <label for="width">Width</label>
                 <input type="text" class="form-control" id="purchsePrice" placeholder="Width"
-                       ng-minlength="3"
+             ng-minlength="1"
                        ng-maxlength="10"
-                       name="manufacturer"
+             name="width"
                        ng-model="width" required>
             </div>
 
 
             <div class="form-group col-md-4">
-                <label for="state">Width Fraction</label>
+    <label for="widthfraction">Width Fraction</label>
                 <select type="text" class="form-control" id="subtypes" data-ng-model="widthfraction" required>
                     <option value="0">0</option>
                     <option value="1/8">1/8</option>
@@ -143,7 +141,7 @@
 
 
             <div class="form-group col-md-4">
-                <label for="state">Unit</label>
+    <label for="widthunit">Unit</label>
                 <select type="text" class="form-control" id="widthunit" data-ng-model="widthunit" required>
                     <option value="in">Inches</option>
                     <option value="ft">Feet</option>
@@ -154,7 +152,7 @@
             <div class="form-group col-md-4">
                 <label for="length">Length</label>
                 <input type="text" class="form-control" id="length" placeholder="Length"
-                       ng-minlength="3"
+             ng-minlength="1"
                        ng-maxlength="10"
                        name="length"
                        ng-model="length" required>
@@ -162,7 +160,7 @@
 
 
             <div class="form-group col-md-4">
-                <label for="state">Length Fraction</label>
+      <label for="lengthfraction">Length Fraction</label>
                 <select type="text" class="form-control" id="lengthfraction" data-ng-model="lengthfraction" required>
                     <option value="0">0</option>
                     <option value="1/8">1/8</option>
@@ -175,7 +173,7 @@
             </div>
 
             <div class="form-group col-md-4">
-                <label for="state">Unit</label>
+      <label for="lengthunit">Unit</label>
                 <select type="text" class="form-control" id="lengthunit" data-ng-model="lengthunit" required>
                     <option value="in">Inches</option>
                     <option value="ft">Feet</option>
@@ -187,8 +185,8 @@
                 <input type="text" class="form-control" id="garden_handlematerial" placeholder="wood"
                        ng-minlength="3"
                        ng-maxlength="10"
-                       name="garden_handlematerial"
-                       ng-model="$scope.garden_handlematerial" required>
+             name="toolobject.garden_handlematerial"
+             ng-model="toolobject.garden_handlematerial" required>
 
                 <div ng-messages="user.garden_handlematerial.$dirty && user.garden_handlematerial.$error"
                      style="color:maroon"
@@ -199,14 +197,10 @@
                 </div>
             </div>
 
-            <div class="form-group col-md-6" ng-if="category.name =='Power'">
-                <label for="power_voltrating">Power Tool Volt Rating (V)</label>
-                <select type="text" class="form-control" id="power_voltrating" data-ng-model="power_voltrating"
-                        required>
-                    <option value="110">110</option>
-                    <option value="120">120</option>
-                    <option value="220">220</option>
-                    <option value="240">240</option>
+    <div class="form-group col-md-6" ng-if = "category =='Power'">
+      <label for="powertool">Power Tool Volt Rating (V)</label>
+        <select type="text" class="form-control" id="power_voltrating" data-ng-model="toolobject.power_voltrating"
+        data-ng-options="vr for vr in get_voltrating()" required>
                 </select>
 
                 <label for="power_amprating">Power Tool Amp Rating (A)</label>
@@ -214,7 +208,7 @@
                        ng-minlength="1"
                        ng-maxlength="10"
                        name="power_amprating"
-                       ng-model="$scope.power_amprating" required>
+             ng-model="toolobject.power_amprating" required>
 
                 <div ng-messages="user.power_amprating.$dirty && user.power_amprating.$error" style="color:maroon"
                      role="alert">
@@ -228,7 +222,7 @@
                        ng-minlength="2"
                        ng-maxlength="10"
                        name="power_minrpm"
-                       ng-model="$scope.power_minrpm" required>
+             ng-model="toolobject.power_minrpm" required>
 
                 <div ng-messages="user.power_minrpm.$dirty && user.power_minrpm.$error" style="color:maroon"
                      role="alert">
@@ -242,7 +236,7 @@
                        ng-minlength="2"
                        ng-maxlength="10"
                        name="power_maxrpm"
-                       ng-model="$scope.power_maxrpm">
+               ng-model="toolobject.power_maxrpm">
 
                 <div ng-messages="user.power_maxrpm.$dirty && user.power_maxrpm.$error" style="color:maroon"
                      role="alert">
@@ -254,11 +248,11 @@
 
             <div class="form-group col-md-6" ng-if="category.name =='Ladder'">
                 <label for="ladder_stepcount">Ladder Step Count (step)</label>
-                <input type="text" class="form-control" id="ladder_stepcount" placeholder="20"
+        <input type="number" class="form-control" id="ladder_stepcount" placeholder="20"
                        ng-minlength="1"
                        ng-maxlength="10"
                        name="ladder_stepcount"
-                       ng-model="$scope.ladder_stepcount" required>
+             ng-model="toolobject.ladder_stepcount" required>
 
                 <div ng-messages="user.ladder_stepcount.$dirty && user.ladder_stepcount.$error" style="color:maroon"
                      role="alert">
@@ -272,7 +266,7 @@
                        ng-minlength="1"
                        ng-maxlength="10"
                        name="ladder_weightcapacity"
-                       ng-model="$scope.ladder_weightcapacity" required>
+             ng-model="toolobject.ladder_weightcapacity" required>
 
                 <div ng-messages="user.ladder_weightcapacity.$dirty && user.ladder_weightcapacity.$error"
                      style="color:maroon"
@@ -286,17 +280,17 @@
 
             <div class="form-group col-md-6" ng-if="subtype.name =='Screwdriver'">
                 <label for="screwdriver_drivesize">Screw Driver Drive Size (#)</label>
-                <input type="text" class="form-control" id="screwdriver_drivesize" placeholder="2"
-                       ng-minlength="3"
+        <input type="number" class="form-control" id="screwdriver_drivesize" placeholder="2"
+             ng-minlength="1"
                        ng-maxlength="10"
                        name="screwdriver_drivesize"
-                       ng-model="$scope.screwdriver_drivesize" required>
+             ng-model="toolobject.screwdriver_drivesize" required>
 
                 <div ng-messages="user.screwdriver_drivesize.$dirty && user.screwdriver_drivesize.$error"
                      style="color:maroon"
                      role="alert">
                     <div ng-message="required">This field must not be empty</div>
-                    <div ng-message="minlength">Must have at least 3 characters</div>
+        <div ng-message="minlength">Must have at least 1 characters</div>
                     <div ng-message="maxlength">Cannot have more than 10 characters</div>
                 </div>
             </div>
@@ -304,16 +298,16 @@
             <div class="form-group col-md-6" ng-if="subtype.name =='Socket'">
                 <label for="socket_drivesize">Socket Drive Size (inch)</label>
                 <input type="text" class="form-control" id="socket_drivesize" placeholder="1/2"
-                       ng-minlength="3"
+             ng-minlength="1"
                        ng-maxlength="10"
                        name="socket_drivesize"
-                       ng-model="$scope.socket_drivesize" required>
+             ng-model="toolobject.socket_drivesize" required>
 
                 <div ng-messages="user.screwdriver_drivesize.$dirty && user.screwdriver_drivesize.$error"
                      style="color:maroon"
                      role="alert">
                     <div ng-message="required">This field must not be empty</div>
-                    <div ng-message="minlength">Must have at least 3 characters</div>
+        <div ng-message="minlength">Must have at least 1 characters</div>
                     <div ng-message="maxlength">Cannot have more than 10 characters</div>
                 </div>
 
@@ -322,7 +316,7 @@
                        ng-minlength="3"
                        ng-maxlength="10"
                        name="socket_saesize"
-                       ng-model="$scope.socket_saesize" required>
+             ng-model="toolobject.socket_saesize" required>
 
                 <div ng-messages="user.socket_saesize.$dirty && user.socket_saesize.$error" style="color:maroon"
                      role="alert">
@@ -338,7 +332,7 @@
                        ng-minlength="3"
                        ng-maxlength="10"
                        name="rachet_drivesize"
-                       ng-model="$scope.rachet_drivesize" required>
+             ng-model="toolobject.rachet_drivesize" required>
 
                 <div ng-messages="user.rachet_drivesize.$dirty && user.rachet_drivesize.$error" style="color:maroon"
                      role="alert">
@@ -354,7 +348,7 @@
                        ng-minlength="3"
                        ng-maxlength="10"
                        name="wrench_drivesize"
-                       ng-model="$scope.wrench_drivesize" required>
+             ng-model="toolobject.wrench_drivesize" required>
 
                 <div ng-messages="user.wrench_drivesize.$dirty && user.wrench_drivesize.$error" style="color:maroon"
                      role="alert">
@@ -379,7 +373,7 @@
                        ng-minlength="2"
                        ng-maxlength="10"
                        name="handgun_gaugerating"
-                       ng-model="$scope.handgun_gaugerating" required>
+             ng-model="toolobject.handgun_gaugerating" required>
 
                 <div ng-messages="user.handgun_gaugerating.$dirty && user.handgun_gaugerating.$error"
                      style="color:maroon"
@@ -394,7 +388,7 @@
                        ng-minlength="2"
                        ng-maxlength="10"
                        name="handgun_capacity"
-                       ng-model="$scope.handgun_capacity" required>
+             ng-model="toolobject.handgun_capacity" required>
 
                 <div ng-messages="user.handgun_capacity.$dirty && user.handgun_capacity.$error" style="color:maroon"
                      role="alert">
@@ -419,7 +413,7 @@
                        ng-minlength="3"
                        ng-maxlength="50"
                        name="pruner_bladematerial"
-                       ng-model="$scope.pruner_bladematerial" required>
+               ng-model="toolobject.pruner_bladematerial" required>
 
                 <div ng-messages="user.pruner_bladematerial.$dirty && user.pruner_bladematerial.$error"
                      style="color:maroon"
@@ -434,7 +428,7 @@
                        ng-minlength="1"
                        ng-maxlength="10"
                        name="pruner_bladelength"
-                       ng-model="$scope.pruner_bladelength" required>
+                 ng-model="toolobject.pruner_bladelength" required>
 
                 <div ng-messages="user.pruner_bladelength.$dirty && user.pruner_bladelength.$error" style="color:maroon"
                      role="alert">
@@ -450,7 +444,7 @@
                        ng-minlength="1"
                        ng-maxlength="10"
                        name="striking_headweight"
-                       ng-model="$scope.striking_headweight" required>
+                 ng-model="toolobject.striking_headweight" required>
 
                 <div ng-messages="user.striking_headweight.$dirty && user.striking_headweight.$error"
                      style="color:maroon"
@@ -467,7 +461,7 @@
                        ng-minlength="1"
                        ng-maxlength="10"
                        name="digger_bladewidth"
-                       ng-model="$scope.digger_bladewidth" required>
+                 ng-model="toolobject.digger_bladewidth" required>
 
                 <div ng-messages="user.digger_bladewidth.$dirty && user.digger_bladewidth.$error" style="color:maroon"
                      role="alert">
@@ -481,7 +475,7 @@
                        ng-minlength="1"
                        ng-maxlength="10"
                        name="digger_bladelength"
-                       ng-model="$scope.digger_bladelength" required>
+                 ng-model="toolobject.digger_bladelength" required>
 
                 <div ng-messages="user.digger_bladelength.$dirty && user.digger_bladelength.$error" style="color:maroon"
                      role="alert">
@@ -497,7 +491,7 @@
                        ng-minlength="1"
                        ng-maxlength="10"
                        name="rakes_tinecount"
-                       ng-model="$scope.rakes_tinecount" required>
+                 ng-model="toolobject.rakes_tinecount" required>
 
                 <div ng-messages="user.rakes_tinecount.$dirty && user.rakes_tinecount.$error" style="color:maroon"
                      role="alert">
@@ -513,7 +507,7 @@
                        ng-minlength="3"
                        ng-maxlength="10"
                        name="wheelbarrow_binmaterial"
-                       ng-model="$scope.wheelbarrow_binmaterial" required>
+                 ng-model="toolobject.wheelbarrow_binmaterial" required>
 
                 <div ng-messages="user.wheelbarrow_binmaterial.$dirty && user.wheelbarrow_binmaterial.$error"
                      style="color:maroon"
@@ -528,7 +522,7 @@
                        ng-minlength="3"
                        ng-maxlength="10"
                        name="wheelbarrow_binmvolume"
-                       ng-model="$scope.wheelbarrow_binmvolume">
+                 ng-model="toolobject.wheelbarrow_binmvolume">
 
                 <div ng-messages="user.wheelbarrow_binmvolume.$dirty && user.wheelbarrow_binmvolume.$error"
                      style="color:maroon"
@@ -543,7 +537,7 @@
                        ng-minlength="1"
                        ng-maxlength="10"
                        name="wheelbarrow_wheelcount"
-                       ng-model="$scope.wheelbarrow_wheelcount" required>
+                 ng-model="toolobject.wheelbarrow_wheelcount" required>
 
                 <div ng-messages="user.wheelbarrow_wheelcount.$dirty && user.wheelbarrow_wheelcount.$error"
                      style="color:maroon"
@@ -557,7 +551,7 @@
             <div class="form-group col-md-6" ng-if="subtype.name =='Drill'">
                 <div class="form-group col-md-6">
                     <label for="drill_adjustableclutch">Adjustable Clutch</label>
-                    <select type="text" class="form-control" id="drill_adjustableclutch"
+              <select type="text" class="form-control" id="drill_adjustableclutch" data-ng-model="toolobject.drill_adjustableclutch" required>
                             data-ng-model="drill_adjustableclutch" required>
                         <option value="1">Yes</option>
                         <option value="0">No</option>
@@ -569,7 +563,7 @@
                        ng-minlength="1"
                        ng-maxlength="10"
                        name="drill_mintorque"
-                       ng-model="$scope.drill_mintorque">
+                 ng-model="toolobject.drill_mintorque">
 
                 <div ng-messages="user.drill_mintorque.$dirty && user.drill_mintorque.$error" style="color:maroon"
                      role="alert">
@@ -583,7 +577,7 @@
                        ng-minlength="1"
                        ng-maxlength="10"
                        name="drill_maxtorque"
-                       ng-model="$scope.drill_maxtorque">
+                 ng-model="toolobject.drill_maxtorque">
 
                 <div ng-messages="user.drill_maxtorque.$dirty && user.drill_maxtorque.$error" style="color:maroon"
                      role="alert">
@@ -599,7 +593,7 @@
                        ng-minlength="1"
                        ng-maxlength="10"
                        name="saw_bladesize"
-                       ng-model="$scope.saw_bladesize" required>
+                 ng-model="toolobject.saw_bladesize" required>
 
                 <div ng-messages="user.saw_bladesize.$dirty && user.saw_bladesize.$error" style="color:maroon"
                      role="alert">
@@ -626,7 +620,7 @@
                        ng-minlength="1"
                        ng-maxlength="10"
                        name="aircompressor_tanksize"
-                       ng-model="$scope.aircompressor_tanksize" required>
+                 ng-model="toolobject.aircompressor_tanksize" required>
 
                 <div ng-messages="user.aircompressor_tanksize.$dirty && user.aircompressor_tanksize.$error"
                      style="color:maroon"
@@ -641,7 +635,7 @@
                        ng-minlength="2"
                        ng-maxlength="10"
                        name="aircompressor_pressurerating"
-                       ng-model="$scope.aircompressor_pressurerating">
+                 ng-model="toolobject.aircompressor_pressurerating">
 
                 <div ng-messages="user.aircompressor_pressurerating.$dirty && user.aircompressor_pressurerating.$error"
                      style="color:maroon"
@@ -658,7 +652,7 @@
                        ng-minlength="1"
                        ng-maxlength="10"
                        name="mixer_motorrating"
-                       ng-model="$scope.mixer_motorrating" required>
+                 ng-model="toolobject.mixer_motorrating" required>
 
                 <div ng-messages="user.mixer_motorrating.$dirty && user.mixer_motorrating.$error" style="color:maroon"
                      role="alert">
@@ -672,7 +666,7 @@
                        ng-minlength="1"
                        ng-maxlength="10"
                        name="mixer_drumsize"
-                       ng-model="$scope.mixer_drumsize">
+                 ng-model="toolobject.mixer_drumsize" >
 
                 <div ng-messages="user.mixer_drumsize.$dirty && user.mixer_drumsize.$error" style="color:maroon"
                      role="alert">
@@ -687,7 +681,7 @@
                            ng-minlength="1"
                            ng-maxlength="10"
                            name="mixer_motorrating"
-                           ng-model="$scope.generator_powerrating" required>
+                   ng-model="toolobject.generator_powerrating" required>
 
                     <div ng-messages="user.generator_powerrating.$dirty && user.generator_powerrating.$error"
                          style="color:maroon"
@@ -702,7 +696,7 @@
             <div class="form-group col-md-6" ng-if="subtype.name =='Straight'">
                 <div class="form-group col-md-6">
                     <label for="state">Straight Ladder Rubber Feet</label>
-                    <select type="text" class="form-control" id="straight_rubberfeet"
+                <select type="text" class="form-control" id="straight_rubberfeet" data-ng-model="toolobject.straight_rubberfeet" required>
                             data-ng-model="straight_rubberfeet" required>
                         <option value="1">Yes</option>
                         <option value="0">No</option>
@@ -713,13 +707,30 @@
             <div class="form-group col-md-6" ng-if="subtype.name =='Step'">
                 <div class="form-group col-md-6">
                     <label for="state">Step Ladder Pail Shelf</label>
-                    <select type="text" class="form-control" id="step_pailshelf" data-ng-model="step_pailshelf"
+                <select type="text" class="form-control" id="step_pailshelf" data-ng-model="toolobject.step_pailshelf" required>
                             required>
                         <option value="1">Yes</option>
                         <option value="0">No</option>
                     </select>
                 </div>
             </div>
+
+          <div class="form-group col-md-6" ng-if = "category == 'Power'">
+            <div ng-repeat="accessory in accessories">
+            <label for="state">Power Tool Accessories</label>
+              <select type="text" class="form-control" id="power_accessories" ng-model="accessories.power_accessories"
+              data-ng-options="pa for pa in powertoolassessories()" required>
+              </select>
+
+            <label for="accessory_description">Accessory Description</label>
+              <input type="text" class="form-control" id="accessory_description" placeholder="16V battery"
+                   ng-minlength="3"
+                   ng-maxlength="50"
+                   name="accessory_description"
+                   ng-model="accessories.accessory_description" required>
+          </div>
+          <button ng-click="addAccessory()"> Add Accessory</button>
+        </div>
     </form>
 </div>
 <div class="form-group">

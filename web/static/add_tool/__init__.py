@@ -1,4 +1,6 @@
+from __future__ import print_function
 import json
+import sys
 
 def find_tool(params):
     mapping = {
@@ -31,16 +33,16 @@ class Tool(object):
         self.category = params['category']
         self.sub_type = params['sub_type']
         self.sub_option = params['sub_option']
-        self.width = params['width']
-        self.length = params['length']
-        self.weight = params['weight']
+        self.width = int(params['width'])
+        self.length = int(params['length'])
+        self.weight = int(params['weight'])
         self.manufacturer = params['manufacturer']
         self.material = params['material']
         self.power_source = params['power_source']
-        self.original_price = params['original_price']
+        self.original_price = int(params['original_price'])
 
     def create(self, cursor):
-        cursor.execute("INSERT INTO Tool (width, weight, length, manufacturer, material, deposit_price, rental_price,\
+        result = cursor.execute("INSERT INTO Tool (width, weight, length, manufacturer, material, deposit_price, rental_price,\
             original_price, Category_Id, PowerSource_Id, SubOption_Id, SubType_Id) \
             SELECT %s, %s, %s, %s, %s, %s, %s, %s, Category.id, PowerSource.id, SubOption.id, SubType.id \
             FROM Category, PowerSource, SubOption, SubType \
@@ -48,7 +50,9 @@ class Tool(object):
             [self.width, self.weight, self.length, self.manufacturer, self.material,
              self.original_price * .4, self.original_price * .15, self.original_price,
              self.category, self.power_source, self.sub_option, self.sub_type])
-        self.tool_id = cursor.lastrowid
+        assert cursor.rowcount == 1, 'Failed INSERT, Affected row: %d' % cursor.rowcount
+        cursor.execute("SELECT last_insert_id()")
+        self.tool_id = cursor.fetchone()[0]
         return self
 
 class Hand(Tool):
@@ -63,7 +67,7 @@ class Hand(Tool):
 class Screwdriver(Hand):
     def __init__(self, params):
         super(Screwdriver, self).__init__(params)
-        self.screw_size = params['screw_size']
+        self.screw_size = int(params['screw_size'])
 
     def create(self, cursor):
         super(Screwdriver, self).create(cursor)
@@ -84,7 +88,7 @@ class Socket(Hand):
 class Ratchet(Hand):
     def __init__(self, params):
         super(Ratchet, self).__init__(params)
-        self.drive_size = params['drive_size']
+        self.drive_size = params['rachet_drive_size']
 
     def create(self, cursor):
         super(Ratchet, self).create(cursor)
@@ -94,7 +98,7 @@ class Ratchet(Hand):
 class Wrench(Hand):
     def __init__(self, params):
         super(Wrench, self).__init__(params)
-        self.drive_size = params['drive_size']
+        self.drive_size = params['wrench_drive_size']
 
     def create(self, cursor):
         super(Wrench, self).create(cursor)
@@ -104,7 +108,7 @@ class Wrench(Hand):
 class Pliers(Hand):
     def __init__(self, params):
         super(Pliers, self).__init__(params)
-        self.adjustable = params['adjustable']
+        self.adjustable = params['pliers_adjustable']
 
     def create(self, cursor):
         super(Pliers, self).create(cursor)
@@ -114,8 +118,8 @@ class Pliers(Hand):
 class Gun(Hand):
     def __init__(self, params):
         super(Gun, self).__init__(params)
-        self.gauge_rating = params['gauge_rating']
-        self.capacity = params['capacity']
+        self.gauge_rating = params['gun_gauge_rating']
+        self.capacity = params['gun_capacity']
 
     def create(self, cursor):
         super(Gun, self).create(cursor)
@@ -125,7 +129,7 @@ class Gun(Hand):
 class Hammer(Hand):
     def __init__(self, params):
         super(Hammer, self).__init__(params)
-        self.anti_vibration = params['anti_vibration']
+        self.anti_vibration = params['hammer_anti_vibration']
 
     def create(self, cursor):
         super(Hammer, self).create(cursor)
@@ -145,8 +149,8 @@ class Garden(Tool):
 class Pruner(Garden):
     def __init__(self, params):
         super(Pruner, self).__init__(params)
-        self.blade_material = params['blade_material']
-        self.blade_length = params['blade_length']
+        self.blade_material = params['pruner_blade_material']
+        self.blade_length = params['pruner_blade_length']
 
     def create(self, cursor):
         super(Pruner, self).create(cursor)
@@ -156,7 +160,7 @@ class Pruner(Garden):
 class Striking(Garden):
     def __init__(self, params):
         super(Striking, self).__init__(params)
-        self.head_weight = params['head_weight']
+        self.head_weight = params['striking_head_weight']
 
     def create(self, cursor):
         super(Striking, self).create(cursor)
@@ -166,8 +170,8 @@ class Striking(Garden):
 class Digger(Garden):
     def __init__(self, params):
         super(Digger, self).__init__(params)
-        self.blade_width = params['blade_width']
-        self.blade_length = params['blade_length']
+        self.blade_width = params['digger_blade_width']
+        self.blade_length = params['digger_blade_length']
 
     def create(self, cursor):
         super(Digger, self).create(cursor)
@@ -177,7 +181,7 @@ class Digger(Garden):
 class Rakes(Garden):
     def __init__(self, params):
         super(Rakes, self).__init__(params)
-        self.tine_count = params['tine_count']
+        self.tine_count = params['rakes_tine_count']
 
     def create(self, cursor):
         super(Rakes, self).create(cursor)
@@ -187,9 +191,9 @@ class Rakes(Garden):
 class WheelBarrows(Garden):
     def __init__(self, params):
         super(WheelBarrows, self).__init__(params)
-        self.bin_material = params['bin_material']
-        self.wheel_count = params['wheel_count']
-        self.bin_volume = params['bin_volume']
+        self.bin_material = params['wheelbarrow_bin_material']
+        self.wheel_count = params['wheelbarrow_wheel_count']
+        self.bin_volume = params['wheelbarrow_bin_volume']
 
     def create(self, cursor):
         super(WheelBarrows, self).create(cursor)
@@ -200,27 +204,27 @@ class WheelBarrows(Garden):
 class Power(Tool):
     def __init__(self, params):
         super(Power, self).__init__(params)
-        self.volt_rating = params['volt_rating']
-        self.amp_rating = params['amp_rating']
-        self.min_rpm_rating = params['min_rpm_rating']
-        self.max_rpm_rating = params['max_rpm_rating']
-        self.accessory_qty = params['accessory_qty']
+        self.volt_rating = int(params['power_volt_rating'])
+        self.amp_rating = params['power_amp_rating']
+        self.min_rpm_rating = params['power_min_rpm_rating']
+        self.max_rpm_rating = params['power_max_rpm_rating']
+        self.power_accessories = params['power_accessories']
         self.accessory_description = params['accessory_description']
 
     def create(self, cursor):
         super(Power, self).create(cursor)
         cursor.execute("INSERT INTO PowerTool VALUES (%s, %s, %s, %s, %s)",
                        [self.tool_id, self.volt_rating, self.amp_rating, self.min_rpm_rating, self.max_rpm_rating])
-        cursor.execute("INSERT INTO Accessory (description, quantity, PowerTool_Id) VALUES (%s, %s, %s)",
-                       [self.accessory_description, self.accessory_qty, self.tool_id])
+        cursor.execute("INSERT INTO Accessory (description, PowerTool_Id) VALUES (%s, %s, %s)",
+                       [self.accessory_description, self.tool_id])
         return self
 
 class Drill(Power):
     def __init__(self, params):
         super(Drill, self).__init__(params)
-        self.adjustable_clutch = params['adjustable_clutch']
-        self.min_torque_rating = params['min_torque_rating']
-        self.max_torque_rating = params['max_torque_rating']
+        self.adjustable_clutch = params['drill_adjustable_clutch']
+        self.min_torque_rating = params['drill_min_torque_rating']
+        self.max_torque_rating = params['drill_max_torque_rating']
 
     def create(self, cursor):
         super(Drill, self).create(cursor)
@@ -232,7 +236,7 @@ class Drill(Power):
 class Saw(Power):
     def __init__(self, params):
         super(Saw, self).__init__(params)
-        self.blade_size = params['blade_size']
+        self.blade_size = params['saw_blade_size']
 
     def create(self, cursor):
         super(Saw, self).create(cursor)
@@ -244,7 +248,7 @@ class Saw(Power):
 class Sander(Power):
     def __init__(self, params):
         super(Sander, self).__init__(params)
-        self.dust_bag = params['dust_bag']
+        self.dust_bag = params['sander_dust_bag']
 
     def create(self, cursor):
         super(Sander, self).create(cursor)
@@ -256,8 +260,8 @@ class Sander(Power):
 class AirCompressor(Power):
     def __init__(self, params):
         super(AirCompressor, self).__init__(params)
-        self.tank_size = params['tank_size']
-        self.pressure_rating = params['pressure_rating']
+        self.tank_size = params['ac_tank_size']
+        self.pressure_rating = params['ac_pressure_rating']
 
     def create(self, cursor):
         super(AirCompressor, self).create(cursor)
@@ -269,8 +273,8 @@ class AirCompressor(Power):
 class Mixer(Power):
     def __init__(self, params):
         super(Mixer, self).__init__(params)
-        self.motor_rating = params['motor_rating']
-        self.drum_size = params['drum_size']
+        self.motor_rating = params['mixer_motor_rating']
+        self.drum_size = params['mixer_drum_size']
 
     def create(self, cursor):
         super(Mixer, self).create(cursor)
@@ -282,7 +286,7 @@ class Mixer(Power):
 class Generator(Power):
     def __init__(self, params):
         super(Generator, self).__init__(params)
-        self.power_rating = params['power_rating']
+        self.power_rating = params['generator_power_rating']
 
     def create(self, cursor):
         super(Generator, self).create(cursor)
@@ -306,7 +310,7 @@ class Ladder(Tool):
 class Straight(Ladder):
     def __init__(self, params):
         super(Straight, self).__init__(params)
-        self.rubber_feet = params['rubber_feet']
+        self.rubber_feet = params['straight_rubber_feet']
 
     def create(self, cursor):
         super(Straight, self).create(cursor)
@@ -318,7 +322,7 @@ class Straight(Ladder):
 class Step(Ladder):
     def __init__(self, params):
         super(Step, self).__init__(params)
-        self.pail_shelf = params['pail_shelf']
+        self.pail_shelf = params['step_pail_shelf']
 
     def create(self, cursor):
         super(Step, self).create(cursor)
