@@ -167,7 +167,6 @@ def get_customer_profile(username):
              'data': result
              }), 200, json_content
     except Exception as e:
-        print(e)
         return json.dumps(
             {'success': False,
              'message': 'User {} doesnt exist.'.format(username)

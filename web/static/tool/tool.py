@@ -1,4 +1,3 @@
-import json
 json_content = {'ContentType': 'application/json'}
 
 class Tool:
@@ -6,20 +5,32 @@ class Tool:
         self.con = con
         self.cursor = cursor
 
-    def search(self, start_date="", end_date="", keyword="", type="", sub_type="", power_source="", tool_query=""):
+    def search(self, start_date="", end_date="", keyword="", category="", sub_type="", power_source="", tool_query=""):
         cursor = self.cursor
         tools = []
+        if category == "all":
+            query = "SELECT tool.id, category.name, powersource.name, subtype.name, suboption.name, rental_price, deposit_price " \
+                    "FROM Tool AS tool JOIN SubOption AS suboption ON suboption.id = tool.SubOption_Id JOIN SubType AS subtype ON subtype.id = tool.SubType_Id " \
+                    "JOIN PowerSource AS powersource ON powersource.id = tool.PowerSource_Id " \
+                    "JOIN Category AS category ON category.id = tool.Category_Id " \
+                    "WHERE tool.id IN ({})".format(tool_query)
+            cursor.execute(query)
+        else:
+            query = "SELECT tool.id, category.name, powersource.name, subtype.name, suboption.name, rental_price, deposit_price " \
+                    "FROM Tool AS tool JOIN SubOption AS suboption ON suboption.id = tool.SubOption_Id JOIN SubType AS subtype ON subtype.id = tool.SubType_Id " \
+                    "JOIN PowerSource AS powersource ON powersource.id = tool.PowerSource_Id " \
+                    "JOIN Category AS category ON category.id = tool.Category_Id " \
+                    "WHERE subtype.name = %s AND powersource.name = %s AND category.name = %s AND tool.id IN ({})".format(tool_query)
+            cursor.execute(query, (sub_type, power_source, category))
 
-        cursor.execute(
-            "SELECT id, manufacturer, rental_price, deposit_price FROM Tool WHERE id IN ({})".format(tool_query))
         data = cursor.fetchall()
 
-        for tool_id, man, rent, deposit in data:
+        for tool_id, category, powersource, subtype, suboption, rental_price, deposit_price in data:
             tools.append({
                 'id': tool_id,
-                'description': man,
-                'rental_price': str(rent),
-                'deposit_price': str(deposit)
+                'description': "{} {} {}".format(powersource, suboption, subtype),
+                'rental_price': str(rental_price),
+                'deposit_price': str(deposit_price)
             })
         response = {'success': True, 'status_code': 200, 'tools': tools}
 
