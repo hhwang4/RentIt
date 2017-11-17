@@ -75,7 +75,17 @@
                 forsale: r.status == 'For Sale',
                 sold: r.status == 'Sold'}">{{ r.status }}</td>
                 <td>{{ r.date }}</td>
-                <td>{{ r.description }}</td>
+                <td>
+                     <button
+                         ng-click="vm.getTool($index)"
+                         uib-popover-template="vm.dynamicPopover.templateUrl"
+                         type="button" class="btn btn-light"
+                         popover-animation="false"
+                         popover-placement="right"
+                     >
+                         {{r.description}}
+                     </button>
+                </td>
                 <td>${{ r.rentalProfit }}</td>
                 <td>${{ r.totalCost }}</td>
                 <td>${{ r.totalProfit }}</td>

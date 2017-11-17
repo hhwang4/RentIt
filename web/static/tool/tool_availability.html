@@ -90,7 +90,17 @@
       <tbody>
       <tr ng-repeat="tool in tools | filter: keyword">
         <th scope="row">{{tool.id}}</th>
-        <td>{{tool.description}}</td>
+        <td>
+          <button
+              ng-click="getTool($index)"
+              uib-popover-template="dynamicPopover.templateUrl"
+              type="button" class="btn btn-light"
+              popover-animation="false"
+              popover-placement="right"
+          >
+            {{tool.description}}
+          </button>
+        </td>
         <td>{{tool.rental_price | currency}}</td>
         <td>{{tool.deposit_price | currency}}</td>
       </tr>

@@ -112,9 +112,9 @@ def login():
     login_info = request.json
 
     if login_info['type'] == 'customer':
-        sql_statement = "SELECT password from Customer as c where c.user_name = '{}';".format(login_info['username'])
+        sql_statement = "SELECT password, concat(c.first_name, ' ', c.last_name) AS CustomerName from Customer as c where c.user_name = '{}';".format(login_info['username'])
     elif login_info['type'] == 'clerk':
-        sql_statement = "SELECT password from Clerk as c where c.user_name = '{}';".format(login_info['username'])
+        sql_statement = "SELECT password, concat(c.first_name, ' ', c.last_name) AS ClerkName from Clerk as c where c.user_name = '{}';".format(login_info['username'])
 
     cursor = mysql.connect().cursor()
     try:
@@ -132,11 +132,13 @@ def login():
                404, json_content
 
     pw = result[0][0]
+    full_name = result[0][1]
 
     if login_info["password"] == pw:
         return json.dumps({'success': True,
                            'type': login_info['type'],
-                           'username': login_info['username']
+                           'username': login_info['username'],
+                           'full_name': full_name
                            }), 200, json_content
     else:
         return json.dumps(

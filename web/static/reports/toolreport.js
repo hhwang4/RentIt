@@ -116,4 +116,30 @@ angular.module('myApp.toolReport', ['ngRoute'])
 
             vm.fetchToolReport();
 
+            // Availability popover
+            vm.dynamicPopover = {
+                templateUrl: 'static/tool/tool_full_description_vm.html',
+                tool: {},
+                error: false,
+                error_message: "An error has occurred retrieving your data. Please try again later."
+            };
+            vm.getTool = function(index) {
+                const currentTool = vm.tools[index];
+                $http.get('/tools/' + currentTool.id)
+                    .success(function(response) {
+                    const tool = ((response.data || {}).details || [])[0] || {};
+                    vm.dynamicPopover.tool.id = tool.id;
+                    vm.dynamicPopover.tool.type = tool.tool_type;
+                    vm.dynamicPopover.tool.short_description = tool.short_description;
+                    vm.dynamicPopover.tool.full_description = tool.full_description;
+                    vm.dynamicPopover.tool.deposit_price = tool.deposit_price;
+                    vm.dynamicPopover.tool.rental_price = tool.rental_price;
+                    vm.dynamicPopover.tool.accessories = tool.accessories;
+                })
+                .error(function(response) {
+                    vm.dynamicPopover.error = true;
+                    console.log(response.message);
+                });
+            };
+
         }]);

@@ -47,6 +47,32 @@ angular.module('myApp.toolAvailability', ['ngRoute', 'ngAnimate'])
       opened: false
     };
 
+    // Availability popover
+    $scope.dynamicPopover = {
+      templateUrl: 'static/tool/tool_full_description.html',
+      tool: {},
+      error: false,
+      error_message: "An error has occurred retrieving your data. Please try again later."
+    };
+    $scope.getTool = function(index) {
+      const currentTool = $scope.tools[index];
+      $http.get('/tools/' + currentTool.id)
+        .success(function(response) {
+          const tool = ((response.data || {}).details || [])[0] || {};
+          $scope.dynamicPopover.tool.id = tool.id;
+          $scope.dynamicPopover.tool.type = tool.tool_type;
+          $scope.dynamicPopover.tool.short_description = tool.short_description;
+          $scope.dynamicPopover.tool.full_description = tool.full_description;
+          $scope.dynamicPopover.tool.deposit_price = tool.deposit_price;
+          $scope.dynamicPopover.tool.rental_price = tool.rental_price;
+          $scope.dynamicPopover.tool.accessories = tool.accessories;
+        })
+        .error(function(response) {
+          $scope.dynamicPopover.error = true;
+          console.log(response.message);
+        });
+    };
+
     // Search
     $scope.end_date = null;
     $scope.start_date = null;
