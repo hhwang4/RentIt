@@ -258,6 +258,7 @@ angular.module('myApp.addtool', ['ngRoute'])
           })
           .success(function(response) {
             //$location.path('/addtool');
+            alert('Tool was successfully Added!');
           })
           .error(function(err, status) {
             console.log('Error', err, status);
