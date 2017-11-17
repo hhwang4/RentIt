@@ -16,6 +16,16 @@ set @creditCardId := last_insert_id();
 insert into Customer (user_name, first_name,middle_name,last_name,email,password,Address_Id, CreditCard_Id)
 values('thebatman', 'Bruce', 'Tyrone', 'Wayne', 'thebatman@aol.com', 'robin', @addressId, @creditCardId);
 
+insert into Address (street, city, state, zip) values('77 weekly street', 'Diablo City', 'UT', '6666-5555');
+
+set @addressId1 := last_insert_id();
+
+insert into CreditCard (name, card_number, cvc, expiration_month, expiration_year) values('Bryan Fernando', '0000-6666-5555-0232', '005', 2, 2022);
+
+set @creditCardId1 := last_insert_id();
+insert into Customer (user_name, first_name,middle_name,last_name,email,password,Address_Id, CreditCard_Id)
+values('thehulk', 'Bryan', 'Wilson', 'Fernando', 'thehalk@gmail.com', 'user123', @addressId1, @creditCardId1);
+
 insert into PhoneNumber (area_code, number, extension, type, `primary`, Customer_UserName) values('321', '867-5309', NULL, 'cell', TRUE, 'thebatman');
 insert into PhoneNumber (area_code, number, extension, type, `primary`, Customer_UserName) values('321', '867-5308', NULL, 'work', False, 'thebatman');
 insert into PhoneNumber (area_code, number, extension, type, `primary`, Customer_UserName) values('444', '867-5308', NULL, 'home', False, 'thebatman');
