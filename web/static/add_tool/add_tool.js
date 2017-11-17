@@ -33,7 +33,7 @@ angular.module('myApp.addtool', ['ngRoute'])
       $scope.toolobject.garden_handlematerial;
       $scope.toolobject.power_amprating;
       $scope.toolobject.power_minrpm;
-      $scope.toolobject.power_maxrpm;
+      $scope.toolobject.power_maxrpm = null;
       $scope.toolobject.ladder_stepcount;
       $scope.toolobject.ladder_weightcapacity;
       $scope.toolobject.screwdriver_drivesize;

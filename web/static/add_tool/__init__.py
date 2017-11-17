@@ -206,7 +206,7 @@ class Power(Tool):
         self.volt_rating = float(params['power_volt_rating'])
         self.amp_rating = float(params['power_amp_rating'])
         self.min_rpm_rating = float(params['power_min_rpm_rating'])
-        self.max_rpm_rating = float(params['power_max_rpm_rating'])
+        self.max_rpm_rating = float(params['power_max_rpm_rating']) if params['power_max_rpm_rating'] is not None else None
         self.accessories = params['accessories']
 
     def create(self, cursor):

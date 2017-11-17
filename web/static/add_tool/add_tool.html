@@ -307,7 +307,7 @@
 
       <div class="form-group col-md-6" ng-if="subtype.name == 'Pliers'">
         <label for="state">Adjustable</label>
-        <select type="text" class="form-control" id="pliers_adjustable" data-ng-model="pliers_adjustable" required>
+        <select type="text" class="form-control" id="pliers_adjustable" data-ng-model="toolobject.pliers_adjustable" required>
           <option value="1">Yes</option>
           <option value="0">No</option>
         </select>
@@ -340,8 +340,8 @@
       </div>
 
       <div class="form-group col-md-6" ng-if="subtype.name =='Hammer'">
-        <label for="state">Anti-vibration</label>
-        <select type="text" class="form-control" id="hammer_antivibration" data-ng-model="hammer_antivibration" required>
+        <label for="hammer_antivibration">Anti-vibration</label>
+        <select type="text" class="form-control" id="hammer_antivibration" data-ng-model="toolobject.hammer_antivibration" required>
           <option value="1">Yes</option>
           <option value="0">No</option>
         </select>
@@ -510,14 +510,14 @@
       <div class="form-group col-md-6" ng-if="subtype.name =='Sander'">
         <div class="form-group col-md-6">
           <label for="sander_dustbag">Sander Dust Bag</label>
-          <select type="text" class="form-control" id="sander_dustbag" data-ng-model="sander_dustbag" required>
+          <select type="text" class="form-control" id="sander_dustbag" data-ng-model="toolobject.sander_dustbag" required>
             <option value="1">Yes</option>
             <option value="0">No</option>
           </select>
         </div>
       </div>
 
-      <div class="form-group col-md-6" ng-if="subtype.name =='AirCompressor'">
+      <div class="form-group col-md-6" ng-if="subtype.name =='Air-Compressor'">
         <label for="aircompressor_tanksize">Air Compressor Tank Size (gal)</label>
         <input type="text" class="form-control" id="aircompressor_tanksize"
         placeholder="30" ng-minlength="1" ng-maxlength="10" name="aircompressor_tanksize"
@@ -568,13 +568,13 @@
           <div ng-message="pattern">Must be a number</div>
         </div>
 
-        <div class="form-group col-md-6" ng-if="subtype.name =='Generator'">
-          <label for="generator_powerrating">Generator Power Rating (Watt)</label>
-          <input type="text" class="form-control" id="mixer_motorrating"
-          placeholder="30" ng-minlength="1" ng-maxlength="10" name="mixer_motorrating"
+        <div class="form-group col-md-6" ng-if="subtype.name == 'Generator'">
+          <label for="GeneratorPowerRating">Generator Power Rating (Watt)</label>
+          <input type="text" class="form-control" id="GeneratorPowerRating"
+          placeholder="30" ng-minlength="1" ng-maxlength="10" name="GeneratorPowerRating"
           ng-model="toolobject.generator_powerrating" pattern= "\d+" required>
 
-          <div ng-messages="generator_powerrating.$dirty && generator_powerrating.$error" style="color:maroon" role="alert">
+          <div ng-messages="GeneratorPowerRating.$dirty && GeneratorPowerRating.$error" style="color:maroon" role="alert">
             <div ng-message="required">This field must not be empty</div>
             <div ng-message="minlength">Must have at least 1 characters</div>
             <div ng-message="maxlength">Cannot have more than 10 characters</div>
