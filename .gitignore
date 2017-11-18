@@ -22,3 +22,4 @@ dist
 node_modules/
 bower_components/
 *.orig
+*.orig

@@ -11,8 +11,8 @@ function Reservation(d) {
     this.id = d[0];
     this.startDate = moment(d[1]).format('MM/DD/YY');
     this.endDate = moment(d[2]).format('MM/DD/YY');
-    this.pickupClerk = d[3];
-    this.dropOffClerk = d[4];
+    this.dropOffClerk = d[3];
+    this.pickupClerk = d[4];
     this.numDays = d[5];
     this.totalDepositPrice = d[6];
     this.totalRentalPrice = d[7];
