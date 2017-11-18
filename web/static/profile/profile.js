@@ -31,7 +31,7 @@ angular.module('myApp.profile', ['ngRoute'])
             resolve: {
                 accessToken: ['localStorageService', '$location', function ($localStorage, $location) {
                     if ($localStorage.get('authorizationData'))
-                        return $localStorage.get('authorizationData')
+                        return $localStorage.get('authorizationData');
                     else {
                         $location.path('/login');
                         return;

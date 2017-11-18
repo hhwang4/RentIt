@@ -1,7 +1,7 @@
 <!-- Title -->
 <h2>Make Reservation</h2>
 <!-- Search feature -->
-<form name="search">
+<ng-form name="search">
   <div class="form-row">
     <div class="form-group col-sm">
       <p class="input-group">
@@ -28,46 +28,51 @@
       </p>
     </div>
     <div class="col-auto">
-      <button ng-click="tool_search()" type="submit" class="btn btn-primary">Submit</button>
+      <button ng-click="tool_search()" ng-disabled="search.$invalid" type="submit" class="btn btn-primary">Submit</button>
     </div>
   </div>
   <div class="form-inline">
     <div class="form-check form-check-inline">
       <label class="form-check-label">
-        <input ng-model="type" class="form-check-input" type="radio" name="inlineRadioOptions" id="type-all-tool" value="all"> All Tools
+        <input ng-model="category" ng-change="getPowerSources()" class="form-check-input" type="radio" name="inlineRadioOptions" id="type-all-tool" value="all"> All Tools
       </label>
     </div>
     <div class="form-check form-check-inline">
       <label class="form-check-label">
-        <input ng-model="type" class="form-check-input" type="radio" name="inlineRadioOptions" id="type-hand-tool" value="Hand"> Hand Tool
+        <input ng-model="category" ng-change="getPowerSources()" class="form-check-input" type="radio" name="inlineRadioOptions" id="type-hand-tool" value="Hand"> Hand Tool
       </label>
     </div>
     <div class="form-check form-check-inline">
       <label class="form-check-label">
-        <input ng-model="type" class="form-check-input" type="radio" name="inlineRadioOptions" id="type-garden-tool" value="Garden" > Garden Tool
+        <input ng-model="category" ng-change="getPowerSources()" class="form-check-input" type="radio" name="inlineRadioOptions" id="type-garden-tool" value="Garden" > Garden Tool
       </label>
     </div>
     <div class="form-check form-check-inline ">
       <label class="form-check-label">
-        <input ng-model="type" class="form-check-input" type="radio" name="inlineRadioOptions" id="type-ladder" value="Ladder" > Ladder
+        <input ng-model="category" ng-change="getPowerSources()" class="form-check-input" type="radio" name="inlineRadioOptions" id="type-ladder" value="Ladder" > Ladder
       </label>
     </div>
     <div class="form-check form-check-inline ">
       <label class="form-check-label">
-        <input ng-model="type" class="form-check-input" type="radio" name="inlineRadioOptions" id="type-power-tool" value="Power" > Power Tool
+        <input ng-model="category" ng-change="getPowerSources()" class="form-check-input" type="radio" name="inlineRadioOptions" id="type-power-tool" value="Power" > Power Tool
       </label>
     </div>
     <!-- Select Power Source and Sub-Type -->
-    <label for="power-source">Power Source:</label>
-    <select ng-model="power_source" class="form-control" id="power-source">
-      <option>Manual</option>
-    </select>
-    <label for="sub-type">Sub-Type:</label>
-    <select ng-model="sub_type" class="form-control" id="sub-type">
-      <option>Screwdriver</option>
-    </select>
+    <div class="input-group input-group-lg">
+      <div class="form-group col-md-6">
+        <label for="power_source">Power Source:</label>
+        <select type="text" class="form-control" id="power_source" data-ng-model="power_source" ng-change="getSubtypes()" data-ng-options="m as m.name for m in power_sources track by m.id">
+        </select>
+      </div>
+
+      <div class="form-group col-md-6">
+        <label for="sub_types">Sub-Type:</label>
+        <select type="text" class="form-control" id="sub_types" data-ng-model="sub_type" ng-change="getSuboptions()" data-ng-options="m as m.name for m in sub_types track by m.id">
+        </select>
+      </div>
+    </div>
   </div>
-</form>
+</ng-form>
 <!-- Display Available Tools For Rent-->
 <h2>Available Tools For Rent</h2>
 <div ng-if="!hasSearched">

@@ -34,7 +34,7 @@ app.json_encoder = MyJSONEncoder
 app.config['MYSQL_DATABASE_USER'] = 'root'
 app.config['MYSQL_DATABASE_PASSWORD'] = 'mypassword'
 app.config['MYSQL_DATABASE_DB'] = 'cs6400_sfa17_team033'
-#app.config['MYSQL_DATABASE_HOST'] = 'localhost'
+# app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 app.config['MYSQL_DATABASE_HOST'] = 'mysql'  # mysql is the name of the docker container
 mysql.init_app(app)
 
@@ -519,10 +519,14 @@ def tools():
         result = tool.search(start_date, end_date, keyword, type, sub_type, power_source, tool_query)
 
     except Exception as e:
+        print(e)
         result = {'success': False, 'status_code': 404, 'message': "Tool search failed"}
     finally:
         cursor.close()
         db.close()
+
+    return create_response(result)
+
 
 @app.route('/categories')
 def get_categories():
@@ -597,8 +601,6 @@ def get_suboptions(category_id, powersource_id, subtype_id):
     finally:
         cursor.close()
         db.close()
-
-    return create_response(result)
 
     return create_response(result)
 
