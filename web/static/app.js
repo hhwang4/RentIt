@@ -11,6 +11,8 @@ angular.module('myApp', [
   'ngAnimate',
   'myApp.view1',
   'myApp.view2',
+  'myApp.404',
+  'myApp.menu',
   'myApp.login',
   'myApp.logout',
   'myApp.profile',
@@ -30,7 +32,7 @@ angular.module('myApp', [
   .config(['$locationProvider', '$routeProvider', function($locationProvider, $routeProvider) {
   $locationProvider.hashPrefix('!');
 
-  $routeProvider.otherwise({redirectTo: '/login'});
+  $routeProvider.otherwise({redirectTo: '/dashboard'});
 }])
   .filter('capitalize', function() {
     // source: https://stackoverflow.com/questions/30207272/capitalize-the-first-letter-of-string-in-angularjs

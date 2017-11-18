@@ -15,17 +15,9 @@
   <script src="{{ url_for('static',filename='bower_components/html5-boilerplate/dist/js/vendor/modernizr-2.8.3.min.js') }}"></script>
 </head>
 <body>
-  <ul class="menu">
-    <li><a href="#!/login">Login</a></li>
-    <li><a href="#!/dashboard">Dashboard</a></li>
-    <li><a href="#!/profile">Profile</a></li>
-    <li><a href="#!/register">Register Customer</a></li>
-    <li><a href="#!/make_reservation">Make Reservation</a></li>
-    <li><a href="#!/tool_availability">Check Tool Availability</a></li>
-    <li><a href="#!/pickup_reservation">Pickup Reservation</a></li>
-    <li><a href="#!/dropoff_reservation">DropOff Reservation</a></li>
-    <li><a href="#!/add_tool">Add Tool</a></li>
-  </ul>
+
+
+  <ng-include src="'static/menu/menu.html'" data-ng-controller="menuCtrl as vm"></ng-include>
 
   <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
@@ -50,9 +42,11 @@
   <script src="{{ url_for('static',filename='bower_components/angular-messages/angular-messages.js') }}"></script>
   <script src="{{ url_for('static',filename='bower_components/angular-password/angular-password.js') }}"></script>
   <script src="{{ url_for('static',filename='app.js') }}"></script>
+  <script src="{{ url_for('static',filename='menu/menu.js') }}"></script>
   <script src="{{ url_for('static',filename='view1/view1.js') }}"></script>
   <script src="{{ url_for('static',filename='view2/view2.js') }}"></script>
   <script src="{{ url_for('static',filename='login/login.js') }}"></script>
+  <script src="{{ url_for('static',filename='custom/404.js') }}"></script>
   <script src="{{ url_for('static',filename='login/logout.js') }}"></script>
   <script src="{{ url_for('static',filename='profile/profile.js') }}"></script>
   <script src="{{ url_for('static',filename='registration/registration.js') }}"></script>

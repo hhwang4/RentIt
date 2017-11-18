@@ -9,9 +9,10 @@ angular.module('myApp.logout', ['ngRoute'])
         });
     }])
 
-    .controller('LogoutCtrl', ['$scope', '$http', 'localStorageService', '$location',
-        function ($scope, $http, localStorageService, $location) {
+    .controller('LogoutCtrl', ['$scope', '$rootScope', '$http', 'localStorageService', '$location',
+        function ($scope,$rootScope,  $http, localStorageService, $location) {
         localStorageService.remove('authorizationData');
+        $rootScope.links = [];
         $location.path('/login');
 
     }]);

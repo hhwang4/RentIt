@@ -8,8 +8,8 @@ angular.module('myApp.login', ['ngRoute'])
         });
     }])
 
-    .controller('LoginCtrl', ['$scope', '$http', 'localStorageService', '$location',
-        function ($scope, $http, localStorageService, $location) {
+    .controller('LoginCtrl', ['$scope', '$rootScope', '$http', 'localStorageService', '$location',
+        function ($scope, $rootScope, $http, localStorageService, $location) {
         $scope.view = 'This is a scope variable1';
 
         var vm = this;
@@ -26,6 +26,8 @@ angular.module('myApp.login', ['ngRoute'])
             return vm.username != null && vm.password != null;
         };
 
+
+
         vm.login = function () {
             vm.error = null;
             vm.logout();
@@ -36,6 +38,27 @@ angular.module('myApp.login', ['ngRoute'])
             }, {headers: {'Content-Type': 'application/json'}})
                 .success(function (response) {
                     localStorageService.set('authorizationData', response);
+
+                    if(vm.loginType == 'clerk') {
+                        $rootScope.links = [
+                        {name: 'Dashboard', url: '/#!/dashboard'},
+                        {name: 'Pick up Reservations', url: '/#!/pickup_reservation'},
+                        {name: 'Drop off Reservations', url: '/#!/dropoff_reservation'},
+                        {name: 'Add new tool', url: '/#!/add_tool'},
+                        {name: 'Generate Reports', url: '/#!/reports'},
+                        {name: 'Logout', url: '/#!/logout'}
+                        ]
+                    }
+                    else {
+                        $rootScope.links = [
+                            {name: 'Dashboard', url: '/#!/dashboard'},
+                            {name: 'View Profile', url: '/#!/profile/'+ vm.username},
+                            {name: 'Make reservation', url: '/#!/make_reservation'},
+                            {name: 'Check tool Availability', url: '/#!/tool_availability'},
+                            {name: 'Logout', url: '/#!/logout'},
+                        ]
+                    }
+
                     $location.path('/dashboard');
                 })
                 .error(function (err, status) {
