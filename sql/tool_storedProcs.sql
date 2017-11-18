@@ -1,14 +1,14 @@
--- Full Tool Details
+use cs6400_sfa17_team033;
 
--- including all the details of full description and short description
-
-set @toolid :='8';
-SELECT 
-	tool.id as toolId, 
-    category.name as category, 
+DELIMITER $$
+CREATE DEFINER=`root`@`%` PROCEDURE `ToolDetails`(IN var_toolid int)
+BEGIN
+SELECT
+	tool.id as toolId,
+    category.name as category,
 	CONCAT(
 		COALESCE(powersource.name, ''), ' ',
-		COALESCE(suboption.name, ''), ' ', 
+		COALESCE(suboption.name, ''), ' ',
 		COALESCE(subtype.name, '')
 	) as short_desc,
 	CONCAT(
@@ -18,7 +18,7 @@ SELECT
 		COALESCE(other_desc.other_desc, ''), ' ',
 		COALESCE(
 			IF(
-				powersource.name='A/C','electric', 
+				powersource.name='A/C','electric',
 				IF(
 					powersource.name='D/C', 'cordless',
 					powersource.name
@@ -31,7 +31,7 @@ SELECT
 	) as full_desc,
     powersource.name as powersource,
     subtype.name as subtype, suboption.name as suboption,
-    rental_price, 
+    rental_price,
     deposit_price,
     material,
     width,
@@ -49,40 +49,40 @@ JOIN (
 
 	SELECT
 		CONCAT(
-			COALESCE(CONCAT(gauge_rating, 'G'), ''), ' ', 
+			COALESCE(CONCAT(gauge_rating, 'G'), ''), ' ',
 			COALESCE(capacity, '')
 		) AS other_desc
 	FROM HandGun
-	WHERE id = @toolid
+	WHERE id = var_toolid
 	UNION
 	SELECT
 		anti_vibration AS other_desc
-	FROM HandHammer	
-	WHERE id = @toolid
+	FROM HandHammer
+	WHERE id = var_toolid
 	UNION
 	SELECT
 		adjustable AS other_desc
 	FROM HandPlier
-	WHERE id = @toolid
+	WHERE id = var_toolid
 	UNION
 	SELECT
 		CONCAT(drive_size, 'in') AS other_desc
 	FROM HandRatchet
-	WHERE id = @toolid
+	WHERE id = var_toolid
 	UNION
 	SELECT
 		CONCAT('#', screw_size)AS other_desc
 	FROM ScrewDriver
-	WHERE id = @toolid
+	WHERE id = var_toolid
 	UNION
 	SELECT
 		CONCAT(
-			COALESCE(CONCAT(drive_size, 'in'), ''), ' ', 
+			COALESCE(CONCAT(drive_size, 'in'), ''), ' ',
 			COALESCE(CONCAT(sae_size, 'in'), ''), ' ',
 			COALESCE(deep_socket, '')
 		) AS other_desc
 	FROM HandSocket
-	WHERE id = @toolid
+	WHERE id = var_toolid
 	UNION
 	SELECT
 		CONCAT(
@@ -93,9 +93,9 @@ JOIN (
 			COALESCE(CONCAT(min_rpm_rating, 'min rpm'), ''), ' ',
 			COALESCE(CONCAT(max_rpm_rating, 'max rpm'), '')
 		) AS other_desc
-	FROM PowerAirCompressor pa 
+	FROM PowerAirCompressor pa
 	JOIN PowerTool pt ON pt.id = pa.id
-	WHERE pt.id = @toolid
+	WHERE pt.id = var_toolid
 	UNION
 	SELECT
 		CONCAT(
@@ -107,9 +107,9 @@ JOIN (
 			COALESCE(CONCAT(min_rpm_rating, 'min rpm'), ''), ' ',
 			COALESCE(CONCAT(max_rpm_rating, 'max rpm'), '')
 		) AS other_desc
-	FROM PowerDrill pa 
+	FROM PowerDrill pa
 	JOIN PowerTool pt ON pt.id = pa.id
-	WHERE pt.id = @toolid
+	WHERE pt.id = var_toolid
 	UNION
 	SELECT
 		CONCAT(
@@ -119,9 +119,9 @@ JOIN (
 			COALESCE(CONCAT(min_rpm_rating, 'min rpm'), ''), ' ',
 			COALESCE(CONCAT(max_rpm_rating, 'max rpm'), '')
 		) AS other_desc
-	FROM PowerGenerator pa 
+	FROM PowerGenerator pa
 	JOIN PowerTool pt ON pt.id = pa.id
-	WHERE pt.id = @toolid
+	WHERE pt.id = var_toolid
 	UNION
 	SELECT
 		CONCAT(
@@ -132,9 +132,9 @@ JOIN (
 			COALESCE(CONCAT(min_rpm_rating, 'min rpm'), ''), ' ',
 			COALESCE(CONCAT(max_rpm_rating, 'max rpm'), '')
 		) AS other_desc
-	FROM PowerMixer pa 
+	FROM PowerMixer pa
 	JOIN PowerTool pt ON pt.id = pa.id
-	WHERE pt.id = @toolid
+	WHERE pt.id = var_toolid
 	UNION
 	SELECT
 		CONCAT(
@@ -144,9 +144,9 @@ JOIN (
 			COALESCE(CONCAT(min_rpm_rating, 'min rpm'), ''), ' ',
 			COALESCE(CONCAT(max_rpm_rating, 'max rpm'), '')
 		) AS other_desc
-	FROM PowerSander pa 
+	FROM PowerSander pa
 	JOIN PowerTool pt ON pt.id = pa.id
-	WHERE pt.id = @toolid
+	WHERE pt.id = var_toolid
 
 	UNION
 	SELECT
@@ -157,9 +157,9 @@ JOIN (
 			COALESCE(CONCAT(min_rpm_rating, 'min rpm'), ''), ' ',
 			COALESCE(CONCAT(max_rpm_rating, 'max rpm'), '')
 		) AS other_desc
-	FROM PowerSaw pa 
+	FROM PowerSaw pa
 	JOIN PowerTool pt ON pt.id = pa.id
-	WHERE pt.id = @toolid
+	WHERE pt.id = var_toolid
 
 	UNION
 	SELECT
@@ -168,9 +168,9 @@ JOIN (
 			COALESCE(CONCAT(blade_length, 'in.'), ''), ' ',
 			COALESCE(blade_material, '')
 		) AS other_desc
-	FROM PruningTool ga 
+	FROM PruningTool ga
 	JOIN GardenTool gt ON gt.id = ga.id
-	WHERE gt.id = @toolid
+	WHERE gt.id = var_toolid
 
 	UNION
 	SELECT
@@ -178,9 +178,9 @@ JOIN (
 			COALESCE(handle_material, ''), ' ',
 			COALESCE(CONCAT(tine_count, 'tine'), ''), ' '
 		) AS other_desc
-	FROM RakeTool ga 
+	FROM RakeTool ga
 	JOIN GardenTool gt ON gt.id = ga.id
-	WHERE gt.id = @toolid
+	WHERE gt.id = var_toolid
 
 	UNION
 	SELECT
@@ -188,9 +188,9 @@ JOIN (
 			COALESCE(CONCAT(head_weight, 'lb.'), ''), ' ',
 			COALESCE(handle_material, '')
 		) AS other_desc
-	FROM StrikingTool ga 
+	FROM StrikingTool ga
 	JOIN GardenTool gt ON gt.id = ga.id
-	WHERE gt.id = @toolid
+	WHERE gt.id = var_toolid
 
 	UNION
 	SELECT
@@ -200,9 +200,9 @@ JOIN (
 			COALESCE(CONCAT(bin_volume, 'cu ft.'), ''), ' ',
 			COALESCE(handle_material, '')
 		) AS other_desc
-	FROM WheelBarrowTool ga 
+	FROM WheelBarrowTool ga
 	JOIN GardenTool gt ON gt.id = ga.id
-	WHERE gt.id = @toolid
+	WHERE gt.id = var_toolid
 
 	UNION
 	SELECT
@@ -211,31 +211,32 @@ JOIN (
 			COALESCE(CONCAT(blade_width, 'in.'), ''), ' ',
 			COALESCE(handle_material, '')
 		) AS other_desc
-	FROM DiggingTool ga 
+	FROM DiggingTool ga
 	JOIN GardenTool gt ON gt.id = ga.id
-	WHERE gt.id = @toolid
+	WHERE gt.id = var_toolid
 
 	UNION
 	SELECT
 		CONCAT(
 			COALESCE(pail_shelf, ''), ' ',
-			COALESCE(step_count, ''), ' ', 
+			COALESCE(step_count, ''), ' ',
 			COALESCE(CONCAT(weight_capacity, 'Lb.'), '')
 		) AS other_desc
-	FROM StepLadder la 
+	FROM StepLadder la
 	JOIN LadderTool lt ON lt.id = la.id
-	WHERE la.id = @toolid
+	WHERE la.id = var_toolid
 
 	UNION
 	SELECT
 		CONCAT(
 			COALESCE(rubber_feet, ''), ' ',
-			COALESCE(step_count, ''), ' ', 
+			COALESCE(step_count, ''), ' ',
 			COALESCE(CONCAT(weight_capacity, 'Lb.'), '')
 		) AS other_desc
-	FROM StraightLadder la 
+	FROM StraightLadder la
 	JOIN LadderTool lt ON lt.id = la.id
-	WHERE la.id = @toolid
+	WHERE la.id = var_toolid
 ) other_desc
-WHERE tool.id = @toolid;
-
+WHERE tool.id = var_toolid;
+END$$
+DELIMITER ;

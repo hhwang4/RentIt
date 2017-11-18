@@ -47,13 +47,102 @@ angular.module('myApp.toolAvailability', ['ngRoute', 'ngAnimate'])
       opened: false
     };
 
+    // Availability popover
+    $scope.dynamicPopover = {
+      templateUrl: 'static/tool/tool_full_description.html',
+      tool: {},
+      error: false,
+      error_message: "An error has occurred retrieving your data. Please try again later."
+    };
+    $scope.getTool = function(index) {
+      const currentTool = $scope.tools[index];
+      $http.get('/tools/' + currentTool.id)
+        .success(function(response) {
+          const tool = ((response.data || {}).details || [])[0] || {};
+          $scope.dynamicPopover.tool.id = tool.id;
+          $scope.dynamicPopover.tool.type = tool.tool_type;
+          $scope.dynamicPopover.tool.short_description = tool.short_description;
+          $scope.dynamicPopover.tool.full_description = tool.full_description;
+          $scope.dynamicPopover.tool.deposit_price = tool.deposit_price;
+          $scope.dynamicPopover.tool.rental_price = tool.rental_price;
+          $scope.dynamicPopover.tool.accessories = tool.accessories;
+        })
+        .error(function(response) {
+          $scope.dynamicPopover.error = true;
+          console.log(response.message);
+        });
+    };
+
     // Search
-    $scope.end_date = null;
-    $scope.start_date = null;
-    $scope.type = null;
-    $scope.keyword = null;
+    $scope.end_date = new Date();
+    $scope.start_date = new Date();
+    $scope.category = 'all';
+    $scope.keyword = '';
     $scope.power_source = null;
     $scope.sub_type = null;
+    $scope.categories = [];
+    $scope.power_sources = [];
+    $scope.sub_types = [];
+
+    $scope.getCategories = function() {
+      $http({
+        method: 'GET',
+        url: '/categories'
+      }).then(function successCallback(response) {
+        console.log(response.data);
+        $scope.categories = response.data.data.data;
+        //$scope.category = $scope.categories[0];
+      }, function errorCallback(response) {
+        $scope.error = response.message;
+      });
+    };
+
+    $scope.getPowerSources = function() {
+      if ($scope.category === 'all') {
+        $scope.power_sources = [];
+        $scope.sub_types = [];
+      } else {
+        $scope.power_source = null;
+        $scope.sub_type = null;
+        const category = $scope.categories.find(function(category) {
+          return category.name == $scope.category;
+        });
+        $http({
+          method: 'GET',
+          url: '/powersources/' + category.id
+        }).then(function successCallback(response) {
+          console.log(response.data);
+          $scope.power_sources = response.data.data.data;
+          $scope.power_source = $scope.power_sources[0];
+          $scope.getSubtypes();
+        }, function errorCallback(response) {
+          $scope.error = response.message;
+        });
+      }
+    };
+
+    $scope.getSubtypes = function() {
+      $scope.sub_type = null;
+      if ($scope.power_source && $scope.category) {
+        const category = $scope.categories.find(function(category) {
+          return category.name == $scope.category;
+        });
+        $http({
+          method: 'GET',
+          url: '/subtypes/' + category.id + '/' + $scope.power_source.id
+        }).then(function successCallback(response) {
+          console.log(response.data);
+          $scope.sub_types = response.data.data.data;
+          $scope.sub_type = $scope.sub_types[0];
+        }, function errorCallback(response) {
+          $scope.error = response.message;
+        });
+      }
+
+    };
+
+    $scope.getCategories();
+
     $scope.tool_search = function() {
       $scope.hasSearched = true;
       var params = {
@@ -61,9 +150,9 @@ angular.module('myApp.toolAvailability', ['ngRoute', 'ngAnimate'])
         end_date: moment($scope.end_date).format('YYYY-MM-DD'),
         keyword: $scope.keyword,
         search_type: 'tool_availability',
-        type: $scope.type,
-        power_source: $scope.power_source,
-        sub_type: $scope.sub_type
+        type: $scope.category,
+        power_source: ($scope.power_source || {}).name,
+        sub_type: ($scope.sub_type || {}).name
       };
       $http({ method: 'GET', url: '/tools', params: params })
         .success(function(response) {

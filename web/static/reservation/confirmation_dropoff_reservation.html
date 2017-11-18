@@ -16,8 +16,8 @@
             <p><strong>Reservation ID: #{{reservation_id}}</strong></p>
             <br />
             <p><strong>Customer Name: </strong>{{customer_full_name}}</p>
-            <p>Total Deposit Price: {{total_deposit_price}}</p>
-            <p>Total Rental Price: {{total_rental_price}}</p>
+            <p>Total Deposit Price: {{total_deposit_price | currency}}</p>
+            <p>Total Rental Price: {{total_rental_price | currency}}</p>
           </div>
           <div ng-if="tools.length" id="reservation-tools">
             <h4>Tools</h4>
@@ -31,15 +31,25 @@
               <tbody>
               <tr ng-repeat="tool in tools">
                 <th scope="row">{{tool.id}}</th>
-                <td>{{tool.description}}</td>
-                <td>{{tool.rental_price}}</td>
-                <td>{{tool.deposit_price}}</td>
+                <td>
+                  <button
+                      ng-click="getTool($index)"
+                      uib-popover-template="dynamicPopover.templateUrl"
+                      type="button" class="btn btn-light"
+                      popover-animation="false"
+                      popover-placement="right"
+                  >
+                    {{tool.description}}
+                  </button>
+                </td>
+                <td>{{tool.rental_price | currency}}</td>
+                <td>{{tool.deposit_price | currency}}</td>
               </tr>
               <tr>
                 <td><strong>Totals</strong></td>
                 <td />
-                <td>{{total_rental_price}}</td>
-                <td>{{total_deposit_price}}</td>
+                <td>{{total_rental_price | currency}}</td>
+                <td>{{total_deposit_price | currency}}</td>
               </tr>
               </tbody>
             </table>

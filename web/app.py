@@ -34,7 +34,7 @@ app.json_encoder = MyJSONEncoder
 app.config['MYSQL_DATABASE_USER'] = 'root'
 app.config['MYSQL_DATABASE_PASSWORD'] = 'mypassword'
 app.config['MYSQL_DATABASE_DB'] = 'cs6400_sfa17_team033'
-#app.config['MYSQL_DATABASE_HOST'] = 'localhost'
+# app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 app.config['MYSQL_DATABASE_HOST'] = 'mysql'  # mysql is the name of the docker container
 mysql.init_app(app)
 
@@ -112,9 +112,9 @@ def login():
     login_info = request.json
 
     if login_info['type'] == 'customer':
-        sql_statement = "SELECT password from Customer as c where c.user_name = '{}';".format(login_info['username'])
+        sql_statement = "SELECT password, concat(c.first_name, ' ', c.last_name) AS CustomerName from Customer as c where c.user_name = '{}';".format(login_info['username'])
     elif login_info['type'] == 'clerk':
-        sql_statement = "SELECT password from Clerk as c where c.user_name = '{}';".format(login_info['username'])
+        sql_statement = "SELECT password, concat(c.first_name, ' ', c.last_name) AS ClerkName from Clerk as c where c.user_name = '{}';".format(login_info['username'])
 
     cursor = mysql.connect().cursor()
     try:
@@ -132,11 +132,13 @@ def login():
                404, json_content
 
     pw = result[0][0]
+    full_name = result[0][1]
 
     if login_info["password"] == pw:
         return json.dumps({'success': True,
                            'type': login_info['type'],
-                           'username': login_info['username']
+                           'username': login_info['username'],
+                           'full_name': full_name
                            }), 200, json_content
     else:
         return json.dumps(
@@ -165,7 +167,6 @@ def get_customer_profile(username):
              'data': result
              }), 200, json_content
     except Exception as e:
-        print(e)
         return json.dumps(
             {'success': False,
              'message': 'User {} doesnt exist.'.format(username)
@@ -476,6 +477,23 @@ def post_dropoff_reservation(reservation_id):
     return create_response(result)
 
 
+@app.route("/tools/<tool_id>", methods=['GET'])
+def tools_id(tool_id):
+    db = mysql.connect()
+    cursor = db.cursor()
+
+    try:
+        tool = Tool(db, cursor)
+        result = tool.specific_tool(tool_id)
+    except Exception as e:
+        result = {'success': False, 'status_code': 404, 'message': "Tool search failed"}
+    finally:
+        cursor.close()
+        db.close()
+
+    return create_response(result)
+
+
 @app.route("/tools")
 def tools():
     db = mysql.connect()
@@ -501,10 +519,14 @@ def tools():
         result = tool.search(start_date, end_date, keyword, type, sub_type, power_source, tool_query)
 
     except Exception as e:
+        print(e)
         result = {'success': False, 'status_code': 404, 'message': "Tool search failed"}
     finally:
         cursor.close()
         db.close()
+
+    return create_response(result)
+
 
 @app.route('/categories')
 def get_categories():
@@ -582,7 +604,6 @@ def get_suboptions(category_id, powersource_id, subtype_id):
 
     return create_response(result)
 
-    return create_response(result)
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=8080)

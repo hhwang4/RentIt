@@ -1,0 +1,27 @@
+<div class="card">
+  <h4 class="card-header">Tool Details</h4>
+  <div ng-show="!dynamicPopover.error" class="card-body">
+    <h5 class="card-title">Tool ID:</h5>
+    <p class="card-text">{{dynamicPopover.tool.id}}</p>
+    <h5 class="card-title">Tool Type:</h5>
+    <p class="card-text">{{dynamicPopover.tool.type}}</p>
+    <h5 class="card-title">Short Description:</h5>
+    <p class="card-text">{{dynamicPopover.tool.short_description}}</p>
+    <h5 class="card-title">Full Description</h5>
+    <p class="card-text">{{dynamicPopover.tool.full_description}}</p>
+    <h5 class="card-title">Deposit Price:</h5>
+    <p class="card-text">{{dynamicPopover.tool.deposit_price | currency}}</p>
+    <h5 class="card-title">Rental Price:</h5>
+    <p class="card-text">{{dynamicPopover.tool.rental_price | currency}}</p>
+    <h5 class="card-title">Accessories</h5>
+    <ol>
+      <li ng-repeat="accessory in dynamicPopover.tool.accessories" class="accessories">
+        <p class="card-text">{{accessory.description}}</p>
+      </li>
+    </ol>
+    </li>
+  </div>
+  <div ng-show="dynamicPopover.error" class="card-body alert alert-danger" role="alert">
+    {{ dynamicPopover.error_message }}
+  </div>
+</div>
