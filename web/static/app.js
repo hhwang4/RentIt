@@ -24,7 +24,8 @@ angular.module('myApp', [
   'myApp.dropoffReservation',
   'myApp.register',
   'myApp.dashboard',
-  'myApp.version'
+  'myApp.version',
+  'myApp.addtool'
 ]).
 config(['$locationProvider', '$routeProvider', function($locationProvider, $routeProvider) {
   $locationProvider.hashPrefix('!');
