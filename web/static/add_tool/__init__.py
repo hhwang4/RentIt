@@ -76,8 +76,8 @@ class Screwdriver(Hand):
 class Socket(Hand):
     def __init__(self, params):
         super(Socket, self).__init__(params)
-        self.drive_size = float(eval(params['socket_drive_size']))
-        self.sae_size = float(eval(params['socket_sae_size']))
+        self.drive_size = float(params['socket_drive_size'])
+        self.sae_size = float(params['socket_sae_size'])
 
     def create(self, cursor):
         super(Socket, self).create(cursor)
@@ -87,7 +87,7 @@ class Socket(Hand):
 class Ratchet(Hand):
     def __init__(self, params):
         super(Ratchet, self).__init__(params)
-        self.drive_size = float(eval(params['rachet_drive_size']))
+        self.drive_size = float(params['rachet_drive_size'])
 
     def create(self, cursor):
         super(Ratchet, self).create(cursor)
@@ -97,7 +97,7 @@ class Ratchet(Hand):
 class Wrench(Hand):
     def __init__(self, params):
         super(Wrench, self).__init__(params)
-        self.drive_size = float(eval(params['wrench_drive_size']))
+        self.drive_size = float(params['wrench_drive_size'])
 
     def create(self, cursor):
         super(Wrench, self).create(cursor)
@@ -122,7 +122,7 @@ class Gun(Hand):
 
     def create(self, cursor):
         super(Gun, self).create(cursor)
-        cursor.execute("INSERT INTO HandGun VALUES (%s, %s, %s)", [self.tool_id, self.capacity])
+        cursor.execute("INSERT INTO HandGun VALUES (%s, %s, %s)", [self.tool_id, self.gauge_rating, self.capacity])
         return self
 
 class Hammer(Hand):
@@ -206,7 +206,7 @@ class Power(Tool):
         self.volt_rating = float(params['power_volt_rating'])
         self.amp_rating = float(params['power_amp_rating'])
         self.min_rpm_rating = float(params['power_min_rpm_rating'])
-        self.max_rpm_rating = float(params['power_max_rpm_rating']) if params['power_max_rpm_rating'] is not None else None
+        self.max_rpm_rating = float(params['power_max_rpm_rating'])
         self.accessories = params['accessories']
 
     def create(self, cursor):
@@ -235,7 +235,7 @@ class Drill(Power):
 class Saw(Power):
     def __init__(self, params):
         super(Saw, self).__init__(params)
-        self.blade_size = float(eval(params['saw_blade_size']))
+        self.blade_size = float(params['saw_blade_size'])
 
     def create(self, cursor):
         super(Saw, self).create(cursor)
@@ -272,7 +272,7 @@ class AirCompressor(Power):
 class Mixer(Power):
     def __init__(self, params):
         super(Mixer, self).__init__(params)
-        self.motor_rating = float(eval(params['mixer_motor_rating']))
+        self.motor_rating = float(params['mixer_motor_rating'])
         self.drum_size = float(eval(params['mixer_drum_size']))
 
     def create(self, cursor):

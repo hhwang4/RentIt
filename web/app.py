@@ -84,10 +84,10 @@ def add_tool_post():
     db = mysql.connect()
     cursor = db.cursor()
     params = request.get_json()
+
     try:
         tool = find_tool(params)
         tool.create(cursor)
-
         db.commit()
     except Exception as e:
         return json.dumps({'success': False, 'message': str(e)}), 500, json_content

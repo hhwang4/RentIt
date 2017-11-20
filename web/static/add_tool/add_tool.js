@@ -33,14 +33,18 @@ angular.module('myApp.addtool', ['ngRoute'])
       $scope.toolobject.garden_handlematerial;
       $scope.toolobject.power_amprating;
       $scope.toolobject.power_minrpm;
-      $scope.toolobject.power_maxrpm = null;
+      $scope.toolobject.power_maxrpm;
       $scope.toolobject.ladder_stepcount;
       $scope.toolobject.ladder_weightcapacity;
       $scope.toolobject.screwdriver_drivesize;
       $scope.toolobject.socket_drivesize;
+      $scope.toolobject.socket_drivefraction;
       $scope.toolobject.socket_saesize;
+      $scope.toolobject.socket_saefraction;
       $scope.toolobject.rachet_drivesize;
+      $scope.toolobject.rachet_drivefraction;
       $scope.toolobject.wrench_drivesize;
+      $scope.toolobject.wrench_drivefraction;
       $scope.toolobject.pliers_adjustable;
       $scope.toolobject.handgun_gaugerating;
       $scope.toolobject.handgun_capacity;
@@ -58,10 +62,12 @@ angular.module('myApp.addtool', ['ngRoute'])
       $scope.toolobject.drill_mintorque;
       $scope.toolobject.drill_maxtorque;
       $scope.toolobject.saw_bladesize;
+      $scope.toolobject.saw_bladefraction;
       $scope.toolobject.sander_dustbag;
       $scope.toolobject.aircompressor_tanksize;
       $scope.toolobject.aircompressor_pressurerating;
       $scope.toolobject.mixer_motorrating;
+      $scope.toolobject.mixer_motorfraction;
       $scope.toolobject.mixer_drumsize;
       $scope.toolobject.generator_powerrating;
       $scope.toolobject.straight_rubberfeet;
@@ -75,6 +81,11 @@ angular.module('myApp.addtool', ['ngRoute'])
           desc: '',
           quantity: ''
         });
+      };
+
+      $scope.remove_accessory = function(item) {
+        var index = $scope.accessories.indexOf(item)
+        $scope.accessories.splice(index, 1)
       };
 
       $scope.fractions = [{
@@ -194,6 +205,13 @@ angular.module('myApp.addtool', ['ngRoute'])
           length *= 12;
         }
 
+        var mixer_motor_rating = parseFloat($scope.toolobject.mixer_motorrating) + $scope.toolobject.mixer_motorfraction;
+        var saw_blade_size = parseFloat($scope.toolobject.saw_bladesize) + $scope.toolobject.saw_bladefraction;
+        var wrench_drive_size = parseFloat($scope.toolobject.wrench_drivesize) + $scope.toolobject.wrench_drivefraction;
+        var rachet_drive_size = parseFloat($scope.toolobject.rachet_drivesize) + $scope.toolobject.rachet_drivefraction;
+        var socket_drive_size = parseFloat($scope.toolobject.socket_drivesize) + $scope.toolobject.socket_drivefraction;
+        var socket_sae_size = parseFloat($scope.toolobject.socket_saesize) + $scope.toolobject.socket_drivefraction;
+
         var data = {
           "category": $scope.category,
           "accessories": $scope.accessories,
@@ -213,10 +231,10 @@ angular.module('myApp.addtool', ['ngRoute'])
           "step_count": $scope.toolobject.ladder_stepcount,
           "weight_capacity": $scope.toolobject.ladder_weightcapacity,
           "screw_size": $scope.toolobject.screwdriver_drivesize,
-          "socket_drive_size": $scope.toolobject.socket_drivesize,
-          "socket_sae_size": $scope.toolobject.socket_saesize,
-          "rachet_drive_size": $scope.toolobject.rachet_drivesize,
-          "wrench_drive_size": $scope.toolobject.wrench_drivesize,
+          "socket_drive_size": socket_drive_size,
+          "socket_sae_size": socket_sae_size,
+          "rachet_drive_size": rachet_drive_size,
+          "wrench_drive_size": wrench_drive_size,
           "pliers_adjustable": $scope.toolobject.pliers_adjustable,
           "gun_gauge_rating": $scope.toolobject.handgun_gaugerating,
           "gun_capacity": $scope.toolobject.handgun_capacity,
@@ -237,11 +255,11 @@ angular.module('myApp.addtool', ['ngRoute'])
           "drill_adjustable_clutch": $scope.toolobject.drill_adjustableclutch,
           "drill_min_torque_rating": $scope.toolobject.drill_mintorque,
           "drill_max_torque_rating": $scope.toolobject.drill_maxtorque,
-          "saw_blade_size": $scope.toolobject.saw_bladesize,
+          "saw_blade_size": saw_blade_size,
           "sander_dust_bag": $scope.toolobject.sander_dustbag,
           "ac_tank_size": $scope.toolobject.aircompressor_tanksize,
           "ac_pressure_rating": $scope.toolobject.aircompressor_pressurerating,
-          "mixer_motor_rating": $scope.toolobject.mixer_motorrating,
+          "mixer_motor_rating": mixer_motor_rating,
           "mixer_drum_size": $scope.toolobject.mixer_drumsize,
           "generator_power_rating": $scope.toolobject.generator_powerrating,
           "straight_rubber_feet": $scope.toolobject.straight_rubberfeet,
