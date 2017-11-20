@@ -13,10 +13,10 @@
     <p class="card-text">{{dynamicPopover.tool.deposit_price | currency}}</p>
     <h5 class="card-title">Rental Price:</h5>
     <p class="card-text">{{dynamicPopover.tool.rental_price | currency}}</p>
-    <h5 class="card-title">Accessories</h5>
+    <h5 class="card-title">Accessories:</h5>
     <ol>
-      <li ng-repeat="accessory in dynamicPopover.tool.accessories" class="accessories">
-        <p class="card-text">{{accessory.description}}</p>
+      <li ng-repeat="accessory in dynamicPopover.tool.accessories" >
+        <p class="card-text">{{accessory}}</p>
       </li>
     </ol>
     </li>

@@ -63,6 +63,14 @@ class Tool:
         #col_names = ['toolId', 'category', 'short_desc', 'full_desc', 'powersource', 'subtype', 'suboption', 'rental_price',
         #            'deposit_price', 'material', 'width', 'weight', 'length', 'manufacturer', 'acc_description']
 
+        query = "SELECT description " \
+                "FROM Accessory " \
+                "WHERE PowerTool_Id = {}".format(tool_id)
+        cursor.execute(query)
+        accessories_result = cursor.fetchall()
+        accessories_list = []
+        for desc in accessories_result:
+            accessories_list.append(desc[0])
         details.append({
             'id': data[0],
             'tool_type': data[1],
@@ -70,7 +78,7 @@ class Tool:
             'full_description': data[3],
             'deposit_price': str(data[8]),
             'rental_price': str(data[7]),
-            'accessories': data[14]
+            'accessories': accessories_list
         })
 
         response = {'success': True, 'status_code': 200, 'details': details}
