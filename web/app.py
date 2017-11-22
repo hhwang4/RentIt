@@ -6,6 +6,7 @@ import flask.json
 import json
 import datetime
 import sys
+
 from static.reservation.reservation import Reservation
 from static.registration.registration import Customer
 from static.add_tool import find_tool
@@ -17,16 +18,13 @@ class MyJSONEncoder(flask.json.JSONEncoder):
         Custom json encorder to handle encoding Decimals
         source: https://stackoverflow.com/questions/24706951/how-to-convert-all-decimals-in-a-python-data-structure-to-string#24707102
     """
-
     def default(self, obj):
         if isinstance(obj, decimal.Decimal):
             # Convert decimal instances to strings.
             return str(obj)
-        # if isinstance(obj, datetime.dateime):
-        #     return obj.strftime("%Y-%m-%d %H:%M:%S")
         return super(MyJSONEncoder, self).default(obj)
 
-
+# App setup and configurations
 app = Flask(__name__)
 mysql = MySQL()
 app.json_encoder = MyJSONEncoder
@@ -43,8 +41,7 @@ json_content = {'ContentType': 'application/json'}
 
 # Creates a json response
 def create_response(result):
-    return json.dumps({'success': result.get('success'), 'data': result}), result.get('status_code'), {
-        'ContentType': 'application/json'}
+    return json.dumps({'success': result.get('success'), 'data': result}), result.get('status_code'), json_content
 
 
 def datetime_handler(x):
@@ -56,18 +53,11 @@ def datetime_handler(x):
     else:
         return x
 
-def check_query_parameters(data, parameters):
-    # TODO: Check the response data to make sure correct query parameter is provided, return error message
-    pass
 
 @app.route("/")
-def hello():
+def index():
     return render_template('index.html')
 
-
-@app.route("/old")
-def old_hello():
-    return render_template('index_old.html')
 
 @app.route("/addtool")
 def add_tool_get():
@@ -100,12 +90,13 @@ def add_tool_post():
 
         db.commit()
     except Exception as e:
-       return json.dumps({'success': False, 'message': str(e)}), 500, json_content
+        return json.dumps({'success': False, 'message': str(e)}), 500, json_content
     finally:
         cursor.close()
         db.close()
 
     return json.dumps({'success': True,}), 200, json_content
+
 
 @app.route("/login", methods=['POST'])
 def login():
@@ -149,11 +140,6 @@ def login():
                400, json_content
 
 
-@app.route("/myindex")
-def myindex():
-    return render_template('index.html')
-
-
 @app.route("/customer/<username>")
 def get_customer_profile(username):
     db = mysql.connect()
@@ -175,6 +161,7 @@ def get_customer_profile(username):
         cursor.close()
         db.close()
 
+
 @app.route("/customer/<username>/credit_cards", methods=['POST'])
 def update_customer_credit_card(username):
     db = mysql.connect()
@@ -184,7 +171,7 @@ def update_customer_credit_card(username):
     try:
         query = 'UPDATE CreditCard AS CC INNER JOIN Customer AS C ON CC.id=C.CreditCard_Id SET name=%s, card_number=%s, cvc=%s, expiration_month=%s, expiration_year=%s WHERE C.user_name=%s'
         cursor.execute(query, (cc_info.get('cardName'), cc_info.get('cardNumber'), cc_info.get('cvc'),
-                        cc_info.get('expirationMonth'), cc_info.get('expirationYear'), username))
+                               cc_info.get('expirationMonth'), cc_info.get('expirationYear'), username))
         db.commit()
 
         return json.dumps(
@@ -200,6 +187,7 @@ def update_customer_credit_card(username):
     finally:
         cursor.close()
         db.close()
+
 
 @app.route("/reservations/<username>")
 def get_customer_reservation(username):
@@ -288,7 +276,7 @@ def get_tool_report(pagenumber, itemsPerPage):
 
     try:
         # LIMIT ({pagenumber}-1)*{itemsPerPage},{itemsPerPage}
-        # todo replace with category ID and Date from request object
+        # TODO: replace with category ID and Date from request object
         day = datetime.datetime.now().strftime("%Y-%m-%d")
         cursor.callproc("ToolInventoryReport", [itemsPerPage, (pagenumber - 1) * itemsPerPage, day])
         result = cursor.fetchall()
@@ -348,7 +336,7 @@ def register_customer():
 
 @app.route("/reservations", methods=['POST'])
 def make_reservation():
-    """ Reserve specified tools"""
+    """ Reserve specified tools """
     db = mysql.connect()
     cursor = db.cursor()
     data = request.json
@@ -367,7 +355,7 @@ def make_reservation():
 
 @app.route("/pickup_reservations/<int:reservation_id>", methods=['GET'])
 def get_pickup_reservations(reservation_id):
-    """Get all or a specific reservation"""
+    """ Get all or a specific reservation """
     db = mysql.connect()
     cursor = db.cursor()
 
@@ -385,7 +373,7 @@ def get_pickup_reservations(reservation_id):
 
 @app.route("/pickup_reservations", methods=['GET'])
 def get_reservation():
-    """Get all reservation pickups"""
+    """ Get all reservation pickups """
     db = mysql.connect()
     cursor = db.cursor()
 
@@ -410,7 +398,6 @@ def post_pickup_reservation(reservation_id):
 
     try:
         reservation = Reservation(db, cursor)
-        check_query_parameters(request, 'clerk_username')
         result = reservation.pickup_reservation(reservation_id, clerk_username)
     except Exception as e:
         print(e)
@@ -423,7 +410,7 @@ def post_pickup_reservation(reservation_id):
 
 @app.route("/dropoff_reservations/<int:reservation_id>", methods=['GET'])
 def get_dropoff_reservations(reservation_id):
-    """Get all or a specific reservation"""
+    """ Get all or a specific reservation """
     db = mysql.connect()
     cursor = db.cursor()
 
@@ -441,7 +428,7 @@ def get_dropoff_reservations(reservation_id):
 
 @app.route("/dropoff_reservations", methods=['GET'])
 def get_dropoff_all_reservation():
-    """Get all reservation dropoffs"""
+    """ Get all reservations that can be dropped-off """
     db = mysql.connect()
     cursor = db.cursor()
 
@@ -466,7 +453,6 @@ def post_dropoff_reservation(reservation_id):
 
     try:
         reservation = Reservation(db, cursor)
-        check_query_parameters(request, 'clerk_username')
         result = reservation.dropoff_reservation(reservation_id, clerk_username)
     except Exception as e:
         result = {'success': False, 'status_code': 404, 'message': "Could not dropoff reservation #{}".format(reservation_id)}
@@ -547,6 +533,7 @@ def get_categories():
 
     return create_response(result)
 
+
 @app.route('/powersources/<int:category_id>')
 def get_powersources(category_id):
 
@@ -566,13 +553,14 @@ def get_powersources(category_id):
 
     return create_response(result)
 
+
 @app.route('/subtypes/<int:category_id>/<int:powersource_id>')
 def get_subtypes(category_id, powersource_id):
 
     try:
         db = mysql.connect()
         cursor = db.cursor()
-        cursor.execute('select id, name FROM  SubTypePowerSource  AS  stps JOIN  SubType  AS  st  ON  st.id  =   stps.SubType_Id WHERE  stps.Category_Id  =   %s AND  stps.PowerSource_Id  = %s ;', [category_id, powersource_id])
+        cursor.execute('select id, name FROM SubTypePowerSource AS stps JOIN SubType AS st ON st.id = stps.SubType_Id WHERE stps.Category_Id = %s AND stps.PowerSource_Id = %s ;', [category_id, powersource_id])
         data = cursor.fetchall()
         data = [{"id": r[0], "name": r[1]} for r in data]
         result = {'success': True, 'status_code': 200, 'data': data}
@@ -585,13 +573,14 @@ def get_subtypes(category_id, powersource_id):
 
     return create_response(result)
 
+
 @app.route('/suboptions/<int:category_id>/<int:powersource_id>/<int:subtype_id>')
 def get_suboptions(category_id, powersource_id, subtype_id):
 
     try:
         db = mysql.connect()
         cursor = db.cursor()
-        cursor.execute('SELECT so.id, so.name FROM SubOption AS so JOIN SubType AS st ON st.id =  so.SubType_Id JOIN SubTypePowerSource AS stps ON stps.SubType_Id =  st.id WHERE PowerSource_Id =  %s AND so.SubType_Id = %s AND stps.Category_Id =  %s ;', [powersource_id,subtype_id, category_id])
+        cursor.execute('SELECT so.id, so.name FROM SubOption AS so JOIN SubType AS st ON st.id = so.SubType_Id JOIN SubTypePowerSource AS stps ON stps.SubType_Id = st.id WHERE PowerSource_Id = %s AND so.SubType_Id = %s AND stps.Category_Id = %s ;', [powersource_id,subtype_id, category_id])
         data = cursor.fetchall()
         data = [{"id": r[0], "name": r[1]} for r in data]
         result = {'success': True, 'status_code': 200, 'data': data}

@@ -60,8 +60,6 @@ class Tool:
         cursor = self.cursor
         cursor.callproc("ToolDetails", [tool_id])
         data = cursor.fetchone()
-        #col_names = ['toolId', 'category', 'short_desc', 'full_desc', 'powersource', 'subtype', 'suboption', 'rental_price',
-        #            'deposit_price', 'material', 'width', 'weight', 'length', 'manufacturer', 'acc_description']
 
         query = "SELECT description " \
                 "FROM Accessory " \

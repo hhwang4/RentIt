@@ -28,11 +28,23 @@ angular.module('myApp.toolAvailability', ['ngRoute', 'ngAnimate'])
     $scope.hasSearched = false;
 
     // Calendar popup
-    $scope.dateOptions = {
+    $scope.dateOptions1 = {
       formatYear: 'yy',
       maxDate: new Date(2020, 5, 22),
       minDate: new Date(),
       startingDay: 1
+    };
+    $scope.dateOptions2 = {
+      formatYear: 'yy',
+      maxDate: new Date(2020, 5, 22),
+      minDate: $scope.start_date,
+      startingDay: 1
+    };
+    $scope.checkDate = function() {
+      $scope.dateOptions2.minDate = $scope.start_date;
+      if (moment($scope.end_date).diff(moment($scope.start_date)) < 0) {
+        $scope.end_date = null;
+      }
     };
     $scope.open1 = function() {
       $scope.popup1.opened = true;
