@@ -6,7 +6,7 @@
     <div class="form-group col-sm">
       <p class="input-group">
         <label for="start-date">Start Date:</label>
-        <input required type="text" class="form-control" uib-datepicker-popup ng-model="start_date" is-open="popup1.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" />
+        <input ng-change="checkDate()" required type="text" class="form-control" uib-datepicker-popup ng-model="start_date" is-open="popup1.opened" datepicker-options="dateOptions1" ng-required="true" close-text="Close" />
         <span class="input-group-btn">
           <button type="button" class="btn btn-default" ng-click="open1()"><i class="glyphicon glyphicon-calendar"></i></button>
         </span>
@@ -15,7 +15,7 @@
     <div class="form-group col-sm">
       <p class="input-group">
         <label for="end-date">End Date:</label>
-        <input required type="text" class="form-control" uib-datepicker-popup ng-model="end_date" is-open="popup2.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" />
+        <input required type="text" class="form-control" uib-datepicker-popup ng-model="end_date" is-open="popup2.opened" datepicker-options="dateOptions2" ng-required="true" close-text="Close" />
         <span class="input-group-btn">
         <button type="button" class="btn btn-default" ng-click="open2()"><i class="glyphicon glyphicon-calendar"></i></button>
       </span>
@@ -59,15 +59,17 @@
     </div>
     <!-- Select Power Source and Sub-Type -->
     <div class="input-group input-group-lg">
-      <div class="form-group col-md-6">
+      <div class="form-group col-lg-7">
         <label for="power_source">Power Source:</label>
         <select type="text" class="form-control" id="power_source" data-ng-model="power_source" ng-change="getSubtypes()" data-ng-options="m as m.name for m in power_sources track by m.id">
+          <option value="" selected hidden>All</option>
         </select>
       </div>
 
-      <div class="form-group col-md-6">
+      <div class="form-group col-lg-6">
         <label for="sub_types">Sub-Type:</label>
         <select type="text" class="form-control" id="sub_types" data-ng-model="sub_type" ng-change="getSuboptions()" data-ng-options="m as m.name for m in sub_types track by m.id">
+          <option value="" selected hidden>All</option>
         </select>
       </div>
     </div>
