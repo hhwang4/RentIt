@@ -33,8 +33,8 @@
 
       <div class="form-group col-md-6">
         <label for="purchaseprice">Purchase Price ($)</label>
-        <input type="text" class="form-control" id="purchsePrice" placeholder="Purchase Price" ng-minlength="1" ng-maxlength="50" name="purchasePrice" ng-model="purchaseprice" pattern="^\d+\.?\d*$" required>
-        <div ng-messages="purchaseprice.$dirty && purchaseprice.$error" style="color:maroon" role="alert">
+        <input type="text" class="form-control" id="purchaseprice" placeholder="Purchase Price" ng-minlength="1" ng-maxlength="50" name="purchaseprice" ng-model="purchaseprice" pattern="^\d+\.?\d*$" required>
+        <div ng-messages="addtool.purchaseprice.$dirty && addtool.purchaseprice.$error" style="color:maroon" role="alert">
           <div ng-message="required">This field must not be empty</div>
           <div ng-message="minlength">Must have at least 1 character</div>
           <div ng-message="maxlength">Cannot have more than 10 characters</div>
@@ -56,7 +56,7 @@
       <div class="form-group col-md-6">
         <label for="weight">Weight (lbs)</label>
         <input type="text" class="form-control" id="weight" placeholder="20.53" ng-minlength="1" ng-maxlength="10" name="weight" ng-model="weight" pattern="^\d+\.?\d*$" required>
-        <div ng-messages="weight.$dirty && weight.$error" style="color:maroon" role="alert">
+        <div ng-messages="addtool.weight.$dirty && addtool.weight.$error" style="color:maroon" role="alert">
           <div ng-message="required">This field must not be empty</div>
           <div ng-message="minlength">Must have at least 1 character</div>
           <div ng-message="maxlength">Cannot have more than 10 characters</div>
@@ -68,7 +68,7 @@
         <label for="width">Width</label>
         <input type="text" min="0" step="1" / class="form-control" id="width" placeholder="0" ng-minlength="1" ng-maxlength="10" name="width" ng-model="width" pattern="\d+" required>
 
-        <div ng-messages="width.$dirty && width.$error" style="color:maroon" role="alert">
+        <div ng-messages="addtool.width.$dirty && addtool.width.$error" style="color:maroon" role="alert">
           <div ng-message="required">This field must not be empty</div>
           <div ng-message="minlength">Must have at least 1 character</div>
           <div ng-message="maxlength">Cannot have more than 10 characters</div>
@@ -96,11 +96,11 @@
       <div class="form-group col-md-4">
         <label for="length">Length</label>
         <input type="text" class="form-control" id="length" placeholder="0" ng-minlength="1" ng-maxlength="10" name="length" ng-model="length" pattern="\d+" required required>
-        <div ng-messages="length.$dirty && length.$error" style="color:maroon" role="alert">
+        <div ng-messages="addtool.length.$dirty && addtool.length.$error" style="color:maroon" role="alert">
           <div ng-message="required">This field must not be empty</div>
           <div ng-message="minlength">Must have at least 1 character</div>
           <div ng-message="maxlength">Cannot have more than 10 characters</div>
-          <div ng-message="pattern">Must be integer</div>
+          <div ng-message="pattern">Must be an integer</div>
         </div>
       </div>
 
@@ -121,9 +121,9 @@
 
       <div class="form-group col-md-6" ng-if="category.name =='Garden'">
         <label for="garden_handlematerial">Handle Material</label>
-        <input type="text" class="form-control" id="garden_handlematerial" placeholder="wood" ng-minlength="3" ng-maxlength="10" name="toolobject.garden_handlematerial" ng-model="toolobject.garden_handlematerial" required>
+        <input type="text" class="form-control" id="garden_handlematerial" placeholder="wood" ng-minlength="3" ng-maxlength="10" name="garden_handlematerial" ng-model="toolobject.garden_handlematerial" required>
 
-        <div ng-messages="garden_handlematerial.$dirty && garden_handlematerial.$error" style="color:maroon" role="alert">
+        <div ng-messages="addtool.garden_handlematerial.$dirty && addtool.garden_handlematerial.$error" style="color:maroon" role="alert">
           <div ng-message="required">This field must not be empty</div>
           <div ng-message="minlength">Must have at least 3 characters</div>
           <div ng-message="maxlength">Cannot have more than 10 characters</div>
@@ -138,7 +138,7 @@
         <label for="power_amprating">Power Tool Amp Rating (A)</label>
         <input type="text" class="form-control" id="power_amprating" placeholder="30" ng-minlength="1" ng-maxlength="10" name="power_amprating" ng-model="toolobject.power_amprating" pattern="^\d+\.?\d*$" required>
 
-        <div ng-messages="power_amprating.$dirty && power_amprating.$error" style="color:maroon" role="alert">
+        <div ng-messages="addtool.power_amprating.$dirty && addtool.power_amprating.$error" style="color:maroon" role="alert">
           <div ng-message="required">This field must not be empty</div>
           <div ng-message="minlength">Must have at least 1 characters</div>
           <div ng-message="maxlength">Cannot have more than 10 characters</div>
@@ -148,7 +148,7 @@
         <label for="power_minrpm">Power Tool Min RPM Rating (RPM)</label>
         <input type="text" class="form-control" id="power_minrpm" placeholder="3000" ng-minlength="2" ng-maxlength="10" name="power_minrpm" ng-model="toolobject.power_minrpm" pattern="\d+" required>
 
-        <div ng-messages="power_minrpm.$dirty && power_minrpm.$error" style="color:maroon" role="alert">
+        <div ng-messages="addtool.power_minrpm.$dirty && addtool.power_minrpm.$error" style="color:maroon" role="alert">
           <div ng-message="required">This field must not be empty</div>
           <div ng-message="minlength">Must have at least 2 characters</div>
           <div ng-message="maxlength">Cannot have more than 10 characters</div>
@@ -158,7 +158,7 @@
         <label for="power_maxrpm">Power Tool Max RPM Rating (RPM)</label>
         <input type="text" class="form-control" id="power_maxrpm" placeholder="6000" ng-minlength="2" ng-maxlength="10" name="power_maxrpm" ng-model="toolobject.power_maxrpm" pattern="\d+">
 
-        <div ng-messages="power_maxrpm.$dirty && power_maxrpm.$error" style="color:maroon" role="alert">
+        <div ng-messages="addtool.power_maxrpm.$dirty && addtool.power_maxrpm.$error" style="color:maroon" role="alert">
           <div ng-message="required">This field must not be empty</div>
           <div ng-message="minlength">Must have at least 2 characters</div>
           <div ng-message="maxlength">Cannot have more than 10 characters</div>
@@ -170,7 +170,7 @@
         <label for="ladder_stepcount">Ladder Step Count (step)</label>
         <input type="number" class="form-control" id="ladder_stepcount" placeholder="20" ng-minlength="1" ng-maxlength="10" name="ladder_stepcount" ng-model="toolobject.ladder_stepcount" pattern="\d+" required>
 
-        <div ng-messages="ladder_stepcount.$dirty && ladder_stepcount.$error" style="color:maroon" role="alert">
+        <div ng-messages="addtool.ladder_stepcount.$dirty && addtool.ladder_stepcount.$error" style="color:maroon" role="alert">
           <div ng-message="required">This field must not be empty</div>
           <div ng-message="minlength">Must have at least 1 characters</div>
           <div ng-message="maxlength">Cannot have more than 10 characters</div>
@@ -180,7 +180,7 @@
         <label for="ladder_weightcapacity">Ladder Weight Capacity (lb)</label>
         <input type="text" class="form-control" id="ladder_weightcapacity" placeholder="250" ng-minlength="1" ng-maxlength="10" name="ladder_weightcapacity" ng-model="toolobject.ladder_weightcapacity" pattern="^\d+\.?\d*$" required>
 
-        <div ng-messages="ladder_weightcapacity.$dirty && ladder_weightcapacity.$error" style="color:maroon" role="alert">
+        <div ng-messages="addtool.ladder_weightcapacity.$dirty && addtool.ladder_weightcapacity.$error" style="color:maroon" role="alert">
           <div ng-message="required">This field must not be empty</div>
           <div ng-message="minlength">Must have at least 1 characters</div>
           <div ng-message="maxlength">Cannot have more than 10 characters</div>
@@ -193,7 +193,7 @@
         <label for="screwdriver_drivesize">Screw Driver Drive Size (#)</label>
         <input type="number" class="form-control" id="screwdriver_drivesize" placeholder="2" ng-minlength="1" ng-maxlength="10" name="screwdriver_drivesize" ng-model="toolobject.screwdriver_drivesize" pattern="\d+" required>
 
-        <div ng-messages="screwdriver_drivesize.$dirty && screwdriver_drivesize.$error" style="color:maroon" role="alert">
+        <div ng-messages="addtool.screwdriver_drivesize.$dirty && addtool.screwdriver_drivesize.$error" style="color:maroon" role="alert">
           <div ng-message="required">This field must not be empty</div>
           <div ng-message="minlength">Must have at least 1 characters</div>
           <div ng-message="maxlength">Cannot have more than 10 characters</div>
@@ -203,7 +203,7 @@
 
       <div class="form-group col-md-6" ng-if="subtype.name == 'Socket'">
         <label for="socket_drivesize">Socket Drive Size (inch)</label>
-        <input type="text" min="0" step="1" / class="form-control" id="socket_drivesize" placeholder="1/2" ng-minlength="1" ng-maxlength="10" name="socket_drivesize" ng-model="toolobject.socket_drivesize" pattern="\d+" required>
+        <input type="text" min="0" step="1" / class="form-control" id="socket_drivesize" placeholder="2" ng-minlength="1" ng-maxlength="10" name="socket_drivesize" ng-model="toolobject.socket_drivesize" pattern="\d+" required>
 
         <div ng-messages="screwdriver_drivesize.$dirty && screwdriver_drivesize.$error" style="color:maroon" role="alert">
           <div ng-message="required">This field must not be empty</div>
@@ -217,9 +217,9 @@
         </select>
 
         <label for="socket_saesize">Socket Sae Size (inch)</label>
-        <input type="text" min="0" step="1" / class="form-control" id="socket_saesize" placeholder="1/2" ng-minlength="1" ng-maxlength="10" name="socket_saesize" ng-model="toolobject.socket_saesize" pattern="\d+" required>
+        <input type="text" min="0" step="1" / class="form-control" id="socket_saesize" placeholder="2" ng-minlength="1" ng-maxlength="10" name="socket_saesize" ng-model="toolobject.socket_saesize" pattern="\d+" required>
 
-        <div ng-messages="socket_saesize.$dirty && socket_saesize.$error" style="color:maroon" role="alert">
+        <div ng-messages="addtool.socket_saesize.$dirty && addtool.socket_saesize.$error" style="color:maroon" role="alert">
           <div ng-message="required">This field must not be empty</div>
           <div ng-message="minlength">Must have at least 1 characters</div>
           <div ng-message="maxlength">Cannot have more than 10 characters</div>
@@ -234,7 +234,7 @@
         <label for="rachet_drivesize">Rachet Drive Size (inch)</label>
         <input type="text" min="0" step="1" / class="form-control" id="rachet_drivesize" placeholder="1/2" ng-minlength="1" ng-maxlength="10" name="rachet_drivesize" ng-model="toolobject.rachet_drivesize" pattern="\d+" required>
 
-        <div ng-messages="rachet_drivesize.$dirty && rachet_drivesize.$error" style="color:maroon" role="alert">
+        <div ng-messages="addtool.rachet_drivesize.$dirty && addtool.rachet_drivesize.$error" style="color:maroon" role="alert">
           <div ng-message="required">This field must not be empty</div>
           <div ng-message="minlength">Must have at least 1 characters</div>
           <div ng-message="maxlength">Cannot have more than 10 characters</div>
@@ -249,7 +249,7 @@
         <label for="wrench_drivesize">Wrench Drive Size (inch)</label>
         <input type="text" min="0" step="1" / class="form-control" id="wrench_drivesize" placeholder="1/2" ng-minlength="1" ng-maxlength="10" name="wrench_drivesize" ng-model="toolobject.wrench_drivesize" pattern="\d+" required>
 
-        <div ng-messages="wrench_drivesize.$dirty && wrench_drivesize.$error" style="color:maroon" role="alert">
+        <div ng-messages="addtool.wrench_drivesize.$dirty && addtool.wrench_drivesize.$error" style="color:maroon" role="alert">
           <div ng-message="required">This field must not be empty</div>
           <div ng-message="minlength">Must have at least 1 characters</div>
           <div ng-message="maxlength">Cannot have more than 10 characters</div>
@@ -273,7 +273,7 @@
         <label for="handgun_gaugerating">Hand Gun Gauge Rating (G)</label>
         <input type="text" class="form-control" id="handgun_gaugerating" placeholder="18" ng-minlength="2" ng-maxlength="10" name="handgun_gaugerating" ng-model="toolobject.handgun_gaugerating" pattern="\d+" required>
 
-        <div ng-messages="handgun_gaugerating.$dirty && handgun_gaugerating.$error" style="color:maroon" role="alert">
+        <div ng-messages="addtool.handgun_gaugerating.$dirty && addtool.handgun_gaugerating.$error" style="color:maroon" role="alert">
           <div ng-message="required">This field must not be empty</div>
           <div ng-message="minlength">Must have at least 2 characters</div>
           <div ng-message="maxlength">Cannot have more than 10 characters</div>
@@ -283,7 +283,7 @@
         <label for="handgun_capacity">Hand Gun Capacity</label>
         <input type="text" class="form-control" id="handgun_capacity" placeholder="100" ng-minlength="2" ng-maxlength="10" name="handgun_capacity" ng-model="toolobject.handgun_capacity" pattern="\d+" required>
 
-        <div ng-messages="handgun_capacity.$dirty && handgun_capacity.$error" style="color:maroon" role="alert">
+        <div ng-messages="addtool.handgun_capacity.$dirty && addtool.handgun_capacity.$error" style="color:maroon" role="alert">
           <div ng-message="required">This field must not be empty</div>
           <div ng-message="minlength">Must have at least 2 characters</div>
           <div ng-message="maxlength">Cannot have more than 10 characters</div>
@@ -303,7 +303,7 @@
         <label for="pruner_bladematerial">Pruning Tool Blade Material</label>
         <input type="text" class="form-control" id="pruner_bladematerial" placeholder="steel" ng-minlength="3" ng-maxlength="50" name="pruner_bladematerial" ng-model="toolobject.pruner_bladematerial" required>
 
-        <div ng-messages="pruner_bladematerial.$dirty && pruner_bladematerial.$error" style="color:maroon" role="alert">
+        <div ng-messages="addtool.pruner_bladematerial.$dirty && addtool.pruner_bladematerial.$error" style="color:maroon" role="alert">
           <div ng-message="required">This field must not be empty</div>
           <div ng-message="minlength">Must have at least 3 characters</div>
           <div ng-message="maxlength">Cannot have more than 50 characters</div>
@@ -312,7 +312,7 @@
         <label for="pruner_bladelength">Pruning Tool Blade Length (inch)</label>
         <input type="text" class="form-control" id="pruner_bladelength" placeholder="3/8" ng-minlength="1" ng-maxlength="10" name="pruner_bladelength" ng-model="toolobject.pruner_bladelength" pattern="^\d+\/\d+$" required>
 
-        <div ng-messages="pruner_bladelength.$dirty && pruner_bladelength.$error" style="color:maroon" role="alert">
+        <div ng-messages="addtool.pruner_bladelength.$dirty && addtool.pruner_bladelength.$error" style="color:maroon" role="alert">
           <div ng-message="required">This field must not be empty</div>
           <div ng-message="minlength">Must have at least 2 characters</div>
           <div ng-message="maxlength">Cannot have more than 10 characters</div>
@@ -324,7 +324,7 @@
         <label for="striking_headweight">Sriking Tool Head Weight (lb)</label>
         <input type="text" class="form-control" id="striking_headweight" placeholder="3.5" ng-minlength="1" ng-maxlength="10" name="striking_headweight" ng-model="toolobject.striking_headweight" pattern="^\d+\.?\d*$" required>
 
-        <div ng-messages="striking_headweight.$dirty && striking_headweight.$error" style="color:maroon" role="alert">
+        <div ng-messages="addtool.striking_headweight.$dirty && addtool.striking_headweight.$error" style="color:maroon" role="alert">
           <div ng-message="required">This field must not be empty</div>
           <div ng-message="minlength">Must have at least 1 characters</div>
           <div ng-message="maxlength">Cannot have more than 10 characters</div>
@@ -336,7 +336,7 @@
         <label for="digger_bladewidth">Digging Tool Blade Width (in)</label>
         <input type="text" class="form-control" id="digger_bladewidth" placeholder="9.75" ng-minlength="1" ng-maxlength="10" name="digger_bladewidth" ng-model="toolobject.digger_bladewidth" pattern="^\d+\.?\d*$" required>
 
-        <div ng-messages="digger_bladewidth.$dirty && digger_bladewidth.$error" style="color:maroon" role="alert">
+        <div ng-messages="addtool.digger_bladewidth.$dirty && addtool.digger_bladewidth.$error" style="color:maroon" role="alert">
           <div ng-message="required">This field must not be empty</div>
           <div ng-message="minlength">Must have at least 1 characters</div>
           <div ng-message="maxlength">Cannot have more than 10 characters</div>
@@ -346,7 +346,7 @@
         <label for="digger_bladelength">Digging Tool Blade Length (in)</label>
         <input type="text" class="form-control" id="digger_bladelength" placeholder="9.75" ng-minlength="1" ng-maxlength="10" name="digger_bladelength" ng-model="toolobject.digger_bladelength" pattern="^\d+\.?\d*$" required>
 
-        <div ng-messages="digger_bladelength.$dirty && digger_bladelength.$error" style="color:maroon" role="alert">
+        <div ng-messages="addtool.digger_bladelength.$dirty && addtool.digger_bladelength.$error" style="color:maroon" role="alert">
           <div ng-message="required">This field must not be empty</div>
           <div ng-message="minlength">Must have at least 1 characters</div>
           <div ng-message="maxlength">Cannot have more than 10 characters</div>
@@ -358,7 +358,7 @@
         <label for="rakes_tinecount">Rake Tine-count</label>
         <input type="text" class="form-control" id="rakes_tinecount" placeholder="14" ng-minlength="1" ng-maxlength="10" name="rakes_tinecount" ng-model="toolobject.rakes_tinecount" pattern="\d+" required>
 
-        <div ng-messages="rakes_tinecount.$dirty && rakes_tinecount.$error" style="color:maroon" role="alert">
+        <div ng-messages="addtool.rakes_tinecount.$dirty && addtool.rakes_tinecount.$error" style="color:maroon" role="alert">
           <div ng-message="required">This field must not be empty</div>
           <div ng-message="minlength">Must have at least 1 characters</div>
           <div ng-message="maxlength">Cannot have more than 10 characters</div>
@@ -370,7 +370,7 @@
         <label for="wheelbarrow_binmaterial">Wheelbarrow Bin Material</label>
         <input type="text" class="form-control" id="wheelbarrow_binmaterial" placeholder="fiberglass" ng-minlength="3" ng-maxlength="10" name="wheelbarrow_binmaterial" ng-model="toolobject.wheelbarrow_binmaterial" required>
 
-        <div ng-messages="wheelbarrow_binmaterial.$dirty && wheelbarrow_binmaterial.$error" style="color:maroon" role="alert">
+        <div ng-messages="addtool.wheelbarrow_binmaterial.$dirty && addtool.wheelbarrow_binmaterial.$error" style="color:maroon" role="alert">
           <div ng-message="required">This field must not be empty</div>
           <div ng-message="minlength">Must have at least 3 characters</div>
           <div ng-message="maxlength">Cannot have more than 10 characters</div>
@@ -379,7 +379,7 @@
         <label for="wheelbarrow_binmvolume">Wheelbarrow Bin Volume (cf)</label>
         <input type="text" class="form-control" id="wheelbarrow_binmvolume" placeholder="5.9" ng-minlength="3" ng-maxlength="10" name="wheelbarrow_binmvolume" ng-model="toolobject.wheelbarrow_binmvolume" pattern="^\d+\.?\d*$">
 
-        <div ng-messages="wheelbarrow_binmvolume.$dirty && wheelbarrow_binmvolume.$error" style="color:maroon" role="alert">
+        <div ng-messages="addtool.wheelbarrow_binmvolume.$dirty && addtool.wheelbarrow_binmvolume.$error" style="color:maroon" role="alert">
           <div ng-message="required">This field must not be empty</div>
           <div ng-message="minlength">Must have at least 3 characters</div>
           <div ng-message="maxlength">Cannot have more than 10 characters</div>
@@ -389,11 +389,11 @@
         <label for="wheelbarrow_wheelcount">Wheelbarrow Wheel Count</label>
         <input type="text" class="form-control" id="wheelbarrow_wheelcount" placeholder="2" ng-minlength="1" ng-maxlength="10" name="wheelbarrow_wheelcount" ng-model="toolobject.wheelbarrow_wheelcount" pattern="\d+" required>
 
-        <div ng-messages="wheelbarrow_wheelcount.$dirty && wheelbarrow_wheelcount.$error" style="color:maroon" role="alert">
+        <div ng-messages="addtool.wheelbarrow_wheelcount.$dirty && addtool.wheelbarrow_wheelcount.$error" style="color:maroon" role="alert">
           <div ng-message="required">This field must not be empty</div>
           <div ng-message="minlength">Must have at least 1 characters</div>
           <div ng-message="maxlength">Cannot have more than 10 characters</div>
-          <div ng-message="pattern">Must be a number</div>
+          <div ng-message="pattern">Must be an integer</div>
         </div>
       </div>
 
@@ -409,7 +409,7 @@
         <label for="drill_mintorque">Drill Min Torque (ft-lb)</label>
         <input type="text" class="form-control" id="drill_mintorque" placeholder="80.2" ng-minlength="1" ng-maxlength="10" name="drill_mintorque" ng-model="toolobject.drill_mintorque" pattern="^\d+\.?\d*$">
 
-        <div ng-messages="drill_mintorque.$dirty && drill_mintorque.$error" style="color:maroon" role="alert">
+        <div ng-messages="addtool.drill_mintorque.$dirty && addtool.drill_mintorque.$error" style="color:maroon" role="alert">
           <div ng-message="required">This field must not be empty</div>
           <div ng-message="minlength">Must have at least 1 characters</div>
           <div ng-message="maxlength">Cannot have more than 10 characters</div>
@@ -419,7 +419,7 @@
         <label for="drill_maxtorque">Drill Max Torque (ft-lb)</label>
         <input type="text" class="form-control" id="drill_maxtorque" placeholder="800.5" ng-minlength="1" ng-maxlength="10" name="drill_maxtorque" ng-model="toolobject.drill_maxtorque" pattern="^\d+\.?\d*$">
 
-        <div ng-messages="drill_maxtorque.$dirty && drill_maxtorque.$error" style="color:maroon" role="alert">
+        <div ng-messages="addtool.drill_maxtorque.$dirty && addtool.drill_maxtorque.$error" style="color:maroon" role="alert">
           <div ng-message="required">This field must not be empty</div>
           <div ng-message="minlength">Must have at least 1 characters</div>
           <div ng-message="maxlength">Cannot have more than 10 characters</div>
@@ -432,11 +432,11 @@
         <input type="text" min="0" step="1" class="form-control" id="saw_bladesize" placeholder="7" ng-minlength="1" ng-maxlength="10"
         name="saw_bladesize" ng-model="toolobject.saw_bladesize" pattern="\d+" required>
 
-        <div ng-messages="saw_bladesize.$dirty && saw_bladesize.$error" style="color:maroon" role="alert">
+        <div ng-messages="addtool.saw_bladesize.$dirty && addtool.saw_bladesize.$error" style="color:maroon" role="alert">
           <div ng-message="required">This field must not be empty</div>
           <div ng-message="minlength">Must have at least 1 characters</div>
           <div ng-message="maxlength">Cannot have more than 10 characters</div>
-          <div ng-message="pattern">Must be integer</div>
+          <div ng-message="pattern">Must be an integer</div>
         </div>
 
           <label for="saw_bladefraction">Saw Blade Size Fraction</label>
@@ -460,7 +460,7 @@
         <input type="text" class="form-control" id="aircompressor_tanksize" placeholder="30.0" ng-minlength="1"
         ng-maxlength="10" name="aircompressor_tanksize" ng-model="toolobject.aircompressor_tanksize" pattern="^\d+\.?\d*$" required>
 
-        <div ng-messages="aircompressor_tanksize.$dirty && aircompressor_tanksize.$error" style="color:maroon" role="alert">
+        <div ng-messages="addtool.aircompressor_tanksize.$dirty && addtool.aircompressor_tanksize.$error" style="color:maroon" role="alert">
           <div ng-message="required">This field must not be empty</div>
           <div ng-message="minlength">Must have at least 1 characters</div>
           <div ng-message="maxlength">Cannot have more than 10 characters</div>
@@ -471,7 +471,7 @@
         <input type="text" class="form-control" id="aircompressor_pressurerating" placeholder="300.5" ng-minlength="1"
         ng-maxlength="10" name="aircompressor_pressurerating" ng-model="toolobject.aircompressor_pressurerating" pattern="^\d+\.?\d*$">
 
-        <div ng-messages="aircompressor_pressurerating.$dirty && aircompressor_pressurerating.$error" style="color:maroon" role="alert">
+        <div ng-messages="addtool.aircompressor_pressurerating.$dirty && addtool.aircompressor_pressurerating.$error" style="color:maroon" role="alert">
           <div ng-message="required">This field must not be empty</div>
           <div ng-message="minlength">Must have at least 1 characters</div>
           <div ng-message="maxlength">Cannot have more than 10 characters</div>
@@ -484,11 +484,11 @@
         <label for="mixer_motorrating">Mixer Motor Rating (hp)</label>
         <input type="text" min="0" step="1" / class="form-control" id="mixer_motorrating" placeholder="0"
         ng-minlength="1" ng-maxlength="10" name="mixer_motorrating" ng-model="toolobject.mixer_motorrating" pattern="\d+" required>
-        <div ng-messages="mixer_motorrating.$dirty && mixer_motorrating.$error" style="color:maroon" role="alert">
+        <div ng-messages="addtool.mixer_motorrating.$dirty && addtool.mixer_motorrating.$error" style="color:maroon" role="alert">
           <div ng-message="required">This field must not be empty</div>
           <div ng-message="minlength">Must have at least 1 characters</div>
           <div ng-message="maxlength">Cannot have more than 10 characters</div>
-          <div ng-message="pattern">Must be integer</div>
+          <div ng-message="pattern">Must be an integer</div>
         </div>
 
         <label for="mixer_motorfraction">Mixer Motor Rating Fraction</label>
@@ -499,7 +499,7 @@
 
         <label for="mixer_drumsize">Mixer Drum Size (cf)</label>
         <input type="text" class="form-control" id="mixer_drumsize" placeholder="3.5" ng-minlength="1" ng-maxlength="10" name="mixer_drumsize" ng-model="toolobject.mixer_drumsize" pattern="^\d+\.?\d*$">
-        <div ng-messages="mixer_drumsize.$dirty && mixer_drumsize.$error" style="color:maroon" role="alert">
+        <div ng-messages="addtool.mixer_drumsize.$dirty && addtool.mixer_drumsize.$error" style="color:maroon" role="alert">
           <div ng-message="required">This field must not be empty</div>
           <div ng-message="minlength">Must have at least 1 characters</div>
           <div ng-message="maxlength">Cannot have more than 10 characters</div>
@@ -511,11 +511,11 @@
         <label for="generator_powerrating">Generator Power Rating (Watt)</label>
         <input type="text" class="form-control" id="mixer_motorrating" placeholder="30" ng-minlength="1" ng-maxlength="10" name="generator_powerrating" ng-model="toolobject.generator_powerrating" pattern="\d+" required>
 
-        <div ng-messages="generator_powerrating.$dirty && generator_powerrating.$error" style="color:maroon" role="alert">
+        <div ng-messages="addtool.generator_powerrating.$dirty && addtool.generator_powerrating.$error" style="color:maroon" role="alert">
           <div ng-message="required">This field must not be empty</div>
           <div ng-message="minlength">Must have at least 1 characters</div>
           <div ng-message="maxlength">Cannot have more than 10 characters</div>
-          <div ng-message="pattern">Must be a number</div>
+          <div ng-message="pattern">Must be an integer</div>
         </div>
       </div>
 
