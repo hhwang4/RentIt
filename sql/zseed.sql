@@ -506,6 +506,24 @@ insert into GardenTool (id, handle_material) VALUES (@lastTool, 'steel');
 set @lastTool:= last_insert_id();
 insert into RakeTool (id, tine_count) VALUES (@lastTool, 39);
 
+#Garden tool:4
+insert into Tool (width, weight, length, manufacturer, material, deposit_price, rental_price, original_price, Category_Id, PowerSource_Id, SubType_Id, SubOption_Id)
+VALUES (36, 3, 66, 'Midwest Gloves', 'metal', 22.124, 8.2965, 55.31, @gardenCategoryId, @manualPowerSourceId, (select id from SubType where name = 'Rakes'), (select id from SubOption where name = 'landscaping'));
+
+set @lastTool:= last_insert_id();
+insert into GardenTool (id, handle_material) VALUES (@lastTool, 'aluminum');
+set @lastTool:= last_insert_id();
+insert into RakeTool (id, tine_count) VALUES (@lastTool, 40);
+
+#Garden tool:5
+insert into Tool (width, weight, length, manufacturer, material, deposit_price, rental_price, original_price, Category_Id, PowerSource_Id, SubType_Id, SubOption_Id)
+VALUES (4, 2, 44.5, 'Gardeners', 'steel', 27.98, 10.4925, 69.95, @gardenCategoryId, @manualPowerSourceId, (select id from SubType where name = 'Rakes'), (select id from SubOption where name = 'rock'));
+
+set @lastTool:= last_insert_id();
+insert into GardenTool (id, handle_material) VALUES (@lastTool, 'wood');
+set @lastTool:= last_insert_id();
+insert into RakeTool (id, tine_count) VALUES (@lastTool, 4);
+
 # Ladder Tools Insert
 #Ladder tool : 1
 insert into Tool (width, weight, length, manufacturer, material, deposit_price, rental_price, original_price, Category_Id, PowerSource_Id, SubType_Id, SubOption_Id)
@@ -518,12 +536,39 @@ insert into StepLadder (id, pail_shelf) VALUES (@lastTool, true);
 
 #Ladder tool : 2
 insert into Tool (width, weight, length, manufacturer, material, deposit_price, rental_price, original_price, Category_Id, PowerSource_Id, SubType_Id, SubOption_Id)
+VALUES (22.8, 4.63, 29.1, 'Finether', 'Aluminium', 24, 9, 60, @ladderCategoryId, @manualPowerSourceId, (select id from SubType where name = 'Step'), (select id from SubOption where name = 'folding'));
+
+set @lastTool:= last_insert_id();
+insert into LadderTool (id, step_count, weight_capacity) VALUES (@lastTool, 3, 330);
+set @lastTool:= last_insert_id();
+insert into StepLadder (id, pail_shelf) VALUES (@lastTool, true);
+
+#Ladder tool : 3
+insert into Tool (width, weight, length, manufacturer, material, deposit_price, rental_price, original_price, Category_Id, PowerSource_Id, SubType_Id, SubOption_Id)
 VALUES (22.4, 13.4, 28.5, 'Louisville', 'fiberglass', 15.60, 5.33, 33.0, @ladderCategoryId, @manualPowerSourceId, (select id from SubType where name = 'Straight'), (select id from SubOption where name = 'telescoping'));
 
 set @lastTool:= last_insert_id();
 insert into LadderTool (id, step_count, weight_capacity) VALUES (@lastTool, 6, 300);
 set @lastTool:= last_insert_id();
 insert into StraightLadder (id, rubber_feet) VALUES (@lastTool, 6);
+
+#Ladder tool : 4
+insert into Tool (width, weight, length, manufacturer, material, deposit_price, rental_price, original_price, Category_Id, PowerSource_Id, SubType_Id, SubOption_Id)
+VALUES (18.125, 13.4, 144, 'Werner', 'Aluminium', 70.4, 26.4, 176, @ladderCategoryId, @manualPowerSourceId, (select id from SubType where name = 'Straight'), (select id from SubOption where name = 'telescoping'));
+
+set @lastTool:= last_insert_id();
+insert into LadderTool (id, step_count, weight_capacity) VALUES (@lastTool, 12, 300);
+set @lastTool:= last_insert_id();
+insert into StraightLadder (id, rubber_feet) VALUES (@lastTool, 12);
+
+#Ladder tool : 5
+insert into Tool (width, weight, length, manufacturer, material, deposit_price, rental_price, original_price, Category_Id, PowerSource_Id, SubType_Id, SubOption_Id)
+VALUES (18, 19, 126, 'Xtend & Climb', 'steel', 58, 21.75, 145, @ladderCategoryId, @manualPowerSourceId, (select id from SubType where name = 'Straight'), (select id from SubOption where name = 'telescoping'));
+
+set @lastTool:= last_insert_id();
+insert into LadderTool (id, step_count, weight_capacity) VALUES (@lastTool, 12, 225);
+set @lastTool:= last_insert_id();
+insert into StraightLadder (id, rubber_feet) VALUES (@lastTool, 10.5);
 
 # Power Tool insert
 #power tool: 1
