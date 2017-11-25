@@ -149,7 +149,7 @@ class Pruner(Garden):
     def __init__(self, params):
         super(Pruner, self).__init__(params)
         self.blade_material = params['pruner_blade_material']
-        self.blade_length = float(eval(params['pruner_blade_length']))
+        self.blade_length = params['pruner_blade_length']
 
     def create(self, cursor):
         super(Pruner, self).create(cursor)
@@ -169,8 +169,8 @@ class Striking(Garden):
 class Digger(Garden):
     def __init__(self, params):
         super(Digger, self).__init__(params)
-        self.blade_width = float(eval(params['digger_blade_width']))
-        self.blade_length = float(eval(params['digger_blade_length']))
+        self.blade_width = params['digger_blade_width']
+        self.blade_length = params['digger_blade_length']
 
     def create(self, cursor):
         super(Digger, self).create(cursor)

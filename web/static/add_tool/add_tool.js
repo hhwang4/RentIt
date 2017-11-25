@@ -51,9 +51,12 @@ angular.module('myApp.addtool', ['ngRoute'])
       $scope.toolobject.hammer_antivibration;
       $scope.toolobject.pruner_bladematerial;
       $scope.toolobject.pruner_bladelength;
+      $scope.toolobject.pruner_bladefraction;
       $scope.toolobject.striking_headweight;
       $scope.toolobject.digger_bladewidth;
+      $scope.toolobject.digger_widthfraction;
       $scope.toolobject.digger_bladelength;
+      $scope.toolobject.digger_lengthfraction;
       $scope.toolobject.rakes_tinecount;
       $scope.toolobject.wheelbarrow_binmaterial;
       $scope.toolobject.wheelbarrow_wheelcount;
@@ -211,7 +214,9 @@ angular.module('myApp.addtool', ['ngRoute'])
         var rachet_drive_size = parseFloat($scope.toolobject.rachet_drivesize) + $scope.toolobject.rachet_drivefraction;
         var socket_drive_size = parseFloat($scope.toolobject.socket_drivesize) + $scope.toolobject.socket_drivefraction;
         var socket_sae_size = parseFloat($scope.toolobject.socket_saesize) + $scope.toolobject.socket_drivefraction;
-
+        var digger_blade_width = parseFloat($scope.toolobject.digger_bladewidth) + $scope.toolobject.digger_widthfraction;
+        var digger_blade_length = parseFloat($scope.toolobject.digger_bladelength) + $scope.toolobject.digger_lengthfraction;
+        var pruner_blade_length = parseFloat($scope.toolobject.pruner_bladelength) + $scope.toolobject.pruner_bladefraction;
         var data = {
           "category": $scope.category,
           "accessories": $scope.accessories,
@@ -240,10 +245,10 @@ angular.module('myApp.addtool', ['ngRoute'])
           "gun_capacity": $scope.toolobject.handgun_capacity,
           "hammer_anti_vibration": $scope.toolobject.hammer_antivibration,
           "pruner_blade_material": $scope.toolobject.pruner_bladematerial,
-          "pruner_blade_length": $scope.toolobject.pruner_bladelength,
+          "pruner_blade_length": pruner_blade_length,
           "striking_head_weight": $scope.toolobject.striking_headweight,
-          "digger_blade_width": $scope.toolobject.digger_bladewidth,
-          "digger_blade_length": $scope.toolobject.digger_bladelength,
+          "digger_blade_width": digger_blade_width,
+          "digger_blade_length": digger_blade_length,
           "rakes_tine_count": $scope.toolobject.rakes_tinecount,
           "wheelbarrow_bin_material": $scope.toolobject.wheelbarrow_binmaterial,
           "wheelbarrow_wheel_count": $scope.toolobject.wheelbarrow_wheelcount,
