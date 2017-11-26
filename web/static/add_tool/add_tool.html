@@ -310,14 +310,18 @@
         </div>
 
         <label for="pruner_bladelength">Pruning Tool Blade Length (inch)</label>
-        <input type="text" class="form-control" id="pruner_bladelength" placeholder="3/8" ng-minlength="1" ng-maxlength="10" name="pruner_bladelength" ng-model="toolobject.pruner_bladelength" pattern="^\d+\/\d+$" required>
+        <input type="text" class="form-control" id="pruner_bladelength" placeholder="5" ng-minlength="1" ng-maxlength="10" name="pruner_bladelength" ng-model="toolobject.pruner_bladelength" pattern="\d+" required>
 
         <div ng-messages="addtool.pruner_bladelength.$dirty && addtool.pruner_bladelength.$error" style="color:maroon" role="alert">
           <div ng-message="required">This field must not be empty</div>
-          <div ng-message="minlength">Must have at least 2 characters</div>
+          <div ng-message="minlength">Must have at least 1 characters</div>
           <div ng-message="maxlength">Cannot have more than 10 characters</div>
-          <div ng-message="pattern">Must be a fractional number</div>
+          <div ng-message="pattern">Must be an integer</div>
         </div>
+
+        <label for="prunner_bladefraction">Pruning Tool Blade Length Fraction</label>
+        <select type="text" class="form-control" id="prunner_bladefraction" placeholder="0" ng-model="toolobject.pruner_bladefraction" ng-options="f.value as f.name for f in fractions" required>
+        </select>
       </div>
 
       <div class="form-group col-md-6" ng-if="subtype.name =='Striking'">
@@ -334,24 +338,31 @@
 
       <div class="form-group col-md-6" ng-if="subtype.name =='Digger'">
         <label for="digger_bladewidth">Digging Tool Blade Width (in)</label>
-        <input type="text" class="form-control" id="digger_bladewidth" placeholder="9.75" ng-minlength="1" ng-maxlength="10" name="digger_bladewidth" ng-model="toolobject.digger_bladewidth" pattern="^\d+\.?\d*$" required>
+        <input type="text" class="form-control" id="digger_bladewidth" placeholder="8" ng-minlength="1" ng-maxlength="10" name="digger_bladewidth" ng-model="toolobject.digger_bladewidth" pattern="\d+" required>
 
         <div ng-messages="addtool.digger_bladewidth.$dirty && addtool.digger_bladewidth.$error" style="color:maroon" role="alert">
           <div ng-message="required">This field must not be empty</div>
           <div ng-message="minlength">Must have at least 1 characters</div>
           <div ng-message="maxlength">Cannot have more than 10 characters</div>
-          <div ng-message="pattern">Must be a number</div>
+          <div ng-message="pattern">Must be an integer</div>
         </div>
 
+        <label for="digger_widthfraction">Digging Tool Blade Width Fraction</label>
+        <select type="text" class="form-control" id="digger_widthfraction" placeholder="0" ng-model="toolobject.digger_widthfraction" ng-options="f.value as f.name for f in fractions" required>
+        </select>
+
         <label for="digger_bladelength">Digging Tool Blade Length (in)</label>
-        <input type="text" class="form-control" id="digger_bladelength" placeholder="9.75" ng-minlength="1" ng-maxlength="10" name="digger_bladelength" ng-model="toolobject.digger_bladelength" pattern="^\d+\.?\d*$" required>
+        <input type="text" class="form-control" id="digger_bladelength" placeholder="5" ng-minlength="1" ng-maxlength="10" name="digger_bladelength" ng-model="toolobject.digger_bladelength" pattern="\d+" required>
 
         <div ng-messages="addtool.digger_bladelength.$dirty && addtool.digger_bladelength.$error" style="color:maroon" role="alert">
           <div ng-message="required">This field must not be empty</div>
           <div ng-message="minlength">Must have at least 1 characters</div>
           <div ng-message="maxlength">Cannot have more than 10 characters</div>
-          <div ng-message="pattern">Must be a number</div>
+          <div ng-message="pattern">Must be an integer</div>
         </div>
+        <label for="digger_lengthfraction">Digging Tool Blade Length Fraction</label>
+        <select type="text" class="form-control" id="digger_lengthfraction" placeholder="0" ng-model="toolobject.digger_lengthfraction" ng-options="f.value as f.name for f in fractions" required>
+        </select>
       </div>
 
       <div class="form-group col-md-6" ng-if="subtype.name =='Rakes'">
@@ -362,7 +373,7 @@
           <div ng-message="required">This field must not be empty</div>
           <div ng-message="minlength">Must have at least 1 characters</div>
           <div ng-message="maxlength">Cannot have more than 10 characters</div>
-          <div ng-message="pattern">Must be a number</div>
+          <div ng-message="pattern">Must be an integer</div>
         </div>
       </div>
 

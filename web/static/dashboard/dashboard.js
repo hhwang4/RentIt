@@ -41,7 +41,7 @@ angular.module('myApp.dashboard', ['ngRoute'])
                 vm.links = [
                 {name: 'Pick up Reservations', url: '/#!/pickup_reservation'},
                 {name: 'Drop off Reservations', url: '/#!/dropoff_reservation'},
-                {name: 'Add new tool', url: '/#!/add_tool'},
+                {name: 'Add New Tool', url: '/#!/add_tool'},
                 {name: 'Generate Reports', url: '/#!/reports'},
                 {name: 'Logout', url: '/#!/logout'}
             ];
@@ -52,7 +52,7 @@ angular.module('myApp.dashboard', ['ngRoute'])
                         {name: 'Dashboard', url: '/#!/dashboard'},
                         {name: 'Pick up Reservations', url: '/#!/pickup_reservation'},
                         {name: 'Drop off Reservations', url: '/#!/dropoff_reservation'},
-                        {name: 'Add new tool', url: '/#!/add_tool'},
+                        {name: 'Add New tool', url: '/#!/add_tool'},
                         {name: 'Generate Reports', url: '/#!/reports'},
                         {name: 'Logout', url: '/#!/logout'}
                         ];
