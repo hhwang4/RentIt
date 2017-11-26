@@ -19,8 +19,8 @@ angular.module('myApp.dashboard', ['ngRoute'])
         });
     }])
 
-    .controller('DashboardCtrl', ['$scope', '$http', 'localStorageService', '$location',
-        function ($scope, $http, localStorageService, $location) {
+    .controller('DashboardCtrl', ['$scope', '$rootScope', '$http', 'localStorageService', '$location',
+        function ($scope, $rootScope, $http, localStorageService, $location) {
             $scope.view = 'This is a scope variable1';
 
             var savedCreds = localStorageService.get('authorizationData');
@@ -35,7 +35,7 @@ angular.module('myApp.dashboard', ['ngRoute'])
                 {name: 'Make reservation', url: '/#!/make_reservation'},
                 {name: 'Check tool Availability', url: '/#!/tool_availability'},
                 {name: 'Logout', url: '/#!/logout'},
-            ]
+            ];
 
             if(vm.loginType == 'clerk') {
                 vm.links = [
@@ -44,8 +44,28 @@ angular.module('myApp.dashboard', ['ngRoute'])
                 {name: 'Add New Tool', url: '/#!/add_tool'},
                 {name: 'Generate Reports', url: '/#!/reports'},
                 {name: 'Logout', url: '/#!/logout'}
-            ]
+            ];
             }
+
+            if(vm.loginType == 'clerk') {
+                        $rootScope.links = [
+                        {name: 'Dashboard', url: '/#!/dashboard'},
+                        {name: 'Pick up Reservations', url: '/#!/pickup_reservation'},
+                        {name: 'Drop off Reservations', url: '/#!/dropoff_reservation'},
+                        {name: 'Add New tool', url: '/#!/add_tool'},
+                        {name: 'Generate Reports', url: '/#!/reports'},
+                        {name: 'Logout', url: '/#!/logout'}
+                        ];
+                    }
+                    else {
+                        $rootScope.links = [
+                            {name: 'Dashboard', url: '/#!/dashboard'},
+                            {name: 'View Profile', url: '/#!/profile/'+ vm.username},
+                            {name: 'Make reservation', url: '/#!/make_reservation'},
+                            {name: 'Check tool Availability', url: '/#!/tool_availability'},
+                            {name: 'Logout', url: '/#!/logout'},
+                        ];
+                    }
 
 
             vm.hasError = function () {

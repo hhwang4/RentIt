@@ -426,6 +426,7 @@ insert into SubTypePowerSource (SubType_Id, PowerSource_Id, Category_Id) VALUES 
 insert into SubTypePowerSource (SubType_Id, PowerSource_Id, Category_Id) VALUES ((select id from SubType where name = 'Generator'), @gasPowerSourceId, @powerCategoryId);
 
 # Insert Hand Tools
+#Hand tool : 1
 insert into Tool (width, weight, length, manufacturer, material, deposit_price, rental_price, original_price, Category_Id, PowerSource_Id, SubType_Id, SubOption_Id)
 VALUES (2.0, 2.25, 6, 'Dewalt', 'steel', 15.60, 5.33, 44.0, @handCategoryId, @manualPowerSourceId, (select id from SubType where name = 'Screwdriver'), (select id from SubOption where name = 'hex'));
 
@@ -434,6 +435,7 @@ insert into HandTool VALUES (@lastTool);
 set @lastTool:= last_insert_id();
 insert into ScrewDriver (id, screw_size) VALUES (@lastTool, 4);
 
+#Hand tool : 2
 insert into Tool (width, weight, length, manufacturer, material, deposit_price, rental_price, original_price, Category_Id, PowerSource_Id, SubType_Id, SubOption_Id)
 VALUES (2.0, 2.25, 6, 'Dewalt', 'steel', 15.60, 5.33, 55, @handCategoryId, @manualPowerSourceId, (select id from SubType where name = 'Screwdriver'), (select id from SubOption where name = 'hex'));
 
@@ -442,6 +444,8 @@ insert into HandTool VALUES (@lastTool);
 set @lastTool:= last_insert_id();
 insert into ScrewDriver (id, screw_size) VALUES (@lastTool, 4);
 
+
+#Hand tool : 3
 insert into Tool (width, weight, length, manufacturer, material, deposit_price, rental_price, original_price, Category_Id, PowerSource_Id, SubType_Id, SubOption_Id)
 VALUES (12.0, 5.25, 68, 'Dewalt', 'plastic', 0.60, 12.44,99, @handCategoryId, @manualPowerSourceId, (select id from SubType where name = 'Screwdriver'), (select id from SubOption where name = 'hex'));
 
@@ -452,6 +456,8 @@ insert into ScrewDriver (id, screw_size) VALUES (@lastTool, 7);
 
 
 #Hand socket
+
+#Hand tool : 4
 insert into Tool (width, weight, length, manufacturer, material, deposit_price, rental_price, original_price, Category_Id, PowerSource_Id, SubType_Id, SubOption_Id)
 VALUES (2.0, 2.25, 6, 'Dewalt', 'steel', 15.60, 5.33, 3, @handCategoryId, @manualPowerSourceId, (select id from SubType where name = 'Socket'), (select id from SubOption where name = 'deep'));
 
@@ -460,6 +466,8 @@ insert into HandTool VALUES (@lastTool);
 set @lastTool:= last_insert_id();
 insert into HandSocket (id, drive_size, sae_size, deep_socket) VALUES (@lastTool, .5, .25, true);
 
+
+#Hand tool : 5
 # Hand Ratchet
 insert into Tool (width, weight, length, manufacturer, material, deposit_price, rental_price, original_price, Category_Id, PowerSource_Id, SubType_Id, SubOption_Id)
 VALUES (2.0, 2.25, 6, 'Dewalt', 'steel', 15.60, 5.33, 7, @handCategoryId, @manualPowerSourceId, (select id from SubType where name = 'Ratchet'), (select id from SubOption where name = 'fixed'));
@@ -471,6 +479,7 @@ insert into HandRatchet (id, drive_size) VALUES (@lastTool, .5);
 
 
 # Garden tools insert
+#Garden tool:1
 insert into Tool (width, weight, length, manufacturer, material, deposit_price, rental_price, original_price, Category_Id, PowerSource_Id, SubType_Id, SubOption_Id)
 VALUES (2.0, 2.25, 6, 'Dewalt', 'steel', 15.60, 5.33, 66.9, @gardenCategoryId, @manualPowerSourceId, (select id from SubType where name = 'Digger'), (select id from SubOption where name = 'edger'));
 
@@ -479,7 +488,44 @@ insert into GardenTool (id, handle_material) VALUES (@lastTool, 'wood');
 set @lastTool:= last_insert_id();
 insert into DiggingTool (id, blade_width, blade_length) VALUES (@lastTool, NULL, .25);
 
+#Garden tool:2
+insert into Tool (width, weight, length, manufacturer, material, deposit_price, rental_price, original_price, Category_Id, PowerSource_Id, SubType_Id, SubOption_Id)
+VALUES (8.0, 5, 132, 'Fiskars', 'steel', 14, 5.25, 35, @gardenCategoryId, @manualPowerSourceId, (select id from SubType where name = 'Pruner'), (select id from SubOption where name = 'sheer'));
+
+set @lastTool:= last_insert_id();
+insert into GardenTool (id, handle_material) VALUES (@lastTool, 'Fiberglass');
+set @lastTool:= last_insert_id();
+insert into PruningTool (id, blade_material, blade_length) VALUES (@lastTool, 'steel', 1.5);
+
+#Garden tool:3
+insert into Tool (width, weight, length, manufacturer, material, deposit_price, rental_price, original_price, Category_Id, PowerSource_Id, SubType_Id, SubOption_Id)
+VALUES (26, 3, 71, 'Ames', 'plastic', 8, 3, 20, @gardenCategoryId, @manualPowerSourceId, (select id from SubType where name = 'Rakes'), (select id from SubOption where name = 'leaf'));
+
+set @lastTool:= last_insert_id();
+insert into GardenTool (id, handle_material) VALUES (@lastTool, 'steel');
+set @lastTool:= last_insert_id();
+insert into RakeTool (id, tine_count) VALUES (@lastTool, 39);
+
+#Garden tool:4
+insert into Tool (width, weight, length, manufacturer, material, deposit_price, rental_price, original_price, Category_Id, PowerSource_Id, SubType_Id, SubOption_Id)
+VALUES (36, 3, 66, 'Midwest Gloves', 'metal', 22.124, 8.2965, 55.31, @gardenCategoryId, @manualPowerSourceId, (select id from SubType where name = 'Rakes'), (select id from SubOption where name = 'landscaping'));
+
+set @lastTool:= last_insert_id();
+insert into GardenTool (id, handle_material) VALUES (@lastTool, 'aluminum');
+set @lastTool:= last_insert_id();
+insert into RakeTool (id, tine_count) VALUES (@lastTool, 40);
+
+#Garden tool:5
+insert into Tool (width, weight, length, manufacturer, material, deposit_price, rental_price, original_price, Category_Id, PowerSource_Id, SubType_Id, SubOption_Id)
+VALUES (4, 2, 44.5, 'Gardeners', 'steel', 27.98, 10.4925, 69.95, @gardenCategoryId, @manualPowerSourceId, (select id from SubType where name = 'Rakes'), (select id from SubOption where name = 'rock'));
+
+set @lastTool:= last_insert_id();
+insert into GardenTool (id, handle_material) VALUES (@lastTool, 'wood');
+set @lastTool:= last_insert_id();
+insert into RakeTool (id, tine_count) VALUES (@lastTool, 4);
+
 # Ladder Tools Insert
+#Ladder tool : 1
 insert into Tool (width, weight, length, manufacturer, material, deposit_price, rental_price, original_price, Category_Id, PowerSource_Id, SubType_Id, SubOption_Id)
 VALUES (2.0, 2.25, 6, 'Dewalt', 'steel', 15.60, 5.33, 33.0, @ladderCategoryId, @manualPowerSourceId, (select id from SubType where name = 'Step'), (select id from SubOption where name = 'folding'));
 
@@ -487,6 +533,42 @@ set @lastTool:= last_insert_id();
 insert into LadderTool (id, step_count, weight_capacity) VALUES (@lastTool, 10, 6.3);
 set @lastTool:= last_insert_id();
 insert into StepLadder (id, pail_shelf) VALUES (@lastTool, true);
+
+#Ladder tool : 2
+insert into Tool (width, weight, length, manufacturer, material, deposit_price, rental_price, original_price, Category_Id, PowerSource_Id, SubType_Id, SubOption_Id)
+VALUES (22.8, 4.63, 29.1, 'Finether', 'Aluminium', 24, 9, 60, @ladderCategoryId, @manualPowerSourceId, (select id from SubType where name = 'Step'), (select id from SubOption where name = 'folding'));
+
+set @lastTool:= last_insert_id();
+insert into LadderTool (id, step_count, weight_capacity) VALUES (@lastTool, 3, 330);
+set @lastTool:= last_insert_id();
+insert into StepLadder (id, pail_shelf) VALUES (@lastTool, true);
+
+#Ladder tool : 3
+insert into Tool (width, weight, length, manufacturer, material, deposit_price, rental_price, original_price, Category_Id, PowerSource_Id, SubType_Id, SubOption_Id)
+VALUES (22.4, 13.4, 28.5, 'Louisville', 'fiberglass', 15.60, 5.33, 33.0, @ladderCategoryId, @manualPowerSourceId, (select id from SubType where name = 'Straight'), (select id from SubOption where name = 'telescoping'));
+
+set @lastTool:= last_insert_id();
+insert into LadderTool (id, step_count, weight_capacity) VALUES (@lastTool, 6, 300);
+set @lastTool:= last_insert_id();
+insert into StraightLadder (id, rubber_feet) VALUES (@lastTool, 6);
+
+#Ladder tool : 4
+insert into Tool (width, weight, length, manufacturer, material, deposit_price, rental_price, original_price, Category_Id, PowerSource_Id, SubType_Id, SubOption_Id)
+VALUES (18.125, 13.4, 144, 'Werner', 'Aluminium', 70.4, 26.4, 176, @ladderCategoryId, @manualPowerSourceId, (select id from SubType where name = 'Straight'), (select id from SubOption where name = 'telescoping'));
+
+set @lastTool:= last_insert_id();
+insert into LadderTool (id, step_count, weight_capacity) VALUES (@lastTool, 12, 300);
+set @lastTool:= last_insert_id();
+insert into StraightLadder (id, rubber_feet) VALUES (@lastTool, 12);
+
+#Ladder tool : 5
+insert into Tool (width, weight, length, manufacturer, material, deposit_price, rental_price, original_price, Category_Id, PowerSource_Id, SubType_Id, SubOption_Id)
+VALUES (18, 19, 126, 'Xtend & Climb', 'steel', 58, 21.75, 145, @ladderCategoryId, @manualPowerSourceId, (select id from SubType where name = 'Straight'), (select id from SubOption where name = 'telescoping'));
+
+set @lastTool:= last_insert_id();
+insert into LadderTool (id, step_count, weight_capacity) VALUES (@lastTool, 12, 225);
+set @lastTool:= last_insert_id();
+insert into StraightLadder (id, rubber_feet) VALUES (@lastTool, 10.5);
 
 # Power Tool insert
 #power tool: 1
@@ -549,7 +631,19 @@ insert into Accessory (description, quantity, PowerTool_Id) VALUES ('MilwaukeeM1
 
 #power tool:5
 
-#power tool:6
+insert into Tool (width, weight, length, manufacturer, material, deposit_price, rental_price, original_price, Category_Id, PowerSource_Id, SubType_Id, SubOption_Id)
+VALUES (25, 515, 48, 'Generac', 'aluminum ', 1120, 420, 2800, @powerCategoryId, @dcPowerSourceId, (select id from SubType where name = 'Generator'), (select id from SubOption where name = 'electric'));
+
+set @lastTool:= last_insert_id();
+insert into PowerTool (id, volt_rating, amp_rating, min_rpm_rating, max_rpm_rating) VALUES (@lastTool, 120, 200, 0, 3600);
+set @lastTool:= last_insert_id();
+insert into PowerGenerator (id, power_rating) VALUES (@lastTool, 22000);
+
+#Power tool accessory
+insert into Accessory (description, quantity, PowerTool_Id) VALUES ('Scheduled maintaince kit', 1, @lastTool);
+insert into Accessory (description, quantity, PowerTool_Id) VALUES ('Auxiliary transfer switch lockout', 1, @lastTool);
+insert into Accessory (description, quantity, PowerTool_Id) VALUES ('Fasica base wrap', 1, @lastTool);
+insert into Accessory (description, quantity, PowerTool_Id) VALUES ('Wireless local monitor', 1, @lastTool);
 
 
 
