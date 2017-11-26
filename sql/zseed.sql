@@ -645,7 +645,35 @@ insert into Accessory (description, quantity, PowerTool_Id) VALUES ('Auxiliary t
 insert into Accessory (description, quantity, PowerTool_Id) VALUES ('Fasica base wrap', 1, @lastTool);
 insert into Accessory (description, quantity, PowerTool_Id) VALUES ('Wireless local monitor', 1, @lastTool);
 
+#power tool:6
 
+insert into Tool (width, weight, length, manufacturer, material, deposit_price, rental_price, original_price, Category_Id, PowerSource_Id, SubType_Id, SubOption_Id)
+VALUES (14.64, 132, 8.85, 'Dewalt', 'steel', 100, 37.5, 250, @powerCategoryId, @dcPowerSourceId, (select id from SubType where name = 'Saw'), (select id from SubOption where name = 'circular'));
+
+set @lastTool:= last_insert_id();
+insert into PowerTool (id, volt_rating, amp_rating, min_rpm_rating, max_rpm_rating) VALUES (@lastTool, 18, 14, 0, 5000);
+set @lastTool:= last_insert_id();
+insert into PowerSaw (id, blade_size) VALUES (@lastTool, 7.25);
+
+#Power tool accessory
+insert into Accessory (description, quantity, PowerTool_Id) VALUES ('Diablo 7-1/4 in. x 60-Tooth Fine Finish Saw Blade', 2, @lastTool);
+insert into Accessory (description, quantity, PowerTool_Id) VALUES ('Dewalt FUEL 18-Volt Lithium-Ion Cordless SAWZALL Reciprocating Saw with M18 9.0Ah Starter Kit', 1, @lastTool);
+
+#power tool:7
+
+insert into Tool (width, weight, length, manufacturer, material, deposit_price, rental_price, original_price, Category_Id, PowerSource_Id, SubType_Id, SubOption_Id)
+VALUES (25, 515, 48, 'Eagle', 'aluminum ', 1120, 420, 2800, @powerCategoryId, @dcPowerSourceId, (select id from SubType where name = 'Generator'), (select id from SubOption where name = 'electric'));
+
+set @lastTool:= last_insert_id();
+insert into PowerTool (id, volt_rating, amp_rating, min_rpm_rating, max_rpm_rating) VALUES (@lastTool, 120, 200, 0, 3600);
+set @lastTool:= last_insert_id();
+insert into PowerGenerator (id, power_rating) VALUES (@lastTool, 22000);
+
+#Power tool accessory
+insert into Accessory (description, quantity, PowerTool_Id) VALUES ('Scheduled maintaince kit', 1, @lastTool);
+insert into Accessory (description, quantity, PowerTool_Id) VALUES ('Auxiliary transfer switch lockout', 1, @lastTool);
+insert into Accessory (description, quantity, PowerTool_Id) VALUES ('Fasica base wrap', 1, @lastTool);
+insert into Accessory (description, quantity, PowerTool_Id) VALUES ('Wireless local monitor', 1, @lastTool);
 
 
 # Reservations
