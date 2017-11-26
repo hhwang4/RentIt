@@ -647,10 +647,13 @@ insert into Accessory (description, quantity, PowerTool_Id) VALUES ('Wireless lo
 
 
 
+
 # Reservations
-#reservation number:1
-insert into Reservation (booking_date, start_date, end_date, Customer_UserName, DropOffClerk_UserName, PickupClerk_UserName)
-VALUES (NOW(), '2017-10-02', '2017-10-12', 'thebatman', NULL, NULL);
+#insert into Reservation (booking_date, start_date, end_date, Customer_UserName, DropOffClerk_UserName, PickupClerk_UserName)
+#VALUES (NOW(), '2017-10-02', '2017-10-12', 'thebatman', NULL, NULL);
+
+INSERT INTO `Reservation` VALUES (1,'2017-11-26 09:15:24','2017-10-02 00:00:00','2017-10-12 00:00:00','thebatman',NULL,NULL),(2,'2017-11-26 08:57:50','2017-11-26 00:00:00','2017-11-28 00:00:00','thor',NULL,NULL),(3,'2017-11-26 09:16:24','2017-12-15 00:00:00','2017-12-30 00:00:00','thor',NULL,NULL),(4,'2017-11-26 09:17:55','2017-11-29 00:00:00','2017-11-30 00:00:00','thehulk',NULL,NULL),(5,'2017-11-26 09:18:25','2017-11-28 00:00:00','2017-11-29 00:00:00','thehulk',NULL,NULL),(6,'2017-11-26 09:19:01','2017-12-01 00:00:00','2017-12-03 00:00:00','thehulk',NULL,NULL);
+
 
 # Sale Order
 insert into SaleOrder (for_sale_date, sold_date, purchase_price, Customer_UserName, Tool_Id, Clerk_UserName)
@@ -661,8 +664,11 @@ insert into ServiceOrder (start_date, end_date, service_cost, Tool_Id)
 VALUES ('2017-10-02', '2017-10-09', 47.88, 1);
 
 # Tool Reservation
-INSERT INTO ToolReservations (Tool_Id, Reservations_Id) VALUES (1, 1);
-INSERT INTO ToolReservations (Tool_Id, Reservations_Id) VALUES (2, 1);
+#INSERT INTO ToolReservations (Tool_Id, Reservations_Id) VALUES (1, 1);
+#INSERT INTO ToolReservations (Tool_Id, Reservations_Id) VALUES (2, 1);
+#INSERT INTO `ToolReservations` VALUES (6,2),(7,2);
+
+INSERT INTO `ToolReservations` VALUES (1,1),(2,1),(6,2),(7,2),(17,3),(18,3),(19,3),(20,3),(6,4),(7,4),(8,4),(9,4),(2,5),(4,5),(5,5),(21,6),(22,6);
 
 # Tool Rentals
 INSERT INTO Rentals (Tool_Id, start_date, end_date, number_of_rentals) VALUES (1, '2017-10-02', '2017-10-12', 1);
