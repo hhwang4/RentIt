@@ -24,8 +24,11 @@ angular.module('myApp.toolAvailability', ['ngRoute', 'ngAnimate'])
     $scope.customer_username = user_info.username;
 
     // Reservation tools
-    $scope.tools = [];
-    $scope.hasSearched = false;
+    $scope.resetTools = function() {
+      $scope.tools = [];
+      $scope.hasSearched = false;
+    };
+    $scope.resetTools();
 
     // Calendar popup
     $scope.dateOptions1 = {
@@ -41,6 +44,7 @@ angular.module('myApp.toolAvailability', ['ngRoute', 'ngAnimate'])
       startingDay: 1
     };
     $scope.checkDate = function() {
+      $scope.resetTools();
       $scope.dateOptions2.minDate = $scope.start_date;
       if (moment($scope.end_date).diff(moment($scope.start_date)) < 0) {
         $scope.end_date = null;
