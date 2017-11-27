@@ -15,7 +15,7 @@
     <div class="form-group col-sm">
       <p class="input-group">
         <label for="end-date">End Date:</label>
-        <input required type="text" class="form-control" uib-datepicker-popup ng-model="end_date" is-open="popup2.opened" datepicker-options="dateOptions2" ng-required="true" close-text="Close" />
+        <input ng-change="resetTools()" required type="text" class="form-control" uib-datepicker-popup ng-model="end_date" is-open="popup2.opened" datepicker-options="dateOptions2" ng-required="true" close-text="Close" />
         <span class="input-group-btn">
         <button type="button" class="btn btn-default" ng-click="open2()"><i class="glyphicon glyphicon-calendar"></i></button>
       </span>
@@ -115,7 +115,7 @@
         </td>
         <td>{{tool.rental_price | currency}}</td>
         <td>{{tool.deposit_price | currency}}</td>
-        <td ng-click="addTool($index)"><input type="checkbox" aria-label="Add" ng-model="tool.added"></td>
+        <td ng-click="addTool($index)"><input ng-disabled="toolsAdded.length >= 10" type="checkbox" aria-label="Add" ng-model="tool.added"></td>
       </tr>
       </tbody>
     </table>

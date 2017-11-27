@@ -24,9 +24,12 @@ angular.module('myApp.makeReservation', ['ngRoute', 'ngAnimate'])
     $scope.customer_username = user_info.username;
 
     // Reservation tools
-    $scope.tools = [];
-    $scope.toolsAdded = [];
-    $scope.hasSearched = false;
+    $scope.resetTools = function() {
+      $scope.toolsAdded = [];
+      $scope.tools = [];
+      $scope.hasSearched = false;
+    };
+    $scope.resetTools();
 
     // Calendar popup
     $scope.dateOptions1 = {
@@ -42,6 +45,7 @@ angular.module('myApp.makeReservation', ['ngRoute', 'ngAnimate'])
       startingDay: 1
     };
     $scope.checkDate = function() {
+      $scope.resetTools();
       $scope.dateOptions2.minDate = $scope.start_date;
       if (moment($scope.end_date).diff(moment($scope.start_date)) < 0) {
         $scope.end_date = null;
@@ -188,20 +192,22 @@ angular.module('myApp.makeReservation', ['ngRoute', 'ngAnimate'])
     };
 
     $scope.addTool = function(index) {
-      var tool = $scope.tools[index];
-      if ($scope.toolsAdded.indexOf(tool) === -1) {
-        $scope.toolsAdded.push(tool);
-        tool.added = true;
-      } else {
-        $scope.removeTool($scope.toolsAdded.indexOf(tool));
+      if ($scope.toolsAdded.length < 10) {
+        var tool = $scope.tools[index];
+        if ($scope.toolsAdded.indexOf(tool) === -1) {
+          $scope.toolsAdded.push(tool);
+          tool.added = true;
+        } else {
+          $scope.removeTool($scope.toolsAdded.indexOf(tool));
+        }
       }
-    }
+    };
 
     $scope.removeTool = function(index) {
       var tool = $scope.toolsAdded[index];
       tool.added = false;
       $scope.toolsAdded.splice(index, 1);
-    }
+    };
 
     $scope.open = function(size, parentSelector) {
       var parentElem = parentSelector ?
