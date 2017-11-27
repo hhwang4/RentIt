@@ -80,16 +80,27 @@ angular.module('myApp.addtool', ['ngRoute'])
       $scope.accessories = [];
 
       $scope.add_accessory = function() {
-        $scope.accessories.push({
+        var item = {
           desc: '',
           quantity: ''
-        });
+        };
+
+        if($scope.category.name == 'Power' && $scope.powersource.name =='D/C') {
+            item = {
+            desc: 'Li-Ion',
+            quantity: 1
+            };
+        }
+
+        $scope.accessories.push(item);
       };
 
       $scope.remove_accessory = function(item) {
         var index = $scope.accessories.indexOf(item)
         $scope.accessories.splice(index, 1)
       };
+
+
 
       $scope.fractions = [{
           name: "0",
@@ -120,6 +131,8 @@ angular.module('myApp.addtool', ['ngRoute'])
           value: 0.75
         },
       ];
+
+      $scope.cordlessBatteryOptions = ['Li-Ion', 'NiCd', 'NiMH'];
 
       $scope.accessory_description = function() {
         return ['Drill Bits', 'Soft Case', 'Hard Case', 'D/C Batteries', 'D/C Battery Charge', 'Safety Hat',
