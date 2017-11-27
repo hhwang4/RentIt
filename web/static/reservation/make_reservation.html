@@ -115,7 +115,7 @@
         </td>
         <td>{{tool.rental_price | currency}}</td>
         <td>{{tool.deposit_price | currency}}</td>
-        <td ng-click="addTool($index)"><input type="checkbox" aria-label="Add" ng-model="tool.added"></td>
+        <td ng-click="addTool($index)"><input ng-disabled="toolsAdded.length >= 10" type="checkbox" aria-label="Add" ng-model="tool.added"></td>
       </tr>
       </tbody>
     </table>

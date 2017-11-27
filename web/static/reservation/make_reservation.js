@@ -188,20 +188,22 @@ angular.module('myApp.makeReservation', ['ngRoute', 'ngAnimate'])
     };
 
     $scope.addTool = function(index) {
-      var tool = $scope.tools[index];
-      if ($scope.toolsAdded.indexOf(tool) === -1) {
-        $scope.toolsAdded.push(tool);
-        tool.added = true;
-      } else {
-        $scope.removeTool($scope.toolsAdded.indexOf(tool));
+      if ($scope.toolsAdded.length < 10) {
+        var tool = $scope.tools[index];
+        if ($scope.toolsAdded.indexOf(tool) === -1) {
+          $scope.toolsAdded.push(tool);
+          tool.added = true;
+        } else {
+          $scope.removeTool($scope.toolsAdded.indexOf(tool));
+        }
       }
-    }
+    };
 
     $scope.removeTool = function(index) {
       var tool = $scope.toolsAdded[index];
       tool.added = false;
       $scope.toolsAdded.splice(index, 1);
-    }
+    };
 
     $scope.open = function(size, parentSelector) {
       var parentElem = parentSelector ?
