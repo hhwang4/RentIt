@@ -704,3 +704,32 @@ INSERT INTO `ToolReservations` VALUES (1,1),(2,1),(6,2),(7,2),(17,3),(18,3),(19,
 # Tool Rentals
 INSERT INTO Rentals (Tool_Id, start_date, end_date, number_of_rentals) VALUES (1, '2017-10-02', '2017-10-12', 1);
 INSERT INTO Rentals (Tool_Id, start_date, end_date, number_of_rentals) VALUES (2, '2017-10-02', '2017-10-12', 49);
+
+
+#Cordless Power Tools
+insert into Tool (width, weight, length, manufacturer, material, deposit_price, rental_price, original_price, Category_Id, PowerSource_Id, SubType_Id, SubOption_Id)
+VALUES (7.2, 5.6, 12, 'Cordless Dewalt', 'steel', 52, 15, 130, @powerCategoryId, @dcPowerSourceId, (select id from SubType where name = 'Drill'), (select id from SubOption where name = 'driver'));
+
+set @lastTool:= last_insert_id();
+insert into PowerDrill (id, adjustable_clutch, min_torque_rating, max_torque_rating) VALUES (@lastTool, true, 80.5, NULL);
+
+insert into Tool (width, weight, length, manufacturer, material, deposit_price, rental_price, original_price, Category_Id, PowerSource_Id, SubType_Id, SubOption_Id)
+VALUES (2.2, 3.6, 1, 'Cordless Dewalt', 'steel', 32, 15, 200, @powerCategoryId, @dcPowerSourceId, (select id from SubType where name = 'Saw'), (select id from SubOption where name = 'jig'));
+
+set @lastTool:= last_insert_id();
+insert into PowerSaw (id, blade_size) VALUES (@lastTool, 80.5);
+set @lastTool:= last_insert_id();
+insert into Accessory (description, quantity, PowerTool_Id) VALUES ('Li-Ion', 1, @lastTool);
+
+
+insert into Tool (width, weight, length, manufacturer, material, deposit_price, rental_price, original_price, Category_Id, PowerSource_Id, SubType_Id, SubOption_Id)
+VALUES (3.2, 8.6, 323, 'Cordless Dewalt', 'steel', 75, 15, 160, @powerCategoryId, @dcPowerSourceId, (select id from SubType where name = 'Sander'), (select id from SubOption where name = 'belt'));
+
+
+set @lastTool:= last_insert_id();
+insert into PowerSander (id, dust_bag) VALUES (@lastTool, false);
+
+#Power tool accessory
+insert into Accessory (description, quantity, PowerTool_Id) VALUES ('Li-Ion', 1, @lastTool);
+insert into Accessory (description, quantity, PowerTool_Id) VALUES ('NiCd', 2, @lastTool);
+insert into Accessory (description, quantity, PowerTool_Id) VALUES ('NiMH', 7, @lastTool);

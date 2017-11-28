@@ -320,7 +320,7 @@
 
             <div class="form-group col-md-6" ng-if="subtype.name == 'Pliers'">
                 <label for="state">Adjustable</label>
-                <select type="text" class="form-control" id="pliers_adjustable" data-ng-model="pliers_adjustable"
+                <select type="text" class="form-control" id="pliers_adjustable" data-ng-model="toolobject.pliers_adjustable"
                         required>
                     <option value="1">Yes</option>
                     <option value="0">No</option>
@@ -357,7 +357,7 @@
 
             <div class="form-group col-md-6" ng-if="subtype.name =='Hammer'">
                 <label for="state">Anti-vibration</label>
-                <select type="text" class="form-control" id="hammer_antivibration" data-ng-model="hammer_antivibration"
+                <select type="text" class="form-control" id="hammer_antivibration" data-ng-model="toolobject.hammer_antivibration"
                         required>
                     <option value="1">Yes</option>
                     <option value="0">No</option>
@@ -567,7 +567,7 @@
             <div class="form-group col-md-6" ng-if="subtype.name =='Sander'">
                 <div class="form-group col-md-6">
                     <label for="sander_dustbag">Sander Dust Bag</label>
-                    <select type="text" class="form-control" id="sander_dustbag" data-ng-model="sander_dustbag"
+                    <select type="text" class="form-control" id="sander_dustbag" data-ng-model="toolobject.sander_dustbag"
                             required>
                         <option value="1">Yes</option>
                         <option value="0">No</option>
