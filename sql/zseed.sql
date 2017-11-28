@@ -711,11 +711,15 @@ insert into Tool (width, weight, length, manufacturer, material, deposit_price, 
 VALUES (7.2, 5.6, 12, 'Cordless Dewalt', 'steel', 52, 15, 130, @powerCategoryId, @dcPowerSourceId, (select id from SubType where name = 'Drill'), (select id from SubOption where name = 'driver'));
 
 set @lastTool:= last_insert_id();
+insert into PowerTool (id, volt_rating, amp_rating, min_rpm_rating, max_rpm_rating) VALUES (@lastTool, 110, 30, 2000, 4500);
+set @lastTool:= last_insert_id();
 insert into PowerDrill (id, adjustable_clutch, min_torque_rating, max_torque_rating) VALUES (@lastTool, true, 80.5, NULL);
 
 insert into Tool (width, weight, length, manufacturer, material, deposit_price, rental_price, original_price, Category_Id, PowerSource_Id, SubType_Id, SubOption_Id)
 VALUES (2.2, 3.6, 1, 'Cordless Dewalt', 'steel', 32, 15, 200, @powerCategoryId, @dcPowerSourceId, (select id from SubType where name = 'Saw'), (select id from SubOption where name = 'jig'));
 
+set @lastTool:= last_insert_id();
+insert into PowerTool (id, volt_rating, amp_rating, min_rpm_rating, max_rpm_rating) VALUES (@lastTool, 110, 30, 2000, 4500);
 set @lastTool:= last_insert_id();
 insert into PowerSaw (id, blade_size) VALUES (@lastTool, 80.5);
 set @lastTool:= last_insert_id();
@@ -726,6 +730,8 @@ insert into Tool (width, weight, length, manufacturer, material, deposit_price, 
 VALUES (3.2, 8.6, 323, 'Cordless Dewalt', 'steel', 75, 15, 160, @powerCategoryId, @dcPowerSourceId, (select id from SubType where name = 'Sander'), (select id from SubOption where name = 'belt'));
 
 
+set @lastTool:= last_insert_id();
+insert into PowerTool (id, volt_rating, amp_rating, min_rpm_rating, max_rpm_rating) VALUES (@lastTool, 110, 30, 2000, 4500);
 set @lastTool:= last_insert_id();
 insert into PowerSander (id, dust_bag) VALUES (@lastTool, false);
 
