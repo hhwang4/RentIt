@@ -31,6 +31,9 @@ values('admin8@gatech.edu','2011-12-01', 'password', 'The', 'Best', 'Admin8', 'a
 #clerk:10
 insert into Clerk (user_name, date_of_hire,temp_password, first_name, middle_name, last_name, email, password)
 values('admin9@gatech.edu','2012-12-01', 'password', 'The', 'Best', 'Admin9', 'admin9@gatech.edu', 'hunter2');
+#clerk:11 System
+insert into Clerk (user_name, date_of_hire,temp_password, first_name, middle_name, last_name, email, password)
+values('jwatson@tools4rent.com','2000-01-01', 'password', 'Jill', '', 'Watson', 'jwatson@tools4rent.com', 'hunter2');
 
 # Customers
 
@@ -700,4 +703,4 @@ INSERT INTO `ToolReservations` VALUES (1,1),(2,1),(6,2),(7,2),(17,3),(18,3),(19,
 
 # Tool Rentals
 INSERT INTO Rentals (Tool_Id, start_date, end_date, number_of_rentals) VALUES (1, '2017-10-02', '2017-10-12', 1);
-INSERT INTO Rentals (Tool_Id, start_date, end_date, number_of_rentals) VALUES (2, '2017-10-02', '2017-10-12', 2);
+INSERT INTO Rentals (Tool_Id, start_date, end_date, number_of_rentals) VALUES (2, '2017-10-02', '2017-10-12', 49);
