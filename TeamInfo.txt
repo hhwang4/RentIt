@@ -1,0 +1,5 @@
+SQL FILES:
+
+Schema: sql/team033_p2_schema.sql
+Stored Procedures: sql/y-storedProcs.sql
+Seed Data: sql/zseed.sql
