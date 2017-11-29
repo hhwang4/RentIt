@@ -219,7 +219,7 @@ angular.module('myApp.makeReservation', ['ngRoute', 'ngAnimate'])
           $scope.toolsAdded.push(tool);
           tool.added = true;
         } else {
-          $scope.removeTool($scope.toolsAdded.indexOf(tool));
+          $scope.removeTool(id);
         }
       }
     };
