@@ -90,20 +90,18 @@
   <div ng-if="tools.length">
     <table class="table table-hover table-striped">
       <thead class="thead-default">
-      <th scope="col">Tool ID</th>
-      <th scope="col">
-        Description
-      </th>
-      <th scope="col">Rental Price</th>
-      <th scope="col">Deposit Price</th>
+      <th scope="col" ng-click="sortBy('id')">Tool ID</th>
+      <th scope="col" ng-click="sortBy('description')">Description</th>
+      <th scope="col" ng-click="sortBy('rental_price')">Rental Price</th>
+      <th scope="col" ng-click="sortBy('deposit_price')">Deposit Price</th>
       <th scope="col">Add</th>
       </thead>
       <tbody>
-      <tr ng-repeat="tool in tools | filter: keyword">
-        <th scope="row">{{tool.id}}</th>
+      <tr ng-repeat="tool in tools | filter: keyword | orderBy:propertyName:reverse">
+        <td scope="row">{{tool.id}}</td>
         <td>
           <button
-              ng-click="getTool($index)"
+              ng-click="getTool(tool.id)"
               uib-popover-template="dynamicPopover.templateUrl"
               popover-title="{{dynamicPopover.title}}"
               type="button" class="btn btn-light"
@@ -115,7 +113,7 @@
         </td>
         <td>{{tool.rental_price | currency}}</td>
         <td>{{tool.deposit_price | currency}}</td>
-        <td ng-click="addTool($index)"><input ng-disabled="toolsAdded.length >= 10" type="checkbox" aria-label="Add" ng-model="tool.added"></td>
+        <td ng-click="addTool(tool.id)"><input ng-disabled="toolsAdded.length >= 10" type="checkbox" aria-label="Add" ng-model="tool.added"></td>
       </tr>
       </tbody>
     </table>
@@ -126,18 +124,18 @@
 <div>
   <table class="table table-striped">
     <thead class="thead-default">
-    <th scope="col">Tool ID</th>
-    <th scope="col">Description</th>
-    <th scope="col">Rental Price</th>
-    <th scope="col">Deposit Price</th>
+    <th scope="col" ng-click="sortBy2('id')">Tool ID</th>
+    <th scope="col" ng-click="sortBy2('description')">Description</th>
+    <th scope="col" ng-click="sortBy2('rental_price')">Rental Price</th>
+    <th scope="col" ng-click="sortBy2('deposit_price')">Deposit Price</th>
     <th scope="col">Remove</th>
     </thead>
     <tbody>
-    <tr ng-repeat="tool in toolsAdded">
-      <th scope="row">{{tool.id}}</th>
+    <tr ng-repeat="tool in toolsAdded | orderBy:propertyName2:reverse2">
+      <th scope="row" >{{tool.id}}</th>
       <td>
         <button
-            ng-click="getTool($index)"
+            ng-click="getTool(tool.id)"
             uib-popover-template="dynamicPopover.templateUrl"
             type="button" class="btn btn-light"
             popover-animation="false"
@@ -148,7 +146,7 @@
       </td>
       <td>{{tool.rental_price | currency}}</td>
       <td>{{tool.deposit_price | currency}}</td>
-      <td ng-click="removeTool($index)"><input type="checkbox" aria-label="Remove"></td>
+      <td ng-click="removeTool(tool.id)"><input type="checkbox" aria-label="Remove"></td>
     </tr>
     </tbody>
   </table>
