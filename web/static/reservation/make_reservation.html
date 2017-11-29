@@ -87,6 +87,9 @@
   <div ng-if="!tools.length" class="alert alert-warning" role="alert">
     No tools match your search criteria.
   </div>
+  <div ng-if="reservation_failed" class="alert alert-danger" role="alert">
+    <strong>Oh snap!</strong> Change a few things up and try submitting again. The following tools {{ failed_tools }} are no longer available and have been removed from your tools added list.
+  </div>
   <div ng-if="tools.length">
     <table class="table table-hover table-striped">
       <thead class="thead-default">

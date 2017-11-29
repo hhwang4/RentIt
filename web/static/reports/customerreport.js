@@ -8,7 +8,7 @@ function Customer(d) {
     this.userName = d[5];
     this.phone = d[6];
     this.totalReservations = d[7];
-    this.totalRented = d[8];
+    this.totalRented = parseFloat(d[8]);
 };
 angular.module('myApp.customerReport', ['ngRoute'])
 
@@ -31,8 +31,13 @@ angular.module('myApp.customerReport', ['ngRoute'])
 
     .controller('CustomerReport', ['$scope', '$http', 'localStorageService', '$location',
         function ($scope, $http, localStorageService, $location) {
-            $scope.view = 'This is a scope variable1';
-
+            // Sorting
+            $scope.propertyName = ['totalRented', 'lastName']; // "ordered first by number of tools rented, then last name of the customer"
+            $scope.reverse = false;
+            $scope.sortBy = function(propertyName) {
+                $scope.reverse = ($scope.propertyName === propertyName) ? !$scope.reverse : false;
+                $scope.propertyName = propertyName;
+            };
 
             var vm = this;
             vm.test = 'lol'

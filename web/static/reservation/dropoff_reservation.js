@@ -64,8 +64,8 @@ angular.module('myApp.dropoffReservation', ['ngRoute', 'ngAnimate'])
               'customer_id': reservation.customer_id,
               'start_date': reservation.start_date,
               'end_date': reservation.end_date,
-              'total_deposit_price': reservation.total_deposit_price,
-              'total_rental_price': reservation.total_rental_price
+              'total_deposit_price': parseFloat(reservation.total_deposit_price),
+              'total_rental_price': parseFloat(reservation.total_rental_price)
             });
           });
         },
@@ -152,8 +152,8 @@ angular.module('myApp.dropoffReservation', ['ngRoute', 'ngAnimate'])
                 return ({
                   id: tool.id,
                   description: tool.description,
-                  deposit_price: tool.deposit_price,
-                  rental_price: tool.rental_price
+                  deposit_price: parseFloat(tool.deposit_price),
+                  rental_price: parseFloat(tool.rental_price)
                 })
               });
             })
@@ -178,8 +178,8 @@ angular.module('myApp.dropoffReservation', ['ngRoute', 'ngAnimate'])
                   return ({
                     id: tool.id,
                     description: tool.description,
-                    deposit_price: tool.deposit_price,
-                    rental_price: tool.rental_price
+                    deposit_price: parseFloat(tool.deposit_price),
+                    rental_price: parseFloat(tool.rental_price)
                   })
                 });
               })

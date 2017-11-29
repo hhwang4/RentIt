@@ -57,16 +57,16 @@
     <div>
         <table class="table table-striped">
             <thead class="thead-default">
-            <th scope="col" style="width: 20px">Tool ID</th>
-            <th scope="col">Current Status</th>
-            <th scope="col">Date</th>
-            <th scope="col">Description</th>
-            <th scope="col">Rental Profit</th>
-            <th scope="col">Total Cost</th>
-            <th scope="col">Total Profit</th>
+            <th scope="col" style="width: 20px" ng-click="sortBy('id')">Tool ID</th>
+            <th scope="col" ng-click="sortBy('status')">Current Status</th>
+            <th scope="col" ng-click="sortBy('date')">Date</th>
+            <th scope="col" ng-click="sortBy('description')">Description</th>
+            <th scope="col" ng-click="sortBy('rentalProfit')">Rental Profit</th>
+            <th scope="col" ng-click="sortBy('totalCost')">Total Cost</th>
+            <th scope="col" ng-click="sortBy('totalProfit')">Total Profit</th>
             </thead>
             <tbody>
-            <tr ng-repeat="r in vm.tools | filter: vm.searchText | filter: vm.filter">
+            <tr ng-repeat="r in vm.tools | filter: vm.searchText | filter: vm.filter | orderBy:propertyName:reverse">
                 <th scope=row">{{ r.id }}</th>
                 <td ng-class="{
                 available: r.status == 'Available',
@@ -77,7 +77,7 @@
                 <td>{{ r.date }}</td>
                 <td>
                      <button
-                         ng-click="vm.getTool($index)"
+                         ng-click="vm.getTool(r.id)"
                          uib-popover-template="vm.dynamicPopover.templateUrl"
                          type="button" class="btn btn-light"
                          popover-animation="false"

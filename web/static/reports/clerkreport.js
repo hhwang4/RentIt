@@ -33,8 +33,13 @@ angular.module('myApp.clerkReport', ['ngRoute'])
 
     .controller('ClerkReport', ['$scope', '$http', 'localStorageService', '$location',
         function ($scope, $http, localStorageService, $location) {
-            $scope.view = 'This is a scope variable1';
-
+            // Sorting
+            $scope.propertyName = 'combinedTotal'; // "ordered by the total number of pick-ups and drop-offs"
+            $scope.reverse = false;
+            $scope.sortBy = function(propertyName) {
+                $scope.reverse = ($scope.propertyName === propertyName) ? !$scope.reverse : false;
+                $scope.propertyName = propertyName;
+            };
 
             var vm = this;
             vm.test = 'lol'

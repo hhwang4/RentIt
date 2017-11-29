@@ -39,6 +39,7 @@ angular.module('myApp.makeReservation', ['ngRoute', 'ngAnimate'])
     $scope.customer_username = user_info.username;
 
     // Reservation tools
+    $scope.reservation_failed = false;
     $scope.resetTools = function() {
       $scope.toolsAdded = [];
       $scope.tools = [];
@@ -97,8 +98,8 @@ angular.module('myApp.makeReservation', ['ngRoute', 'ngAnimate'])
           $scope.dynamicPopover.tool.type = tool.tool_type;
           $scope.dynamicPopover.tool.short_description = tool.short_description;
           $scope.dynamicPopover.tool.full_description = tool.full_description;
-          $scope.dynamicPopover.tool.deposit_price = tool.deposit_price;
-          $scope.dynamicPopover.tool.rental_price = tool.rental_price;
+          $scope.dynamicPopover.tool.deposit_price = parseFloat(tool.deposit_price);
+          $scope.dynamicPopover.tool.rental_price = parseFloat(tool.rental_price);
           $scope.dynamicPopover.tool.accessories = tool.accessories;
         })
         .error(function(response) {
@@ -178,6 +179,7 @@ angular.module('myApp.makeReservation', ['ngRoute', 'ngAnimate'])
     $scope.getCategories();
 
     $scope.tool_search = function() {
+      $scope.reservation_failed = false;
       $scope.hasSearched = true;
       $scope.toolsAdded = [];
       var params = {
@@ -196,8 +198,8 @@ angular.module('myApp.makeReservation', ['ngRoute', 'ngAnimate'])
             return ({
               id: tool.id,
               description: tool.description,
-              rental_price: tool.rental_price,
-              deposit_price: tool.deposit_price,
+              rental_price: parseFloat(tool.rental_price),
+              deposit_price: parseFloat(tool.deposit_price),
               added: false
             });
           });
@@ -231,6 +233,7 @@ angular.module('myApp.makeReservation', ['ngRoute', 'ngAnimate'])
     };
 
     $scope.open = function(size, parentSelector) {
+      $scope.reservation_failed = false;
       var parentElem = parentSelector ?
         angular.element($document[0].querySelector('.modal' + parentSelector)) : undefined;
       var modalInstance = $uibModal.open({
@@ -316,6 +319,8 @@ angular.module('myApp.makeReservation', ['ngRoute', 'ngAnimate'])
           $scope.toolsAdded = [];
         } else if (response['status'] === "fail") {
           var tool_ids = response['tool_ids'] || [];
+          $scope.failed_tools = tool_ids;
+          $scope.reservation_failed = true;
           $scope.toolsAdded = $scope.toolsAdded.filter(function(tool) {
             // Remove tools that cannot be reserved from tool list
             // TODO: Display message indicating tools are removed

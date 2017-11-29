@@ -188,7 +188,7 @@ angular.module('myApp.toolAvailability', ['ngRoute', 'ngAnimate'])
               id: tool.id,
               description: tool.description,
               rental_price: tool.rental_price,
-              deposit_price: tool.deposit_price,
+              deposit_price: parseFloat(tool.deposit_price),
               added: false
             });
           });

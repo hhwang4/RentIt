@@ -195,7 +195,7 @@ angular.module('myApp.pickupReservation', ['ngRoute', 'ngAnimate'])
                   return ({
                     id: tool.id,
                     description: tool.description,
-                    deposit_price: tool.deposit_price,
+                    deposit_price: parseFloat(tool.deposit_price),
                     rental_price: tool.rental_price
                   })
                 });
