@@ -44,18 +44,18 @@
         <h1>Reservations</h1>
         <table class="table table-striped">
             <thead class="thead-default">
-            <th scope="col" style="width: 20px">Reservation ID</th>
+            <th scope="col" style="width: 20px" ng-click="sortBy('id')">Reservation ID</th>
             <th scope="col" style="width: 200px">Tools</th>
-            <th scope="col">Start Date</th>
-            <th scope="col">End Date</th>
-            <th scope="col">Pick-up Clerk</th>
-            <th scope="col">Drop-off Clerk</th>
-            <th scope="col">Number of Days</th>
-            <th scope="col">Total Deposit Price</th>
-            <th scope="col">Total Rental Price</th>
+            <th scope="col" ng-click="sortBy('startDate')">Start Date</th>
+            <th scope="col" ng-click="sortBy('endDate')">End Date</th>
+            <th scope="col" ng-click="sortBy('pickupClerk')">Pick-up Clerk</th>
+            <th scope="col" ng-click="sortBy('dropoffClerk')">Drop-off Clerk</th>
+            <th scope="col" ng-click="sortBy('numDays')">Number of Days</th>
+            <th scope="col" ng-click="sortBy('totalDepositPrice')">Total Deposit Price</th>
+            <th scope="col" ng-click="sortBy('totalRentalPrice')">Total Rental Price</th>
             </thead>
             <tbody>
-            <tr ng-repeat="r in vm.reservations">
+            <tr ng-repeat="r in vm.reservations | orderBy:propertyName:reverse">
                 <th scope=row">{{ r.id }}</th>
                 <td>
                     <div ng-repeat="t in r.tools">

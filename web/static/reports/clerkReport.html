@@ -9,18 +9,18 @@
     <div>
         <table class="table table-striped">
             <thead class="thead-default">
-            <th scope="col" style="width: 20px">Clerk ID</th>
-            <th scope="col" style="width: 200px">First Name</th>
-            <th scope="col">Middle Name</th>
-            <th scope="col">Last Name</th>
-            <th scope="col">Email</th>
-            <th scope="col">Hire Date</th>
-            <th scope="col">Number of Pickups</th>
-            <th scope="col">Number of Dropoffs</th>
-            <th scope="col">Combined Total</th>
+            <th scope="col" style="width: 20px" ng-click="sortBy('id')">Clerk ID</th>
+            <th scope="col" style="width: 200px" ng-click="sortBy('firstName')">First Name</th>
+            <th scope="col" ng-click="sortBy('middleName')">Middle Name</th>
+            <th scope="col" ng-click="sortBy('lastName')">Last Name</th>
+            <th scope="col" ng-click="sortBy('email')">Email</th>
+            <th scope="col" ng-click="sortBy('hireDate')">Hire Date</th>
+            <th scope="col" ng-click="sortBy('numPickups')">Number of Pickups</th>
+            <th scope="col" ng-click="sortBy('numDropoffs')">Number of Dropoffs</th>
+            <th scope="col" ng-click="sortBy('combinedTotal')">Combined Total</th>
             </thead>
             <tbody>
-            <tr ng-repeat="r in vm.clerks">
+            <tr ng-repeat="r in vm.clerks | orderBy:propertyName:reverse">
                 <th scope=row">{{ r.id }}</th>
                 <td>
                    {{ r.firstName }}

@@ -14,23 +14,23 @@
             <p><strong>Reservation ID: #{{reservation_id}}</strong></p>
           </div>
           <div id="reservation-summary">
-            <p>Reservation Dates: {{start_date}} - {{end_date}}</p>
-            <p>Number of Days Rented: {{number_of_days_rented}}</p>
-            <p>Total Deposit Price: {{total_deposit_price | currency}}</p>
-            <p>Total Rental Price: {{total_rental_price | currency}}</p>
+            <p><strong>Reservation Dates: </strong>{{start_date}} - {{end_date}}</p>
+            <p><strong>Number of Days Rented: </strong>{{number_of_days_rented}}</p>
+            <p><strong>Total Deposit Price: </strong>{{total_deposit_price | currency}}</p>
+            <p><strong>Total Rental Price: </strong>{{total_rental_price * number_of_days_rented | currency}}</p>
           </div>
           <hr />
           <h4>Tools</h4>
           <table class="table table-sm">
             <thead class="thead-default">
-              <th scope="col">Tool ID</th>
-              <th scope="col">Description</th>
-              <th scope="col">Rental Price</th>
-              <th scope="col">Deposit Price</th>
+            <th scope="col" ng-click="sortBy('id')">Tool ID</th>
+            <th scope="col" ng-click="sortBy('description')">Description</th>
+            <th scope="col" ng-click="sortBy('rental_price')">Rental Price</th>
+            <th scope="col" ng-click="sortBy('deposit_price')">Deposit Price</th>
             </thead>
             <tbody>
-              <tr ng-repeat="tool in toolsAdded">
-                <th scope"row">{{tool.id}}</th>
+              <tr ng-repeat="tool in toolsAdded | orderBy:propertyName:reverse">
+                <td scope="row">{{tool.id}}</td>
                 <td>{{tool.description}}</td>
                 <td>{{tool.rental_price | currency}}</td>
                 <td>{{tool.deposit_price | currency}}</td>
@@ -38,7 +38,7 @@
               <tr>
                 <td><strong>Totals</strong></td>
                 <td />
-                <td>{{total_rental_price | currency}}</td>
+                <td>{{total_rental_price * number_of_days_rented | currency}}</td>
                 <td>{{total_deposit_price | currency}}</td>
               </tr>	
             </tbody>

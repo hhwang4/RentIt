@@ -18,12 +18,28 @@ angular.module('myApp.makeReservation', ['ngRoute', 'ngAnimate'])
     });
   }])
   .controller('MakeReservationCtrl', ['$scope', '$http', 'localStorageService', '$location', '$uibModal', function($scope, $http, $localStorage, $location, $uibModal) {
+    // Sorting
+    $scope.propertyName = 'id';
+    $scope.reverse = false;
+    $scope.sortBy = function(propertyName) {
+      $scope.reverse = ($scope.propertyName === propertyName) ? !$scope.reverse : false;
+      $scope.propertyName = propertyName;
+    };
+
+    $scope.propertyName2 = 'id';
+    $scope.reverse2 = false;
+    $scope.sortBy2 = function(propertyName) {
+      $scope.reverse2 = ($scope.propertyName2 === propertyName) ? !$scope.reverse2 : false;
+      $scope.propertyName2 = propertyName;
+    }
+
     // User
     var user_info = $localStorage.get('authorizationData') || {};
     $scope.customer_full_name = user_info.full_name; // TODO: Add user full_name to cache
     $scope.customer_username = user_info.username;
 
     // Reservation tools
+    $scope.reservation_failed = false;
     $scope.resetTools = function() {
       $scope.toolsAdded = [];
       $scope.tools = [];
@@ -71,8 +87,10 @@ angular.module('myApp.makeReservation', ['ngRoute', 'ngAnimate'])
       error: false,
       error_message: "An error has occurred retrieving your data. Please try again later."
     };
-    $scope.getTool = function(index) {
-      const currentTool = $scope.tools[index];
+    $scope.getTool = function(id) {
+      const currentTool = $scope.tools.find(function(tool) {
+        return tool.id === id;
+      });
       $http.get('/tools/' + currentTool.id)
         .success(function(response) {
           const tool = ((response.data || {}).details || [])[0] || {};
@@ -80,8 +98,8 @@ angular.module('myApp.makeReservation', ['ngRoute', 'ngAnimate'])
           $scope.dynamicPopover.tool.type = tool.tool_type;
           $scope.dynamicPopover.tool.short_description = tool.short_description;
           $scope.dynamicPopover.tool.full_description = tool.full_description;
-          $scope.dynamicPopover.tool.deposit_price = tool.deposit_price;
-          $scope.dynamicPopover.tool.rental_price = tool.rental_price;
+          $scope.dynamicPopover.tool.deposit_price = parseFloat(tool.deposit_price);
+          $scope.dynamicPopover.tool.rental_price = parseFloat(tool.rental_price);
           $scope.dynamicPopover.tool.accessories = tool.accessories;
         })
         .error(function(response) {
@@ -161,6 +179,7 @@ angular.module('myApp.makeReservation', ['ngRoute', 'ngAnimate'])
     $scope.getCategories();
 
     $scope.tool_search = function() {
+      $scope.reservation_failed = false;
       $scope.hasSearched = true;
       $scope.toolsAdded = [];
       var params = {
@@ -179,8 +198,8 @@ angular.module('myApp.makeReservation', ['ngRoute', 'ngAnimate'])
             return ({
               id: tool.id,
               description: tool.description,
-              rental_price: tool.rental_price,
-              deposit_price: tool.deposit_price,
+              rental_price: parseFloat(tool.rental_price),
+              deposit_price: parseFloat(tool.deposit_price),
               added: false
             });
           });
@@ -191,25 +210,30 @@ angular.module('myApp.makeReservation', ['ngRoute', 'ngAnimate'])
         });
     };
 
-    $scope.addTool = function(index) {
+    $scope.addTool = function(id) {
       if ($scope.toolsAdded.length < 10) {
-        var tool = $scope.tools[index];
+        var tool = $scope.tools.find(function(tool) {
+          return tool.id === id;
+        });
         if ($scope.toolsAdded.indexOf(tool) === -1) {
           $scope.toolsAdded.push(tool);
           tool.added = true;
         } else {
-          $scope.removeTool($scope.toolsAdded.indexOf(tool));
+          $scope.removeTool(id);
         }
       }
     };
 
-    $scope.removeTool = function(index) {
-      var tool = $scope.toolsAdded[index];
+    $scope.removeTool = function(id) {
+      var tool = $scope.tools.find(function(tool) {
+        return tool.id === id;
+      });
       tool.added = false;
-      $scope.toolsAdded.splice(index, 1);
+      $scope.toolsAdded.splice($scope.toolsAdded.indexOf(tool), 1);
     };
 
     $scope.open = function(size, parentSelector) {
+      $scope.reservation_failed = false;
       var parentElem = parentSelector ?
         angular.element($document[0].querySelector('.modal' + parentSelector)) : undefined;
       var modalInstance = $uibModal.open({
@@ -218,12 +242,20 @@ angular.module('myApp.makeReservation', ['ngRoute', 'ngAnimate'])
         ariaDescribedBy: 'modal-body',
         templateUrl: 'static/reservation/confirmationModal.html',
         controller: function($uibModalInstance, $scope, toolsAdded, start_date, end_date, customer_username) {
+          // Sorting
+          $scope.propertyName = 'id';
+          $scope.reverse = false;
+          $scope.sortBy = function(propertyName) {
+            $scope.reverse = ($scope.propertyName === propertyName) ? !$scope.reverse : false;
+            $scope.propertyName = propertyName;
+          };
+
           $scope.title = "Reservation Summary";
           $scope.isSummary = true;
           $scope.toolsAdded = toolsAdded;
           $scope.start_date = moment(start_date).format('YYYY-MM-DD');
           $scope.end_date = moment(end_date).format('YYYY-MM-DD');
-          $scope.number_of_days_rented = moment($scope.end_date).diff(moment($scope.start_date), 'days');
+          $scope.number_of_days_rented = moment($scope.end_date).diff(moment($scope.start_date), 'days') + 1;
 
           $scope.total_deposit_price = $scope.toolsAdded.reduce(function(total, tool) {
             return total + parseFloat(tool.deposit_price);
@@ -287,6 +319,8 @@ angular.module('myApp.makeReservation', ['ngRoute', 'ngAnimate'])
           $scope.toolsAdded = [];
         } else if (response['status'] === "fail") {
           var tool_ids = response['tool_ids'] || [];
+          $scope.failed_tools = tool_ids;
+          $scope.reservation_failed = true;
           $scope.toolsAdded = $scope.toolsAdded.filter(function(tool) {
             // Remove tools that cannot be reserved from tool list
             // TODO: Display message indicating tools are removed

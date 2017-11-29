@@ -18,6 +18,14 @@ angular.module('myApp.toolAvailability', ['ngRoute', 'ngAnimate'])
     });
   }])
   .controller('ToolAvailabilityCtrl', ['$scope', '$http', 'localStorageService', '$uibModal', function($scope, $http, $localStorage, $uibModal) {
+    // Sorting
+    $scope.propertyName = 'id';
+    $scope.reverse = false;
+    $scope.sortBy = function(propertyName) {
+      $scope.reverse = ($scope.propertyName === propertyName) ? !$scope.reverse : false;
+      $scope.propertyName = propertyName;
+    };
+
     // User
     var user_info = $localStorage.get('authorizationData') || {};
     $scope.customer_full_name = user_info.full_name; // TODO: Add user full_name to cache
@@ -70,8 +78,10 @@ angular.module('myApp.toolAvailability', ['ngRoute', 'ngAnimate'])
       error: false,
       error_message: "An error has occurred retrieving your data. Please try again later."
     };
-    $scope.getTool = function(index) {
-      const currentTool = $scope.tools[index];
+    $scope.getTool = function(id) {
+      const currentTool = $scope.tools.find(function(tool) {
+        return tool.id === id;
+      });
       $http.get('/tools/' + currentTool.id)
         .success(function(response) {
           const tool = ((response.data || {}).details || [])[0] || {};
@@ -178,7 +188,7 @@ angular.module('myApp.toolAvailability', ['ngRoute', 'ngAnimate'])
               id: tool.id,
               description: tool.description,
               rental_price: tool.rental_price,
-              deposit_price: tool.deposit_price,
+              deposit_price: parseFloat(tool.deposit_price),
               added: false
             });
           });

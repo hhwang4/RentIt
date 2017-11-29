@@ -13,9 +13,9 @@ function Reservation(d) {
     this.endDate = moment(d[2]).format('MM/DD/YY');
     this.dropOffClerk = d[3];
     this.pickupClerk = d[4];
-    this.numDays = d[5];
-    this.totalDepositPrice = d[6];
-    this.totalRentalPrice = d[7];
+    this.numDays = parseInt(d[5]) + 1;
+    this.totalDepositPrice = parseFloat(d[6]);
+    this.totalRentalPrice = parseFloat(d[7]) * this.numDays;
     this.tools = d[8].map(function (f) {
         return new ProfileTool(f);
     });
@@ -43,7 +43,13 @@ angular.module('myApp.profile', ['ngRoute'])
 
     .controller('ProfileCtrl', ['$scope', '$http', 'localStorageService', '$location', '$routeParams',
         function ($scope, $http, localStorageService, $location, $routeParams) {
-            $scope.view = 'This is a scope variable1';
+            // Sorting
+            $scope.propertyName = null; // "ordered from most recent to oldest" using backend ordering
+            $scope.reverse = false;
+            $scope.sortBy = function(propertyName) {
+                $scope.reverse = ($scope.propertyName === propertyName) ? !$scope.reverse : false;
+                $scope.propertyName = propertyName;
+            };
 
             var savedCreds = localStorageService.get('authorizationData');
             var vm = this;

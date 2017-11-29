@@ -13,9 +13,9 @@ function Tool(d) {
     this.forSaleDate = moment(d[8]).format('MM/DD/YY');
     this.inrepairDate = moment(d[9]).format('MM/DD/YY');
     this.rentedDate = moment(d[10]).format('MM/DD/YY');
-    this.rentalProfit = d[11];
-    this.totalCost = d[12];
-    this.totalProfit = d[13];
+    this.rentalProfit = parseFloat(d[11]);
+    this.totalCost = parseFloat(d[12]);
+    this.totalProfit = parseFloat(d[13]);
     this.category = d[14];
 
     if (this.available === 1) {
@@ -64,8 +64,13 @@ angular.module('myApp.toolReport', ['ngRoute'])
 
     .controller('ToolReport', ['$scope', '$http', 'localStorageService', '$location',
         function ($scope, $http, localStorageService, $location) {
-            $scope.view = 'This is a scope variable1';
-
+            // Sorting
+            $scope.propertyName = 'totalProfit'; // "ordered by the total profit made on each item"
+            $scope.reverse = true;
+            $scope.sortBy = function(propertyName) {
+                $scope.reverse = ($scope.propertyName === propertyName) ? !$scope.reverse : false;
+                $scope.propertyName = propertyName;
+            };
 
             var vm = this;
             vm.test = 'lol'
@@ -123,8 +128,10 @@ angular.module('myApp.toolReport', ['ngRoute'])
                 error: false,
                 error_message: "An error has occurred retrieving your data. Please try again later."
             };
-            vm.getTool = function(index) {
-                const currentTool = vm.tools[index];
+            vm.getTool = function(id) {
+                const currentTool = vm.tools.find(function(tool) {
+                    return tool.id === id;
+                });
                 $http.get('/tools/' + currentTool.id)
                     .success(function(response) {
                     const tool = ((response.data || {}).details || [])[0] || {};

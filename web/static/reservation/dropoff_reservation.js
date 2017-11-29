@@ -18,6 +18,14 @@ angular.module('myApp.dropoffReservation', ['ngRoute', 'ngAnimate'])
     });
   }])
   .controller('DropoffReservationCtrl', ['$scope', '$http', '$sce', 'localStorageService', '$location', '$uibModal', function($scope, $http, $sce, $localStorage, $location, $uibModal) {
+    // Sorting
+    $scope.propertyName = 'id';
+    $scope.reverse = false;
+    $scope.sortBy = function(propertyName) {
+      $scope.reverse = ($scope.propertyName === propertyName) ? !$scope.reverse : false;
+      $scope.propertyName = propertyName;
+    };
+
     var user_info =  $localStorage.get('authorizationData') || {};
     $scope.reservations = [];
     $scope.reservation_id = null;
@@ -28,7 +36,7 @@ angular.module('myApp.dropoffReservation', ['ngRoute', 'ngAnimate'])
       return ('<div class="container reservation-details"><h6><b>Reservation ID: #</b>' + reservation.id +'</h6>'
         + '<br /><b>Customer Name: </b>' + reservation.customer_name
         + '<br /><b>Total Deposit: </b>' + reservation.total_deposit_price
-        + '<br /><b>Total Rental Price: </b>' + reservation.total_rental_price
+        + '<br /><b>Total Rental Price: $</b>' + (reservation.total_rental_price * (moment(reservation.end_date).diff(moment(reservation.start_date), 'days') + 1)).toFixed(2)
         + '</div>')
     };
     $scope.disable_dropoff_button = function() {
@@ -56,8 +64,8 @@ angular.module('myApp.dropoffReservation', ['ngRoute', 'ngAnimate'])
               'customer_id': reservation.customer_id,
               'start_date': reservation.start_date,
               'end_date': reservation.end_date,
-              'total_deposit_price': reservation.total_deposit_price,
-              'total_rental_price': reservation.total_rental_price
+              'total_deposit_price': parseFloat(reservation.total_deposit_price),
+              'total_rental_price': parseFloat(reservation.total_rental_price)
             });
           });
         },
@@ -89,6 +97,14 @@ angular.module('myApp.dropoffReservation', ['ngRoute', 'ngAnimate'])
         ariaDescribedBy: 'modal-body',
         templateUrl: 'static/reservation/confirmation_dropoff_reservation.html',
         controller: function($uibModalInstance, $scope, reservation_id, clerk_username, clerk_full_name) {
+          // Sorting
+          $scope.propertyName = 'id';
+          $scope.reverse = false;
+          $scope.sortBy = function(propertyName) {
+            $scope.reverse = ($scope.propertyName === propertyName) ? !$scope.reverse : false;
+            $scope.propertyName = propertyName;
+          };
+
           $scope.reservation_id = reservation_id;
           $scope.clerk_username = clerk_username;
           $scope.clerk_full_name = clerk_full_name ;
@@ -130,13 +146,14 @@ angular.module('myApp.dropoffReservation', ['ngRoute', 'ngAnimate'])
               $scope.total_deposit_price = details.total_deposit_price;
               $scope.start_date = details.start_date;
               $scope.end_date = details.end_date;
+              $scope.number_of_days_rented = moment($scope.end_date).diff(moment($scope.start_date), 'days') + 1;
               // Add tools in reservation to reservation list
               $scope.tools = data.tools.map(function(tool) {
                 return ({
                   id: tool.id,
                   description: tool.description,
-                  deposit_price: tool.deposit_price,
-                  rental_price: tool.rental_price
+                  deposit_price: parseFloat(tool.deposit_price),
+                  rental_price: parseFloat(tool.rental_price)
                 })
               });
             })
@@ -161,8 +178,8 @@ angular.module('myApp.dropoffReservation', ['ngRoute', 'ngAnimate'])
                   return ({
                     id: tool.id,
                     description: tool.description,
-                    deposit_price: tool.deposit_price,
-                    rental_price: tool.rental_price
+                    deposit_price: parseFloat(tool.deposit_price),
+                    rental_price: parseFloat(tool.rental_price)
                   })
                 });
               })

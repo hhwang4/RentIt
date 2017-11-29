@@ -7,14 +7,14 @@
 <div ng-if="reservations.length">
   <table class="table table-striped">
     <thead class="thead-default">
-    <th scope="col">Reservation ID</th>
-    <th scope="col">Customer</th>
-    <th scope="col">CustomerID</th>
-    <th scope="col">Start Date</th>
-    <th scope="col">End Date</th>
+    <th scope="col" ng-click="sortBy('id')">Reservation ID</th>
+    <th scope="col" ng-click="sortBy('customer_name')">Customer</th>
+    <th scope="col" ng-click="sortBy('customer_id')">CustomerID</th>
+    <th scope="col" ng-click="sortBy('start_date')">Start Date</th>
+    <th scope="col" ng-click="sortBy('end_date')">End Date</th>
     </thead>
     <tbody>
-    <tr ng-repeat="reservation in reservations">
+    <tr ng-repeat="reservation in reservations | orderBy:propertyName:reverse">
       <th scope="row">
         <button
             popover-animation="false"
