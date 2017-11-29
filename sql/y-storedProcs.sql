@@ -29,7 +29,7 @@ where tr.Reservations_Id in (select id from Reservation as r where r.Customer_Us
 on rid.Tool_id = id
 join Reservation as r on r.id = Reservations_Id
 group by Reservations_Id
-order by booking_date;
+order by booking_date desc;
 END$$
 DELIMITER ;
 
