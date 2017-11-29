@@ -196,7 +196,7 @@ class Reservation:
             query = 'UPDATE Rentals SET end_date=NOW() WHERE Tool_Id in (%s)'
             cursor.executemany(query, tool_ids)
             # Check for rentals over 50 and add sales order
-            query = 'SELECT Tool_Id FROM Rentals WHERE number_of_rentals >= 50'
+            query = 'SELECT Tool_Id FROM Rentals WHERE number_of_rentals >= 50 AND Tool_Id NOT IN (SELECT Tool_Id FROM SaleOrder)'
             cursor.execute(query)
             result = cursor.fetchall()
             if len(result) > 0:
